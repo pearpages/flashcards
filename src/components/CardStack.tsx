@@ -36,15 +36,26 @@ const springTransition = {
   mass: 0.8,
 };
 
+function shuffleArray<T>(array: T[]): T[] {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
 export default function CardStack({ cards }: CardStackProps) {
+  const [deck, setDeck] = useState(cards);
   const [[currentIndex, direction], setPage] = useState([0, 0]);
+  const [revealedIds, setRevealedIds] = useState<Set<number>>(new Set());
 
   const goNext = useCallback(() => {
     setPage(([prev]) => {
-      if (prev >= cards.length - 1) return [prev, 0];
+      if (prev >= deck.length - 1) return [prev, 0];
       return [prev + 1, 1];
     });
-  }, [cards.length]);
+  }, [deck.length]);
 
   const goPrev = useCallback(() => {
     setPage(([prev]) => {
@@ -53,7 +64,24 @@ export default function CardStack({ cards }: CardStackProps) {
     });
   }, []);
 
-  useKeyboardNav(goPrev, goNext);
+  const revealCard = useCallback(() => {
+    const cardId = deck[currentIndex]?.id;
+    if (cardId == null) return;
+    setRevealedIds((prev) => {
+      if (prev.has(cardId)) return prev;
+      const next = new Set(prev);
+      next.add(cardId);
+      return next;
+    });
+  }, [deck, currentIndex]);
+
+  const handleShuffle = () => {
+    setDeck(shuffleArray(cards));
+    setPage([0, 0]);
+    setRevealedIds(new Set());
+  };
+
+  useKeyboardNav(goPrev, goNext, revealCard);
 
   const handleDragEnd = (_: unknown, info: PanInfo) => {
     if (info.offset.x > SWIPE_THRESHOLD) {
@@ -63,7 +91,7 @@ export default function CardStack({ cards }: CardStackProps) {
     }
   };
 
-  if (cards.length === 0) {
+  if (deck.length === 0) {
     return <div className="card-stack-empty">No flashcards found.</div>;
   }
 
@@ -71,16 +99,16 @@ export default function CardStack({ cards }: CardStackProps) {
     <div className="card-stack">
       <div className="card-stack-container">
         {/* Background stacked cards for depth effect */}
-        {currentIndex < cards.length - 1 && (
+        {currentIndex < deck.length - 1 && (
           <div className="stack-card stack-card-2" />
         )}
-        {currentIndex < cards.length - 2 && (
+        {currentIndex < deck.length - 2 && (
           <div className="stack-card stack-card-3" />
         )}
 
         <AnimatePresence mode="popLayout" custom={direction}>
           <motion.div
-            key={currentIndex}
+            key={deck[currentIndex].id}
             className="card-wrapper"
             custom={direction}
             variants={cardVariants}
@@ -93,7 +121,11 @@ export default function CardStack({ cards }: CardStackProps) {
             dragElastic={0.7}
             onDragEnd={handleDragEnd}
           >
-            <FlashCard card={cards[currentIndex]} />
+            <FlashCard
+              card={deck[currentIndex]}
+              revealed={revealedIds.has(deck[currentIndex].id)}
+              onReveal={revealCard}
+            />
           </motion.div>
         </AnimatePresence>
       </div>
@@ -108,15 +140,22 @@ export default function CardStack({ cards }: CardStackProps) {
           ←
         </button>
         <span className="card-counter">
-          {currentIndex + 1} / {cards.length}
+          {currentIndex + 1} / {deck.length}
         </span>
         <button
           className="nav-button"
           onClick={goNext}
-          disabled={currentIndex === cards.length - 1}
+          disabled={currentIndex === deck.length - 1}
           aria-label="Next card"
         >
           →
+        </button>
+        <button
+          className="nav-button shuffle-button"
+          onClick={handleShuffle}
+          aria-label="Shuffle cards"
+        >
+          ⟳
         </button>
       </div>
     </div>
