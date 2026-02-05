@@ -2,7 +2,7 @@
 
 A minimal, beautifully animated flashcard app with a mobile-first card stack UI.
 
-![demo image](./docs/static/demo.png)
+<img src="./docs/static/demo.png" alt="demo image" width="300" />
 
 ## Tech Stack
 
@@ -13,7 +13,7 @@ A minimal, beautifully animated flashcard app with a mobile-first card stack UI.
 
 ## Requirements
 
-- Node.js >= 18
+- Node.js >= 22
 - pnpm
 
 ## Features
