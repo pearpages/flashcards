@@ -46,6 +46,12 @@ Flashcards are stored in `src/flashcards.json`:
 | `image`       | No       | URL to an image, or `null`           |
 | `description` | Yes      | Revealed on tap/click                |
 
+## Deployment
+
+The app is automatically built and published to **GitLab Pages** on every push to `main`.
+
+Live at: https://pere.pages.gitlab.ocado.tech/flashcards/
+
 ## Getting Started
 
 ```bash
