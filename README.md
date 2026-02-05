@@ -2,6 +2,8 @@
 
 A minimal, beautifully animated flashcard app with a mobile-first card stack UI.
 
+![demo image](./docs/static/demo.png)
+
 ## Tech Stack
 
 - **Vite** + **React** + **TypeScript**
