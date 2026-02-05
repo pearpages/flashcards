@@ -51,6 +51,7 @@ Flashcards are stored in `src/flashcards.json`:
 The app is automatically built and published to **GitLab Pages** on every push to `main`.
 
 Live at: https://pere.pages.pages.tech.lastmile.com/flashcards/
+Redirects to: https://flashcards-f0496a.pages.tech.lastmile.com/
 
 ## Getting Started
 
