@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host",
-    "build": "tsc -b && vite build",
+    "validate": "node scripts/validate-decks.mjs",
+    "build": "node scripts/validate-decks.mjs && tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },

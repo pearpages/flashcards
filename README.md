@@ -1,6 +1,6 @@
-# Flashcards
+# Design System Flashcards
 
-A minimal, beautifully animated flashcard app with a mobile-first card stack UI.
+A mobile-first flashcard deck for learning design system components: 119 components, each tagged three ways: its purpose (forms, navigation, overlays…), its layer (primitive, component, pattern) and its atomic design level (atom, molecule, organism, template).
 
 <img src="./docs/static/demo.png" alt="demo image" width="300" />
 
@@ -18,35 +18,70 @@ A minimal, beautifully animated flashcard app with a mobile-first card stack UI.
 
 ## Features
 
-- **Card stack UI** — current card on top with stacked cards peeking behind for depth
-- **Tap to reveal** — tap/click a card to show the description; tap again to dismiss
+- **Component deck** — name, purpose, layer, atomic level, wireframe illustration and one-line purpose on the front
+- **Tap to reveal** — tap/click (or arrow up/down) to show when to use it, nearest alternatives and accessibility notes
+- **Filters** — narrow the deck by purpose, layer and/or atomic design level, in any combination (each deck declares its own filters)
+- **Multiple decks** — add a folder under `src/decks/` and it shows up in the deck picker
 - **Swipe navigation** — swipe left/right to navigate between cards
 - **Keyboard navigation** — left/right arrow keys
+- **Shuffle** — randomise the current deck
 - **Mobile-first design** — full-width on mobile, centered and constrained on desktop
 - **Spring animations** — natural card movement with Framer Motion spring physics
-- **Boundary stops** — navigation stops at first and last card
 
-## Data Format
+## Decks
 
-Flashcards are stored in `src/flashcards.json`:
+Each deck is a folder in `src/decks/` and owns all of its data. The app discovers decks automatically; when there is more than one, a deck picker appears in the header.
 
-```json
-[
-  {
-    "id": 1,
-    "title": "Card Title",
-    "image": "https://example.com/image.png",
-    "description": "The answer or explanation text"
-  }
-]
+```
+src/decks/
+  design-system/
+    deck.json          # title, description and the filters (facets) this deck offers
+    cards.json         # the cards
+    images/<id>.svg    # one illustration per card (optional)
 ```
 
-| Field         | Required | Description                          |
-| ------------- | -------- | ------------------------------------ |
-| `id`          | Yes      | Unique numeric identifier            |
-| `title`       | Yes      | Displayed on the card front          |
-| `image`       | No       | URL to an image, or `null`           |
-| `description` | Yes      | Revealed on tap/click                |
+### Adding cards
+
+Add an entry to `src/decks/<deck>/cards.json`:
+
+```json
+{
+  "id": "icon-button",
+  "title": "IconButton",
+  "facets": { "purpose": "actions", "layer": "component", "atomic": "atom" },
+  "summary": "A compact button that shows only an icon.",
+  "description": "When to use it, how it differs from its siblings, accessibility notes.",
+  "aliases": ["Icon-only button"]
+}
+```
+
+| Field         | Required | Description                                                          |
+| ------------- | -------- | -------------------------------------------------------------------- |
+| `id`          | Yes      | Unique kebab-case slug; also the image filename                      |
+| `title`       | Yes      | Shown on the card front                                              |
+| `facets`      | Yes      | A value for every facet declared in `deck.json`                      |
+| `summary`     | Yes      | One line, shown on the front (≤ 90 chars)                            |
+| `description` | Yes      | Revealed on tap (≤ 280 chars to fit the card)                        |
+| `aliases`     | No       | Other names for the same thing                                       |
+
+Optionally add `images/<id>.svg` (160×120). Cards without one show a `?` placeholder.
+
+Then run `pnpm validate`. It checks ids, required fields, facet values and text lengths, and warns about missing or orphan images. `pnpm build` runs it first and fails on errors.
+
+### Adding a deck
+
+Create `src/decks/<deck-id>/` with a `deck.json` (its `id` must match the folder name) and a `cards.json`:
+
+```json
+{
+  "id": "css-properties",
+  "title": "CSS Properties",
+  "description": "What each property does.",
+  "facets": [{ "key": "module", "label": "Module", "values": ["box model", "flexbox", "grid"] }]
+}
+```
+
+In the design-system deck, `layer` means `primitive` (unopinionated building block), `component` or `pattern` (a composition that solves a recurring problem).
 
 ## Deployment
 
@@ -63,6 +98,9 @@ pnpm install
 
 # Start dev server
 pnpm dev
+
+# Validate deck data
+pnpm validate
 
 # Build for production
 pnpm build

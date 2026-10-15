@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem;
+  gap: 1.5rem;
   width: 100%;
   padding: 1rem;
 }
@@ -11,7 +11,7 @@
   position: relative;
   width: 100%;
   max-width: 380px;
-  height: 420px;
+  height: 460px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -30,7 +30,7 @@
   position: absolute;
   width: 100%;
   max-width: 380px;
-  height: 420px;
+  height: 460px;
   border-radius: 20px;
   background: #f0f0f5;
 }

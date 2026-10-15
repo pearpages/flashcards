@@ -1,0 +1,42 @@
+{
+  "id": "design-system",
+  "title": "Design System",
+  "description": "Design system components: what each one is for, when to use it over its siblings, and how to make it accessible.",
+  "facets": [
+    {
+      "key": "purpose",
+      "label": "Purpose",
+      "values": [
+        "typography",
+        "content",
+        "layout",
+        "actions",
+        "forms",
+        "navigation",
+        "overlays",
+        "feedback",
+        "data",
+        "utilities"
+      ]
+    },
+    {
+      "key": "layer",
+      "label": "Layer",
+      "values": [
+        "primitive",
+        "component",
+        "pattern"
+      ]
+    },
+    {
+      "key": "atomic",
+      "label": "Atomic",
+      "values": [
+        "atom",
+        "molecule",
+        "organism",
+        "template"
+      ]
+    }
+  ]
+}

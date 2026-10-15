@@ -1,0 +1,1673 @@
+[
+  {
+    "id": "heading",
+    "title": "Heading",
+    "facets": {
+      "purpose": "typography",
+      "layer": "primitive",
+      "atomic": "atom"
+    },
+    "summary": "Titles a page or section and builds the document outline.",
+    "description": "Separate the semantic level (h1–h6) from the visual size so outline and style can vary independently. Never skip levels for looks: screen reader users jump between headings to navigate."
+  },
+  {
+    "id": "text",
+    "title": "Text",
+    "facets": {
+      "purpose": "typography",
+      "layer": "primitive",
+      "atomic": "atom"
+    },
+    "summary": "Renders body copy with type-scale tokens for size, weight and colour.",
+    "description": "The base primitive for any run of text. Exposes variants (body, caption, overline) instead of raw font sizes, and an `as` prop so a paragraph, span or label can share the same styling.",
+    "aliases": [
+      "Typography",
+      "Paragraph"
+    ]
+  },
+  {
+    "id": "link",
+    "title": "Link",
+    "facets": {
+      "purpose": "typography",
+      "layer": "component",
+      "atomic": "atom"
+    },
+    "summary": "Navigates to another page, URL or anchor.",
+    "description": "If it goes somewhere, it's a Link (<a href>); if it does something, it's a Button. Links must be distinguishable by more than colour (underline) and should flag external targets.",
+    "aliases": [
+      "Anchor"
+    ]
+  },
+  {
+    "id": "label",
+    "title": "Label",
+    "facets": {
+      "purpose": "typography",
+      "layer": "component",
+      "atomic": "atom"
+    },
+    "summary": "Names a form control so users and assistive tech know what it is.",
+    "description": "Bound to its control via htmlFor/id, which also makes the text clickable to focus the input. Placeholders are not a label substitute: they vanish on typing and often fail contrast."
+  },
+  {
+    "id": "code",
+    "title": "Code / Kbd",
+    "facets": {
+      "purpose": "typography",
+      "layer": "component",
+      "atomic": "atom"
+    },
+    "summary": "Shows inline code snippets or keyboard keys in a monospace style.",
+    "description": "<code> marks machine text like `npm install`; <kbd> marks keys the user presses, like ⌘ K. For multi-line snippets use a CodeBlock with syntax highlighting and a copy button.",
+    "aliases": [
+      "InlineCode",
+      "Keyboard key"
+    ]
+  },
+  {
+    "id": "blockquote",
+    "title": "Blockquote",
+    "facets": {
+      "purpose": "content",
+      "layer": "component",
+      "atomic": "atom"
+    },
+    "summary": "Sets apart a quotation from another source.",
+    "description": "Use the semantic <blockquote> with an optional cite. Don't use it just to indent or highlight text — that's a Callout's job.",
+    "aliases": [
+      "Quote"
+    ]
+  },
+  {
+    "id": "list",
+    "title": "List",
+    "facets": {
+      "purpose": "typography",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "Groups related items as bulleted, numbered or unstyled rows.",
+    "description": "Ordered (<ol>) when sequence matters, unordered (<ul>) when it doesn't. Screen readers announce the item count, so keep list semantics even when removing bullets visually."
+  },
+  {
+    "id": "prose",
+    "title": "Prose",
+    "facets": {
+      "purpose": "content",
+      "layer": "component",
+      "atomic": "organism"
+    },
+    "summary": "Styles long-form rich content (markdown, CMS HTML) with sensible rhythm.",
+    "description": "A wrapper that applies vertical rhythm, measure (~65ch) and element styles to content you don't control, like rendered markdown. Keeps app components free of document typography.",
+    "aliases": [
+      "RichText",
+      "Typography plugin"
+    ]
+  },
+  {
+    "id": "box",
+    "title": "Box",
+    "facets": {
+      "purpose": "layout",
+      "layer": "primitive",
+      "atomic": "atom"
+    },
+    "summary": "A generic container that applies spacing, colour and border tokens.",
+    "description": "The lowest-level layout primitive: a div that only accepts design tokens (padding, background, radius). Other layout components are often built on top of it.",
+    "aliases": [
+      "View",
+      "Surface"
+    ]
+  },
+  {
+    "id": "stack",
+    "title": "Stack",
+    "facets": {
+      "purpose": "layout",
+      "layer": "primitive",
+      "atomic": "atom"
+    },
+    "summary": "Lays children out vertically with consistent gaps between them.",
+    "description": "Owns the space between children so components don't need outer margins. Replaces ad-hoc margin-top rules with a single gap token, which makes spacing predictable.",
+    "aliases": [
+      "VStack",
+      "Flow"
+    ]
+  },
+  {
+    "id": "inline",
+    "title": "Inline",
+    "facets": {
+      "purpose": "layout",
+      "layer": "primitive",
+      "atomic": "atom"
+    },
+    "summary": "Lays children out horizontally, wrapping onto new lines when needed.",
+    "description": "The horizontal sibling of Stack: a flex row with gap and wrap, ideal for tags, buttons or metadata. Controls alignment and whether items wrap or scroll.",
+    "aliases": [
+      "Cluster",
+      "HStack",
+      "Group"
+    ]
+  },
+  {
+    "id": "grid",
+    "title": "Grid",
+    "facets": {
+      "purpose": "layout",
+      "layer": "primitive",
+      "atomic": "atom"
+    },
+    "summary": "Arranges content in rows and columns aligned to the layout grid.",
+    "description": "Wraps CSS Grid with responsive column counts and gap tokens. Use it for 2D layouts like card galleries or dashboards; use Stack/Inline when only one axis matters.",
+    "aliases": [
+      "SimpleGrid",
+      "Columns"
+    ]
+  },
+  {
+    "id": "container",
+    "title": "Container",
+    "facets": {
+      "purpose": "layout",
+      "layer": "primitive",
+      "atomic": "atom"
+    },
+    "summary": "Centres content and caps its width at a readable maximum.",
+    "description": "Sets max-width and horizontal padding for page content so lines don't stretch across ultra-wide screens. Usually comes in a few sizes (sm, md, lg).",
+    "aliases": [
+      "Wrapper",
+      "PageContainer"
+    ]
+  },
+  {
+    "id": "spacer",
+    "title": "Spacer",
+    "facets": {
+      "purpose": "layout",
+      "layer": "primitive",
+      "atomic": "atom"
+    },
+    "summary": "An empty element that inserts a fixed or flexible gap.",
+    "description": "Useful to push items apart in a flex row (flex: 1) or add a one-off token-sized gap. Prefer gap on the parent; reach for Spacer when only one gap is different."
+  },
+  {
+    "id": "divider",
+    "title": "Divider",
+    "facets": {
+      "purpose": "layout",
+      "layer": "primitive",
+      "atomic": "atom"
+    },
+    "summary": "A thin line that separates groups of content.",
+    "description": "Horizontal or vertical. Use <hr> when it's a thematic break; otherwise mark it decorative (aria-hidden) so it isn't announced. Whitespace is often a quieter alternative.",
+    "aliases": [
+      "Separator",
+      "Rule"
+    ]
+  },
+  {
+    "id": "aspect-ratio",
+    "title": "AspectRatio",
+    "facets": {
+      "purpose": "layout",
+      "layer": "primitive",
+      "atomic": "atom"
+    },
+    "summary": "Keeps a box at a fixed width-to-height ratio, like 16:9.",
+    "description": "Reserves space for media before it loads, preventing layout shift. Now mostly a thin wrapper around the CSS aspect-ratio property."
+  },
+  {
+    "id": "center",
+    "title": "Center",
+    "facets": {
+      "purpose": "layout",
+      "layer": "primitive",
+      "atomic": "atom"
+    },
+    "summary": "Centres its child horizontally and vertically.",
+    "description": "A tiny convenience primitive for icons in circles, empty states or loaders. Saves repeating the same flexbox incantation everywhere.",
+    "aliases": [
+      "Absolute center"
+    ]
+  },
+  {
+    "id": "card",
+    "title": "Card",
+    "facets": {
+      "purpose": "layout",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "Groups related content and actions about one subject in a surface.",
+    "description": "Header, media, body and actions in an elevated or outlined container. If the whole card is clickable, use one link with a stretched hit area instead of nesting interactive elements.",
+    "aliases": [
+      "Tile",
+      "Panel"
+    ]
+  },
+  {
+    "id": "scroll-area",
+    "title": "ScrollArea",
+    "facets": {
+      "purpose": "layout",
+      "layer": "primitive",
+      "atomic": "molecule"
+    },
+    "summary": "A region with its own scrolling and consistently styled scrollbars.",
+    "description": "Keeps native scrolling but restyles scrollbars cross-platform. Scrollable regions need to be keyboard focusable (tabindex=0) so non-mouse users can scroll them.",
+    "aliases": [
+      "ScrollView"
+    ]
+  },
+  {
+    "id": "resizable",
+    "title": "Resizable panels",
+    "facets": {
+      "purpose": "layout",
+      "layer": "component",
+      "atomic": "organism"
+    },
+    "summary": "Splits space into panes the user can resize by dragging a handle.",
+    "description": "Common in IDEs and mail apps. The handle is a separator role with arrow-key support, and sizes are often persisted per user.",
+    "aliases": [
+      "SplitPane",
+      "Splitter"
+    ]
+  },
+  {
+    "id": "app-shell",
+    "title": "AppShell",
+    "facets": {
+      "purpose": "layout",
+      "layer": "pattern",
+      "atomic": "template"
+    },
+    "summary": "The persistent frame of an app: header, navigation and content area.",
+    "description": "A template that places organisms (NavBar, SideNav) and leaves a slot for page content. Handles responsive collapse of the navigation and skip links to main.",
+    "aliases": [
+      "Layout",
+      "Frame",
+      "Scaffold"
+    ]
+  },
+  {
+    "id": "sidebar-layout",
+    "title": "Sidebar layout",
+    "facets": {
+      "purpose": "layout",
+      "layer": "pattern",
+      "atomic": "template"
+    },
+    "summary": "A two-column page: narrow sidebar plus flexible main column.",
+    "description": "Sidebar holds filters, settings sections or a TOC. It stacks above or collapses into a drawer below a breakpoint. A classic page template in atomic design terms.",
+    "aliases": [
+      "Two-column layout",
+      "Master-detail"
+    ]
+  },
+  {
+    "id": "page-header",
+    "title": "PageHeader",
+    "facets": {
+      "purpose": "layout",
+      "layer": "pattern",
+      "atomic": "organism"
+    },
+    "summary": "The top of a page: title, breadcrumbs, description and primary actions.",
+    "description": "Standardises where the page title (h1) and main actions live so every page feels consistent. Not to be confused with the site-wide NavBar.",
+    "aliases": [
+      "Page title bar"
+    ]
+  },
+  {
+    "id": "button",
+    "title": "Button",
+    "facets": {
+      "purpose": "actions",
+      "layer": "component",
+      "atomic": "atom"
+    },
+    "summary": "Triggers an action like submit, save or open.",
+    "description": "Variants express hierarchy (primary, secondary, ghost, destructive): one primary per view. Use a real <button>, keep it enabled with an explanation over silently disabling it, and show loading state inline."
+  },
+  {
+    "id": "icon-button",
+    "title": "IconButton",
+    "facets": {
+      "purpose": "actions",
+      "layer": "component",
+      "atomic": "atom"
+    },
+    "summary": "A compact button that shows only an icon.",
+    "description": "Perfect for toolbars and dense UIs, but the icon carries no name: it always needs an aria-label, ideally mirrored in a Tooltip. Hit area should stay at least 24–44px."
+  },
+  {
+    "id": "chip",
+    "title": "Chip",
+    "facets": {
+      "purpose": "actions",
+      "layer": "component",
+      "atomic": "atom"
+    },
+    "summary": "A small interactive pill to filter, select or remove an item.",
+    "description": "Unlike a static Tag, a Chip does something: toggles a filter (aria-pressed), removes a value, or suggests an input. Removable chips need an accessible remove button.",
+    "aliases": [
+      "Pill",
+      "FilterChip"
+    ]
+  },
+  {
+    "id": "toggle-button",
+    "title": "ToggleButton",
+    "facets": {
+      "purpose": "actions",
+      "layer": "component",
+      "atomic": "atom"
+    },
+    "summary": "A button that stays pressed or unpressed, like Bold in an editor.",
+    "description": "Communicates its state with aria-pressed. Use for immediate on/off formatting or view options; for settings that persist, a Switch reads more clearly."
+  },
+  {
+    "id": "button-group",
+    "title": "ButtonGroup",
+    "facets": {
+      "purpose": "actions",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "Visually joins related buttons into one control.",
+    "description": "Groups actions like Undo/Redo or alignment options with shared borders and consistent spacing. If only one option can be active, you probably want a SegmentedControl."
+  },
+  {
+    "id": "split-button",
+    "title": "SplitButton",
+    "facets": {
+      "purpose": "actions",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "A main action button joined to a menu of related alternatives.",
+    "description": "The left part runs the default (e.g. Merge), the arrow opens a Menu of variants (Squash, Rebase). Each part is a separate focusable button with its own label.",
+    "aliases": [
+      "Dropdown button"
+    ]
+  },
+  {
+    "id": "fab",
+    "title": "FAB",
+    "facets": {
+      "purpose": "actions",
+      "layer": "component",
+      "atomic": "atom"
+    },
+    "summary": "A floating action button for the single most important action on screen.",
+    "description": "Material Design pattern, mostly mobile: a round button pinned above content, e.g. Compose. Only one per screen, and it must not cover important content.",
+    "aliases": [
+      "Floating action button"
+    ]
+  },
+  {
+    "id": "copy-button",
+    "title": "CopyButton",
+    "facets": {
+      "purpose": "actions",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "Copies a value to the clipboard and confirms it worked.",
+    "description": "Combines an IconButton with the Clipboard API and transient feedback (icon swap or Tooltip 'Copied!'). Announce the confirmation through a live region for screen readers.",
+    "aliases": [
+      "ClipboardButton"
+    ]
+  },
+  {
+    "id": "toolbar",
+    "title": "Toolbar",
+    "facets": {
+      "purpose": "actions",
+      "layer": "component",
+      "atomic": "organism"
+    },
+    "summary": "A container of controls that act on a view or selection.",
+    "description": "Editor formatting bars, table bulk actions. Uses role=toolbar with roving tabindex: Tab enters once, arrow keys move between controls inside.",
+    "aliases": [
+      "ActionBar"
+    ]
+  },
+  {
+    "id": "field",
+    "title": "Field",
+    "facets": {
+      "purpose": "forms",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "Wraps any control with its label, hint and error message.",
+    "description": "The glue of form accessibility: generates ids and wires aria-describedby and aria-invalid so every control gets consistent label, help text and validation layout.",
+    "aliases": [
+      "FormField",
+      "FormControl"
+    ]
+  },
+  {
+    "id": "text-field",
+    "title": "TextField",
+    "facets": {
+      "purpose": "forms",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "A single-line text input, with label and messages built in.",
+    "description": "Input is the bare atom; TextField = Field + Input, the molecule most teams actually use. Pick the right type and inputmode (email, tel, numeric) to get the right mobile keyboard.",
+    "aliases": [
+      "Input",
+      "TextInput"
+    ]
+  },
+  {
+    "id": "textarea",
+    "title": "Textarea",
+    "facets": {
+      "purpose": "forms",
+      "layer": "component",
+      "atomic": "atom"
+    },
+    "summary": "A multi-line text input for longer free-form answers.",
+    "description": "Often auto-grows with content and shows a character count. Size it to hint at the expected length of the answer."
+  },
+  {
+    "id": "checkbox",
+    "title": "Checkbox",
+    "facets": {
+      "purpose": "forms",
+      "layer": "component",
+      "atomic": "atom"
+    },
+    "summary": "Selects zero, one or many options independently.",
+    "description": "Also has an indeterminate state for 'some children selected'. In a form, checking it takes effect on submit; for instant on/off use a Switch."
+  },
+  {
+    "id": "radio-group",
+    "title": "Radio / RadioGroup",
+    "facets": {
+      "purpose": "forms",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "Selects exactly one option from a small visible set.",
+    "description": "A Radio alone is an atom; the group with its legend is the molecule. Arrow keys move selection within the group. Over ~5 options, consider a Select.",
+    "aliases": [
+      "Radio buttons"
+    ]
+  },
+  {
+    "id": "switch",
+    "title": "Switch",
+    "facets": {
+      "purpose": "forms",
+      "layer": "component",
+      "atomic": "atom"
+    },
+    "summary": "Turns a setting on or off with immediate effect.",
+    "description": "Like a light switch: no Save button needed. Uses role=switch with aria-checked. If the change needs confirming on submit, a Checkbox is the better fit.",
+    "aliases": [
+      "Toggle"
+    ]
+  },
+  {
+    "id": "select",
+    "title": "Select",
+    "facets": {
+      "purpose": "forms",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "Picks one option from a collapsed list.",
+    "description": "Native <select> is the most accessible and mobile-friendly. Use custom ones only when you need rich option content; add search (Combobox) once the list gets long.",
+    "aliases": [
+      "Dropdown"
+    ]
+  },
+  {
+    "id": "combobox",
+    "title": "Combobox",
+    "facets": {
+      "purpose": "forms",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "A text input that filters a popup list of suggestions as you type.",
+    "description": "Input + Listbox in one. One of the hardest components to make accessible: aria-activedescendant tracks the highlighted option while focus stays in the input.",
+    "aliases": [
+      "Autocomplete",
+      "Typeahead"
+    ]
+  },
+  {
+    "id": "listbox",
+    "title": "Listbox",
+    "facets": {
+      "purpose": "forms",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "A list of selectable options, single or multi-select.",
+    "description": "The option list that powers Select and Combobox, also usable inline. Supports keyboard navigation, type-ahead and aria-selected. Not for actions — that's a Menu.",
+    "aliases": [
+      "OptionList"
+    ]
+  },
+  {
+    "id": "picker",
+    "title": "Picker",
+    "facets": {
+      "purpose": "forms",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "A trigger that opens a dedicated surface to choose a value.",
+    "description": "Generic pattern behind date, time, colour and emoji pickers: a button showing the current value opens a Popover (or Sheet on mobile) with a specialised chooser.",
+    "aliases": [
+      "Wheel picker"
+    ]
+  },
+  {
+    "id": "segmented-control",
+    "title": "SegmentedControl",
+    "facets": {
+      "purpose": "forms",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "A row of joined buttons where exactly one is selected.",
+    "description": "Good for 2–5 short options like Day / Week / Month that change a view. Behaves like a radio group. If it swaps whole panels of content, use Tabs instead.",
+    "aliases": [
+      "ToggleGroup",
+      "Button toggle group"
+    ]
+  },
+  {
+    "id": "slider",
+    "title": "Slider",
+    "facets": {
+      "purpose": "forms",
+      "layer": "component",
+      "atomic": "atom"
+    },
+    "summary": "Chooses a value from a continuous range by dragging a thumb.",
+    "description": "Great for approximate values like volume. For precise numbers, pair it with a NumberInput. Arrow keys step, Page Up/Down jump, and aria-valuetext can add units."
+  },
+  {
+    "id": "range-slider",
+    "title": "RangeSlider",
+    "facets": {
+      "purpose": "forms",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "Selects a min–max range with two thumbs on one track.",
+    "description": "Typical for price filters. Each thumb is a separate slider with its own label, and thumbs must not cross each other."
+  },
+  {
+    "id": "number-input",
+    "title": "NumberInput",
+    "facets": {
+      "purpose": "forms",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "Enters a number, with steppers to increment and decrement.",
+    "description": "Handles min/max, step, locale formatting and arrow-key stepping. Don't use it for numbers that aren't quantities (phone, card, postcode) — those are text with inputmode=numeric.",
+    "aliases": [
+      "Stepper input",
+      "Spinbutton"
+    ]
+  },
+  {
+    "id": "password-input",
+    "title": "PasswordInput",
+    "facets": {
+      "purpose": "forms",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "A masked text field with a show/hide toggle.",
+    "description": "The reveal toggle reduces typos. Set autocomplete to current-password or new-password so password managers work, and never block paste."
+  },
+  {
+    "id": "search-field",
+    "title": "SearchField",
+    "facets": {
+      "purpose": "forms",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "An input dedicated to search queries, with icon and clear button.",
+    "description": "Uses type=search and sits inside a role=search landmark. Escape clears it. If it shows live suggestions, it becomes a Combobox.",
+    "aliases": [
+      "SearchInput",
+      "SearchBar"
+    ]
+  },
+  {
+    "id": "pin-input",
+    "title": "PinInput",
+    "facets": {
+      "purpose": "forms",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "A row of single-character boxes for codes like OTPs.",
+    "description": "Auto-advances between boxes and must support pasting the full code. Use autocomplete=one-time-code so phones can fill SMS codes automatically.",
+    "aliases": [
+      "OTP input",
+      "Verification code"
+    ]
+  },
+  {
+    "id": "tag-input",
+    "title": "TagInput",
+    "facets": {
+      "purpose": "forms",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "Enters multiple values that turn into removable chips.",
+    "description": "Type and press Enter or comma to add; Backspace removes the last chip. Used for emails, labels and keywords. Often combined with Combobox suggestions.",
+    "aliases": [
+      "ChipInput",
+      "Multi-value input"
+    ]
+  },
+  {
+    "id": "file-upload",
+    "title": "FileUpload",
+    "facets": {
+      "purpose": "forms",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "Selects files via a button or by dropping them on a zone.",
+    "description": "Drag-and-drop is an enhancement: always keep a real file input button. Show accepted types and size limits up front, then per-file progress and errors.",
+    "aliases": [
+      "Dropzone",
+      "FileInput"
+    ]
+  },
+  {
+    "id": "color-picker",
+    "title": "ColorPicker",
+    "facets": {
+      "purpose": "forms",
+      "layer": "component",
+      "atomic": "organism"
+    },
+    "summary": "Chooses a colour via swatches, a 2D area, sliders or hex input.",
+    "description": "Combines several molecules: saturation/brightness area, hue slider, alpha slider and text field. Always offer a typed input (hex) as an accessible fallback.",
+    "aliases": [
+      "ColorInput"
+    ]
+  },
+  {
+    "id": "calendar",
+    "title": "Calendar",
+    "facets": {
+      "purpose": "forms",
+      "layer": "component",
+      "atomic": "organism"
+    },
+    "summary": "Displays a month grid to pick a date or browse days.",
+    "description": "A grid with arrow-key navigation, month paging and disabled dates. Must respect locale: first day of week, month names and date format.",
+    "aliases": [
+      "DateGrid"
+    ]
+  },
+  {
+    "id": "date-picker",
+    "title": "DatePicker",
+    "facets": {
+      "purpose": "forms",
+      "layer": "component",
+      "atomic": "organism"
+    },
+    "summary": "A date input combined with a popup Calendar.",
+    "description": "Field + Popover + Calendar. Let users type the date too — clicking back 40 years to a birthday is painful. For known dates like birthdays, plain fields often work better.",
+    "aliases": [
+      "DateInput"
+    ]
+  },
+  {
+    "id": "date-range-picker",
+    "title": "DateRangePicker",
+    "facets": {
+      "purpose": "forms",
+      "layer": "component",
+      "atomic": "organism"
+    },
+    "summary": "Selects a start and end date, often over two calendars.",
+    "description": "Common in bookings and analytics. Show the range highlighted while hovering, and offer presets like 'Last 7 days' which cover most needs."
+  },
+  {
+    "id": "time-picker",
+    "title": "TimePicker",
+    "facets": {
+      "purpose": "forms",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "Enters a time of day, as segments or from a list of slots.",
+    "description": "Segmented fields (hh : mm AM/PM) suit free entry; a list suits fixed slots like appointments. Respect the user's 12/24-hour locale.",
+    "aliases": [
+      "TimeField"
+    ]
+  },
+  {
+    "id": "rating",
+    "title": "Rating",
+    "facets": {
+      "purpose": "forms",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "Captures or shows a score, usually as 1–5 stars.",
+    "description": "As input it's essentially a radio group with star visuals. As display it's read-only with a text equivalent like '4.5 out of 5'.",
+    "aliases": [
+      "StarRating"
+    ]
+  },
+  {
+    "id": "fieldset",
+    "title": "Fieldset",
+    "facets": {
+      "purpose": "forms",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "Groups related fields under a shared legend.",
+    "description": "The <legend> gives context to every field inside, e.g. 'Shipping address' before Street and City. Required for radio and checkbox groups.",
+    "aliases": [
+      "FormGroup",
+      "FormSection"
+    ]
+  },
+  {
+    "id": "form",
+    "title": "Form",
+    "facets": {
+      "purpose": "forms",
+      "layer": "pattern",
+      "atomic": "organism"
+    },
+    "summary": "Collects fields, validation and submission into one unit.",
+    "description": "Manages values, validation timing (on blur / on submit) and error summary. On failed submit, move focus to the first error or a summary that links to each field."
+  },
+  {
+    "id": "stepper",
+    "title": "Stepper / Wizard",
+    "facets": {
+      "purpose": "forms",
+      "layer": "pattern",
+      "atomic": "organism"
+    },
+    "summary": "Splits a long task into ordered steps with Back and Next.",
+    "description": "Reduces cognitive load in checkouts and onboarding. Shows progress via a Steps indicator and keeps data when going back. Use it only when steps are truly sequential.",
+    "aliases": [
+      "Wizard",
+      "Multi-step form"
+    ]
+  },
+  {
+    "id": "tabs",
+    "title": "Tabs",
+    "facets": {
+      "purpose": "navigation",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "Switches between panels of related content in the same place.",
+    "description": "A tablist of tabs, each controlling a tabpanel. Arrow keys move between tabs. Content is peer-level; if tabs change the URL as primary navigation, they're really a nav with links."
+  },
+  {
+    "id": "accordion",
+    "title": "Accordion",
+    "facets": {
+      "purpose": "navigation",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "Stacks sections whose content expands and collapses on demand.",
+    "description": "Each header is a button with aria-expanded. Great for FAQs and progressive disclosure on mobile; bad for content most users need, which then hides behind clicks.",
+    "aliases": [
+      "Collapsible",
+      "Disclosure",
+      "Expander"
+    ]
+  },
+  {
+    "id": "pagination",
+    "title": "Pagination",
+    "facets": {
+      "purpose": "navigation",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "Moves through content split into numbered pages.",
+    "description": "Wrapped in a nav landmark, with aria-current on the active page. Better than infinite scroll when users need to find their way back or reach the footer.",
+    "aliases": [
+      "Pager"
+    ]
+  },
+  {
+    "id": "breadcrumbs",
+    "title": "Breadcrumbs",
+    "facets": {
+      "purpose": "navigation",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "Shows where the current page sits in the site hierarchy.",
+    "description": "A trail of links like Home › Products › Shoes, in a nav labelled 'Breadcrumb'. The last item is the current page (aria-current=page) and isn't a link.",
+    "aliases": [
+      "Breadcrumb"
+    ]
+  },
+  {
+    "id": "nav-bar",
+    "title": "NavBar",
+    "facets": {
+      "purpose": "navigation",
+      "layer": "pattern",
+      "atomic": "organism"
+    },
+    "summary": "The site-wide top bar with logo, main links and account actions.",
+    "description": "Logo + navigation + search + user menu: a classic organism. Collapses into a hamburger Menu or Sheet on mobile. Wrap it in <header> with a <nav> inside.",
+    "aliases": [
+      "Header",
+      "TopBar",
+      "AppBar"
+    ]
+  },
+  {
+    "id": "side-nav",
+    "title": "SideNav",
+    "facets": {
+      "purpose": "navigation",
+      "layer": "pattern",
+      "atomic": "organism"
+    },
+    "summary": "Vertical navigation down the side of an app.",
+    "description": "Suits apps with many sections. Supports nested groups, icons and a collapsed rail mode. Mark the current link with aria-current=page.",
+    "aliases": [
+      "Sidebar",
+      "NavigationRail",
+      "Drawer nav"
+    ]
+  },
+  {
+    "id": "nav-link",
+    "title": "NavLink",
+    "facets": {
+      "purpose": "navigation",
+      "layer": "component",
+      "atomic": "atom"
+    },
+    "summary": "A link inside navigation that knows when it's the current page.",
+    "description": "A Link with an active state, set via aria-current=page so it's announced, not only coloured. The building block of NavBar, SideNav and Tabs-as-navigation.",
+    "aliases": [
+      "NavItem"
+    ]
+  },
+  {
+    "id": "steps",
+    "title": "Steps",
+    "facets": {
+      "purpose": "navigation",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "Shows progress through a sequence: done, current and upcoming steps.",
+    "description": "The visual indicator used by a Stepper/Wizard. Marks the current step with aria-current=step and lets users jump back to completed ones.",
+    "aliases": [
+      "ProgressSteps",
+      "Step indicator"
+    ]
+  },
+  {
+    "id": "tree-view",
+    "title": "TreeView",
+    "facets": {
+      "purpose": "navigation",
+      "layer": "component",
+      "atomic": "organism"
+    },
+    "summary": "Navigates nested hierarchies like folders by expanding nodes.",
+    "description": "role=tree with arrow keys: Right expands, Left collapses or goes to parent. Heavy keyboard model — only use it when the data really is deeply hierarchical.",
+    "aliases": [
+      "Tree",
+      "File tree"
+    ]
+  },
+  {
+    "id": "command-palette",
+    "title": "CommandPalette",
+    "facets": {
+      "purpose": "navigation",
+      "layer": "pattern",
+      "atomic": "organism"
+    },
+    "summary": "A ⌘K search box that jumps to any page or runs any command.",
+    "description": "Dialog + Combobox + grouped results. A power-user accelerator, so everything in it must also be reachable through normal UI.",
+    "aliases": [
+      "Command menu",
+      "Spotlight",
+      "Quick open"
+    ]
+  },
+  {
+    "id": "skip-link",
+    "title": "SkipLink",
+    "facets": {
+      "purpose": "navigation",
+      "layer": "component",
+      "atomic": "atom"
+    },
+    "summary": "A hidden-until-focused link to jump straight to main content.",
+    "description": "The first Tab stop on the page, so keyboard users don't tab through the whole header each time. Visually hidden until focused, then clearly visible.",
+    "aliases": [
+      "Skip to content"
+    ]
+  },
+  {
+    "id": "toc",
+    "title": "Table of contents",
+    "facets": {
+      "purpose": "navigation",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "Lists a page's sections and highlights the one in view.",
+    "description": "Anchor links generated from headings, usually sticky beside long docs. Scroll-spy highlighting is an enhancement; the links must work without it.",
+    "aliases": [
+      "TOC",
+      "Anchor nav",
+      "On this page"
+    ]
+  },
+  {
+    "id": "dialog",
+    "title": "Dialog",
+    "facets": {
+      "purpose": "overlays",
+      "layer": "component",
+      "atomic": "organism"
+    },
+    "summary": "A window over the page that demands attention before continuing.",
+    "description": "Modal dialogs trap focus, close on Escape and return focus to the trigger. The native <dialog> with showModal() handles much of this. Keep them for focused tasks, not content.",
+    "aliases": [
+      "Modal"
+    ]
+  },
+  {
+    "id": "dialog-system",
+    "title": "DialogSystem",
+    "facets": {
+      "purpose": "overlays",
+      "layer": "pattern",
+      "atomic": "organism"
+    },
+    "summary": "A central service to open and stack dialogs from anywhere in the app.",
+    "description": "Instead of each component rendering its own modal, a provider exposes an API like dialogs.open(...) and manages stacking, focus return and one-at-a-time rules.",
+    "aliases": [
+      "ModalManager",
+      "DialogProvider"
+    ]
+  },
+  {
+    "id": "alert-dialog",
+    "title": "AlertDialog",
+    "facets": {
+      "purpose": "overlays",
+      "layer": "component",
+      "atomic": "organism"
+    },
+    "summary": "A modal that asks the user to confirm an important action.",
+    "description": "role=alertdialog, not dismissible by clicking outside. Buttons say what they do ('Delete project', not 'OK'), and initial focus goes to the safest choice.",
+    "aliases": [
+      "Confirm dialog"
+    ]
+  },
+  {
+    "id": "sheet",
+    "title": "Sheet",
+    "facets": {
+      "purpose": "overlays",
+      "layer": "component",
+      "atomic": "organism"
+    },
+    "summary": "A panel that slides in from a screen edge over the content.",
+    "description": "Bottom sheets suit mobile actions; side sheets suit details and filters on desktop. Modal sheets behave like a Dialog; non-modal ones let you keep working.",
+    "aliases": [
+      "Drawer",
+      "Bottom sheet",
+      "Side panel",
+      "Offcanvas"
+    ]
+  },
+  {
+    "id": "popover",
+    "title": "Popover",
+    "facets": {
+      "purpose": "overlays",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "A floating, interactive panel anchored to a trigger.",
+    "description": "Holds rich content like forms or pickers and opens on click. Unlike a Tooltip it can be focused and interacted with. The native popover attribute now handles top-layer and light dismiss."
+  },
+  {
+    "id": "menu",
+    "title": "Menu",
+    "facets": {
+      "purpose": "overlays",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "A popup list of actions or commands.",
+    "description": "role=menu with menuitems navigated by arrow keys; selecting one runs an action. If the items are values to choose for a form, it's a Listbox/Select instead.",
+    "aliases": [
+      "ActionMenu"
+    ]
+  },
+  {
+    "id": "dropdown-menu",
+    "title": "DropdownMenu",
+    "facets": {
+      "purpose": "overlays",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "A button that opens a Menu, like '⋯ More actions'.",
+    "description": "Trigger + Menu. Supports sub-menus, groups, checkable items and shortcuts. Keep destructive items separated at the bottom.",
+    "aliases": [
+      "MenuButton",
+      "Overflow menu",
+      "Kebab menu"
+    ]
+  },
+  {
+    "id": "context-menu",
+    "title": "ContextMenu",
+    "facets": {
+      "purpose": "overlays",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "A Menu opened by right-click or long-press at the pointer.",
+    "description": "Speeds up power users in file managers and editors. It's hidden by nature, so every action must also be available somewhere visible. Shift+F10 opens it from the keyboard.",
+    "aliases": [
+      "Right-click menu"
+    ]
+  },
+  {
+    "id": "tooltip",
+    "title": "Tooltip",
+    "facets": {
+      "purpose": "overlays",
+      "layer": "component",
+      "atomic": "atom"
+    },
+    "summary": "A short text label that appears on hover or focus.",
+    "description": "Plain text only, never interactive or essential. Shows on keyboard focus too, dismisses with Escape. Doesn't work on touch, so don't hide key info in it."
+  },
+  {
+    "id": "hover-card",
+    "title": "HoverCard",
+    "facets": {
+      "purpose": "overlays",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "A rich preview that appears when hovering a link, like a profile.",
+    "description": "Sits between Tooltip (text only) and Popover (click to open). It's a progressive enhancement for sighted mouse users; the link must make sense without it.",
+    "aliases": [
+      "Preview card"
+    ]
+  },
+  {
+    "id": "lightbox",
+    "title": "Lightbox",
+    "facets": {
+      "purpose": "overlays",
+      "layer": "component",
+      "atomic": "organism"
+    },
+    "summary": "Shows an image or gallery full-screen over a dimmed page.",
+    "description": "A specialised Dialog with next/previous, zoom and swipe. Close with Escape, keep alt text and captions, and return focus to the thumbnail.",
+    "aliases": [
+      "Image viewer",
+      "Gallery modal"
+    ]
+  },
+  {
+    "id": "alert",
+    "title": "Alert",
+    "facets": {
+      "purpose": "feedback",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "An inline message about status: info, success, warning or error.",
+    "description": "Icon + title + text, coloured by severity (never colour alone). Persistent and in context. Only use role=alert for urgent messages added dynamically — it interrupts screen readers.",
+    "aliases": [
+      "InlineMessage",
+      "Notice"
+    ]
+  },
+  {
+    "id": "banner",
+    "title": "Banner",
+    "facets": {
+      "purpose": "feedback",
+      "layer": "component",
+      "atomic": "organism"
+    },
+    "summary": "A full-width message at the top of the app or page.",
+    "description": "For system-level news: maintenance, trial ending, offline. Persists until resolved or dismissed. Don't stack several — prioritise one.",
+    "aliases": [
+      "Announcement bar",
+      "System message"
+    ]
+  },
+  {
+    "id": "badge",
+    "title": "Badge",
+    "facets": {
+      "purpose": "feedback",
+      "layer": "component",
+      "atomic": "atom"
+    },
+    "summary": "A small count or status marker attached to another element.",
+    "description": "Like '3' on an inbox icon or 'New' on a menu item. The info must reach screen readers too, e.g. 'Inbox, 3 unread' in the parent label.",
+    "aliases": [
+      "Counter",
+      "Indicator"
+    ]
+  },
+  {
+    "id": "progress",
+    "title": "Progress",
+    "facets": {
+      "purpose": "feedback",
+      "layer": "component",
+      "atomic": "atom"
+    },
+    "summary": "Shows how far along a task is, as a bar or ring.",
+    "description": "Determinate when you know the percentage (uploads), indeterminate when you don't. Uses role=progressbar with aria-valuenow, and a label saying what is progressing.",
+    "aliases": [
+      "ProgressBar",
+      "Meter"
+    ]
+  },
+  {
+    "id": "spinner",
+    "title": "Spinner",
+    "facets": {
+      "purpose": "feedback",
+      "layer": "component",
+      "atomic": "atom"
+    },
+    "summary": "An animated indicator that something is loading.",
+    "description": "For short, unknown waits. Delay it ~300ms to avoid flicker, give it an accessible label, and prefer a Skeleton when you know the shape of the incoming content.",
+    "aliases": [
+      "Loader",
+      "ActivityIndicator"
+    ]
+  },
+  {
+    "id": "skeleton",
+    "title": "Skeleton",
+    "facets": {
+      "purpose": "feedback",
+      "layer": "component",
+      "atomic": "atom"
+    },
+    "summary": "Grey placeholder shapes that mimic content while it loads.",
+    "description": "Feels faster than a spinner and prevents layout shift because the real content lands in the same shape. Hide it from screen readers and set aria-busy on the region.",
+    "aliases": [
+      "Placeholder",
+      "Shimmer"
+    ]
+  },
+  {
+    "id": "toast",
+    "title": "Toast",
+    "facets": {
+      "purpose": "feedback",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "A brief notification that pops in and disappears by itself.",
+    "description": "For low-priority confirmations like 'Message sent', often with Undo. Announced via a live region without stealing focus. Never put the only path to a critical action in one.",
+    "aliases": [
+      "Snackbar",
+      "Notification"
+    ]
+  },
+  {
+    "id": "toast-provider",
+    "title": "ToastProvider",
+    "facets": {
+      "purpose": "feedback",
+      "layer": "pattern",
+      "atomic": "organism"
+    },
+    "summary": "App-level service that queues, positions and announces toasts.",
+    "description": "Mounted once near the root, exposing toast(...) to the whole app. Handles stacking, timeouts (paused on hover/focus) and the shared live region.",
+    "aliases": [
+      "Toaster",
+      "NotificationCenter"
+    ]
+  },
+  {
+    "id": "empty-state",
+    "title": "EmptyState",
+    "facets": {
+      "purpose": "feedback",
+      "layer": "pattern",
+      "atomic": "organism"
+    },
+    "summary": "What a view shows when there's no data yet, or no results.",
+    "description": "Illustration + explanation + next action ('Create your first project'). Distinguish first use, no search results and errors — each needs different wording.",
+    "aliases": [
+      "Blank slate",
+      "Zero state"
+    ]
+  },
+  {
+    "id": "callout",
+    "title": "Callout",
+    "facets": {
+      "purpose": "feedback",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "A highlighted box that draws attention to a tip or note in content.",
+    "description": "Editorial cousin of Alert, used inside docs and articles: Note, Tip, Warning. It's static content, so no live region needed.",
+    "aliases": [
+      "Admonition",
+      "Note"
+    ]
+  },
+  {
+    "id": "status-dot",
+    "title": "StatusDot",
+    "facets": {
+      "purpose": "feedback",
+      "layer": "component",
+      "atomic": "atom"
+    },
+    "summary": "A small coloured dot that signals state, like online or failed.",
+    "description": "Compact status for presence, builds or services. Colour alone fails colour-blind users, so pair it with text or a distinct shape.",
+    "aliases": [
+      "StatusIndicator",
+      "Presence"
+    ]
+  },
+  {
+    "id": "validation-message",
+    "title": "Validation message",
+    "facets": {
+      "purpose": "feedback",
+      "layer": "component",
+      "atomic": "atom"
+    },
+    "summary": "Text below a field explaining what's wrong and how to fix it.",
+    "description": "Say how to fix it ('Use at least 8 characters'), not just 'Invalid'. Linked to the field with aria-describedby, and shown with an icon, not just red text.",
+    "aliases": [
+      "FieldError",
+      "Error text",
+      "HelperText"
+    ]
+  },
+  {
+    "id": "table",
+    "title": "Table",
+    "facets": {
+      "purpose": "data",
+      "layer": "component",
+      "atomic": "organism"
+    },
+    "summary": "Displays data in rows and columns for scanning and comparing.",
+    "description": "Use a real <table> with <th> headers and a caption. Right-align numbers, keep a sticky header for long tables, and let it scroll horizontally on small screens."
+  },
+  {
+    "id": "data-grid",
+    "title": "DataGrid",
+    "facets": {
+      "purpose": "data",
+      "layer": "component",
+      "atomic": "organism"
+    },
+    "summary": "An interactive table: sort, filter, select, edit, virtualise.",
+    "description": "Table on steroids for large datasets. Uses role=grid where arrow keys move between cells. Only reach for it when users really manipulate data — a plain Table is far simpler.",
+    "aliases": [
+      "DataTable",
+      "Spreadsheet"
+    ]
+  },
+  {
+    "id": "heatmap",
+    "title": "Heatmap",
+    "facets": {
+      "purpose": "data",
+      "layer": "component",
+      "atomic": "organism"
+    },
+    "summary": "Encodes values as colour intensity across a grid.",
+    "description": "Like a GitHub contribution graph. Needs a legend, a colour-blind-safe sequential palette and tooltips or a table alternative for exact values.",
+    "aliases": [
+      "Contribution graph"
+    ]
+  },
+  {
+    "id": "list-item",
+    "title": "ListItem",
+    "facets": {
+      "purpose": "data",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "A row in a list with leading media, text lines and trailing actions.",
+    "description": "Avatar or icon + primary/secondary text + meta or action. The workhorse of settings screens, inboxes and contacts.",
+    "aliases": [
+      "Cell",
+      "Row",
+      "List tile"
+    ]
+  },
+  {
+    "id": "description-list",
+    "title": "DescriptionList",
+    "facets": {
+      "purpose": "data",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "Shows label–value pairs, like the details of an order.",
+    "description": "Semantic <dl> with <dt>/<dd> pairs. Lays out as two columns on wide screens, stacked on narrow ones. Better than a table when there's only one record.",
+    "aliases": [
+      "Key-value list",
+      "Properties",
+      "DataList"
+    ]
+  },
+  {
+    "id": "stat",
+    "title": "Stat",
+    "facets": {
+      "purpose": "data",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "Highlights one key number with its label and trend.",
+    "description": "Label + big value + change ('▲ 12% vs last week'). Dashboards place several in a row. Make the trend direction readable in text, not just a green/red arrow.",
+    "aliases": [
+      "KPI",
+      "Metric",
+      "StatCard"
+    ]
+  },
+  {
+    "id": "timeline",
+    "title": "Timeline",
+    "facets": {
+      "purpose": "data",
+      "layer": "component",
+      "atomic": "organism"
+    },
+    "summary": "Lists events in chronological order along a line.",
+    "description": "Order history, activity feeds, changelogs. Semantically an ordered list with <time> elements. Mark the current or latest event clearly.",
+    "aliases": [
+      "ActivityFeed"
+    ]
+  },
+  {
+    "id": "tag",
+    "title": "Tag",
+    "facets": {
+      "purpose": "data",
+      "layer": "component",
+      "atomic": "atom"
+    },
+    "summary": "A static label that categorises or describes an item.",
+    "description": "Read-only metadata like 'Draft' or 'Design'. If clicking it filters or removes something, it's a Chip. Keep tag colours meaningful and consistent.",
+    "aliases": [
+      "Label",
+      "Lozenge",
+      "Pill"
+    ]
+  },
+  {
+    "id": "avatar",
+    "title": "Avatar",
+    "facets": {
+      "purpose": "data",
+      "layer": "component",
+      "atomic": "atom"
+    },
+    "summary": "Represents a person or entity with an image or initials.",
+    "description": "Falls back from photo to initials to a generic icon. Decorative next to a name (alt=\"\"), meaningful when shown alone. Often carries a StatusDot."
+  },
+  {
+    "id": "avatar-group",
+    "title": "AvatarGroup",
+    "facets": {
+      "purpose": "data",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "Overlapping avatars showing who's involved, with a +N overflow.",
+    "description": "Shows collaborators or attendees compactly. The '+5' should reveal the full list (Popover or Tooltip) and the group needs a label like '8 members'.",
+    "aliases": [
+      "Facepile",
+      "AvatarStack"
+    ]
+  },
+  {
+    "id": "tree",
+    "title": "Tree",
+    "facets": {
+      "purpose": "data",
+      "layer": "component",
+      "atomic": "organism"
+    },
+    "summary": "Displays hierarchical data with indentation and connectors.",
+    "description": "Static display of nested data like an org chart or JSON viewer. When nodes are expandable and navigable it becomes a TreeView.",
+    "aliases": [
+      "Hierarchy",
+      "Nested list"
+    ]
+  },
+  {
+    "id": "chart",
+    "title": "Chart",
+    "facets": {
+      "purpose": "data",
+      "layer": "component",
+      "atomic": "organism"
+    },
+    "summary": "Visualises data as bars, lines, areas or pies.",
+    "description": "Pick the form by question: bars compare, lines show trends. Use a token-based palette, label axes, and provide a data table or summary for screen readers.",
+    "aliases": [
+      "Graph",
+      "DataViz"
+    ]
+  },
+  {
+    "id": "carousel",
+    "title": "Carousel",
+    "facets": {
+      "purpose": "data",
+      "layer": "component",
+      "atomic": "organism"
+    },
+    "summary": "Shows one slide of a set at a time, with controls to move between.",
+    "description": "Most users never see past slide one, so don't hide key content in it. Never auto-advance without a pause button; support swipe and keyboard.",
+    "aliases": [
+      "Slider",
+      "Slideshow"
+    ]
+  },
+  {
+    "id": "image",
+    "title": "Image",
+    "facets": {
+      "purpose": "content",
+      "layer": "component",
+      "atomic": "atom"
+    },
+    "summary": "Displays a picture responsively, with loading and fallback states.",
+    "description": "Wraps <img> with srcset, lazy loading, aspect ratio and a fallback. Every image needs alt: describe informative images, use alt=\"\" for decorative ones."
+  },
+  {
+    "id": "figure",
+    "title": "Figure",
+    "facets": {
+      "purpose": "content",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "An image, chart or snippet with an associated caption.",
+    "description": "Semantic <figure> + <figcaption>. The caption complements, not replaces, the alt text — and is visible to everyone."
+  },
+  {
+    "id": "video-player",
+    "title": "VideoPlayer",
+    "facets": {
+      "purpose": "content",
+      "layer": "component",
+      "atomic": "organism"
+    },
+    "summary": "Plays video with controls for play, seek, volume and captions.",
+    "description": "Captions and transcripts are required for accessibility. Never autoplay with sound; all controls must work by keyboard.",
+    "aliases": [
+      "MediaPlayer"
+    ]
+  },
+  {
+    "id": "icon",
+    "title": "Icon",
+    "facets": {
+      "purpose": "content",
+      "layer": "primitive",
+      "atomic": "atom"
+    },
+    "summary": "A small symbol from the system's icon set.",
+    "description": "Sized and coloured by tokens, inheriting currentColor. Decorative by default (aria-hidden); if it conveys meaning alone, it needs a label."
+  },
+  {
+    "id": "logo",
+    "title": "Logo",
+    "facets": {
+      "purpose": "content",
+      "layer": "component",
+      "atomic": "atom"
+    },
+    "summary": "Renders the brand mark in its approved variants.",
+    "description": "Encodes brand rules (clear space, min size, light/dark versions) in one place. Usually links home, with alt text naming the company, not 'logo'.",
+    "aliases": [
+      "Brand",
+      "Wordmark"
+    ]
+  },
+  {
+    "id": "visually-hidden",
+    "title": "VisuallyHidden",
+    "facets": {
+      "purpose": "utilities",
+      "layer": "primitive",
+      "atomic": "atom"
+    },
+    "summary": "Hides content visually but keeps it for screen readers.",
+    "description": "Adds context sighted users get from layout, like 'Delete invoice #42' behind a trash icon. Different from display:none, which hides from everyone.",
+    "aliases": [
+      "sr-only",
+      "ScreenReaderOnly"
+    ]
+  },
+  {
+    "id": "portal",
+    "title": "Portal",
+    "facets": {
+      "purpose": "utilities",
+      "layer": "primitive",
+      "atomic": "atom"
+    },
+    "summary": "Renders children into another DOM node, usually the body.",
+    "description": "Escapes parent overflow and z-index for overlays like Dialog, Popover and Toast. The native popover/dialog top layer is making it less necessary."
+  },
+  {
+    "id": "focus-trap",
+    "title": "FocusTrap",
+    "facets": {
+      "purpose": "utilities",
+      "layer": "primitive",
+      "atomic": "atom"
+    },
+    "summary": "Keeps keyboard focus cycling inside a region while it's open.",
+    "description": "Used by modal Dialogs and Sheets so Tab can't wander to the page behind. Paired with returning focus to the trigger when closed.",
+    "aliases": [
+      "FocusScope",
+      "FocusLock"
+    ]
+  },
+  {
+    "id": "theme-provider",
+    "title": "ThemeProvider",
+    "facets": {
+      "purpose": "utilities",
+      "layer": "primitive",
+      "atomic": "template"
+    },
+    "summary": "Supplies design tokens and theme (light, dark, brand) to the tree.",
+    "description": "Sits at the root and sets CSS variables or context so every component reads the right tokens. Respects prefers-color-scheme and avoids a flash of the wrong theme.",
+    "aliases": [
+      "Design tokens provider",
+      "ColorModeProvider"
+    ]
+  },
+  {
+    "id": "show",
+    "title": "Show / Hide",
+    "facets": {
+      "purpose": "utilities",
+      "layer": "primitive",
+      "atomic": "atom"
+    },
+    "summary": "Conditionally renders children by breakpoint or condition.",
+    "description": "Declarative responsive helpers like <Show above=\"md\">. Prefer CSS-only hiding when possible to avoid layout shift on hydration.",
+    "aliases": [
+      "Responsive",
+      "Hidden",
+      "ClientOnly"
+    ]
+  },
+  {
+    "id": "transition",
+    "title": "Transition",
+    "facets": {
+      "purpose": "utilities",
+      "layer": "primitive",
+      "atomic": "atom"
+    },
+    "summary": "Animates elements as they enter, leave or change.",
+    "description": "Wraps motion tokens (duration, easing) for consistent animation. Must respect prefers-reduced-motion by shortening or removing movement.",
+    "aliases": [
+      "Presence",
+      "Motion",
+      "Collapse/Fade"
+    ]
+  }
+]

@@ -1,11 +1,12 @@
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence, type PanInfo } from "framer-motion";
-import type { Flashcard } from "../types";
+import type { Deck, Flashcard } from "../types";
 import FlashCard from "./FlashCard";
 import { useKeyboardNav } from "../hooks/useKeyboardNav";
 import "./CardStack.css";
 
 interface CardStackProps {
+  deck: Deck;
   cards: Flashcard[];
 }
 
@@ -45,17 +46,17 @@ function shuffleArray<T>(array: T[]): T[] {
   return shuffled;
 }
 
-export default function CardStack({ cards }: CardStackProps) {
-  const [deck, setDeck] = useState(cards);
+export default function CardStack({ deck, cards }: CardStackProps) {
+  const [stack, setStack] = useState(cards);
   const [[currentIndex, direction], setPage] = useState([0, 0]);
-  const [revealedIds, setRevealedIds] = useState<Set<number>>(new Set());
+  const [revealedIds, setRevealedIds] = useState<Set<string>>(new Set());
 
   const goNext = useCallback(() => {
     setPage(([prev]) => {
-      if (prev >= deck.length - 1) return [prev, 0];
+      if (prev >= stack.length - 1) return [prev, 0];
       return [prev + 1, 1];
     });
-  }, [deck.length]);
+  }, [stack.length]);
 
   const goPrev = useCallback(() => {
     setPage(([prev]) => {
@@ -65,7 +66,7 @@ export default function CardStack({ cards }: CardStackProps) {
   }, []);
 
   const revealCard = useCallback(() => {
-    const cardId = deck[currentIndex]?.id;
+    const cardId = stack[currentIndex]?.id;
     if (cardId == null) return;
     setRevealedIds((prev) => {
       if (prev.has(cardId)) return prev;
@@ -73,10 +74,10 @@ export default function CardStack({ cards }: CardStackProps) {
       next.add(cardId);
       return next;
     });
-  }, [deck, currentIndex]);
+  }, [stack, currentIndex]);
 
   const handleShuffle = () => {
-    setDeck(shuffleArray(cards));
+    setStack(shuffleArray(cards));
     setPage([0, 0]);
     setRevealedIds(new Set());
   };
@@ -91,24 +92,24 @@ export default function CardStack({ cards }: CardStackProps) {
     }
   };
 
-  if (deck.length === 0) {
-    return <div className="card-stack-empty">No flashcards found.</div>;
+  if (stack.length === 0) {
+    return <div className="card-stack-empty">No cards match these filters.</div>;
   }
 
   return (
     <div className="card-stack">
       <div className="card-stack-container">
         {/* Background stacked cards for depth effect */}
-        {currentIndex < deck.length - 1 && (
+        {currentIndex < stack.length - 1 && (
           <div className="stack-card stack-card-2" />
         )}
-        {currentIndex < deck.length - 2 && (
+        {currentIndex < stack.length - 2 && (
           <div className="stack-card stack-card-3" />
         )}
 
         <AnimatePresence mode="popLayout" custom={direction}>
           <motion.div
-            key={deck[currentIndex].id}
+            key={stack[currentIndex].id}
             className="card-wrapper"
             custom={direction}
             variants={cardVariants}
@@ -122,8 +123,9 @@ export default function CardStack({ cards }: CardStackProps) {
             onDragEnd={handleDragEnd}
           >
             <FlashCard
-              card={deck[currentIndex]}
-              revealed={revealedIds.has(deck[currentIndex].id)}
+              deck={deck}
+              card={stack[currentIndex]}
+              revealed={revealedIds.has(stack[currentIndex].id)}
               onReveal={revealCard}
             />
           </motion.div>
@@ -140,12 +142,12 @@ export default function CardStack({ cards }: CardStackProps) {
           ←
         </button>
         <span className="card-counter">
-          {currentIndex + 1} / {deck.length}
+          {currentIndex + 1} / {stack.length}
         </span>
         <button
           className="nav-button"
           onClick={goNext}
-          disabled={currentIndex === deck.length - 1}
+          disabled={currentIndex === stack.length - 1}
           aria-label="Next card"
         >
           →
