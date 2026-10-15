@@ -17,6 +17,11 @@ item, and add a dated line at the top of **Done**.
 - [ ] **Retake the README demo screenshot.** `docs/static/demo.png` still shows the old
       generic deck.
 
+- [ ] **Set GitHub Pages up for the tag deploy** (needs the owner): Settings → Pages →
+      Source "GitHub Actions", custom domain `flashcards.pearpages.com`, Enforce HTTPS; allow
+      `v*` tags in the `github-pages` environment's deployment rules.
+- [ ] **Review Proposed ADR 0006** (GitHub Pages on `v*` tags).
+
 ### Scaffold follow-ups
 
 - [ ] **Enable GitHub private vulnerability reporting** — security.md points reporters
@@ -26,6 +31,7 @@ item, and add a dated line at the top of **Done**.
 
 ## Done
 
+- [x] 2026-10-15: GitHub Actions deploy to GitHub Pages (flashcards.pearpages.com) on `v*` tags; removed the GitLab Pages job.
 - [x] 2026-10-15: Deck picker home screen (preview tiles), back arrow, deck in the URL (`#/<deck>/…`), fresh start on each visit; legacy links still work.
 - [x] 2026-10-15: Escaped card ids in BrowseView selectors — a crafted link no longer blanks the page.
 - [x] 2026-10-15: Scaffolded project knowledge files — 14 created (incl. 5 ADRs), 4 fixed, 2 follow-ups.

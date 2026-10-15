@@ -33,17 +33,21 @@ its own. Everything it shows is bundled at build time from `src/decks/`.
 
 - None. The app and its build use no API keys or tokens.
 - `.env*` files are gitignored; an example file (`.env.example`) would list names only.
-- GitLab Pages deploys with the CI job's built-in permissions; no stored secrets.
+- GitHub Pages deploys with the workflow's `GITHUB_TOKEN` (`contents: read`, `pages: write`,
+  `id-token: write`) only. No stored secrets.
+- Anyone who can push a `v*` tag can publish the site; only the repository owner can push.
 
 ## Dependencies
 
 - Runtime: `react`, `react-dom`, `framer-motion`. Everything else is build-time tooling.
-- `pnpm-lock.yaml` is the committed lockfile; CI installs with pnpm.
+- `pnpm-lock.yaml` is the committed lockfile; the GitHub workflow installs with
+  `--frozen-lockfile`.
+- The deploy workflow uses GitHub's own actions plus `pnpm/action-setup`, pinned to major
+  versions (not commit SHAs).
 - No automated update or audit yet; run `pnpm audit` before releases and when adding a
   dependency.
 
 ## Known risks
 
-- **CI uses floating versions.** `.gitlab-ci.yml` uses `node:22-alpine` and
-  `pnpm@latest`, so a deploy can pick up a new pnpm or base image unannounced. Accepted for
-  now because deploys are manual and the output is static.
+- **Actions pinned to major tags.** A compromised action release could alter the published
+  site. Accepted for now; pin to commit SHAs if the site gains users.

@@ -16,6 +16,7 @@ accepted.
 | [0003](docs/adr/0003-local-svg-drawings-with-platform-variants.md) | Local SVG drawings, with mobile and iOS/Android variants | Proposed | 2026-10-15 |
 | [0004](docs/adr/0004-hash-routing-without-a-router.md) | Hash routing without a router library | Proposed | 2026-10-15 |
 | [0005](docs/adr/0005-purpose-layer-and-atomic-facets.md) | Purpose and layer filter the deck; atomic level is a badge | Proposed | 2026-10-15 |
+| [0006](docs/adr/0006-deploy-to-github-pages-on-version-tags.md) | Deploy to GitHub Pages on `v*` tags at flashcards.pearpages.com | Proposed | 2026-10-15 |
 
 ## Format
 

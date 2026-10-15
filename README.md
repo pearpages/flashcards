@@ -98,10 +98,9 @@ In the design-system deck, `layer` means `primitive` (unopinionated building blo
 
 ## Deployment
 
-The app is automatically built and published to **GitLab Pages** on every push to `main`.
-
-Live at: https://pere.pages.pages.tech.lastmile.com/flashcards/
-Redirects to: https://flashcards-f0496a.pages.tech.lastmile.com/
+Pushing a version tag (`v*`, e.g. `git tag v1.0.0 && git push origin v1.0.0`) builds the app
+with GitHub Actions and publishes it to **GitHub Pages** at https://flashcards.pearpages.com.
+The workflow can also be run by hand from the Actions tab.
 
 ## Getting Started
 

@@ -81,8 +81,10 @@ No state is persisted: reload starts from the URL hash with no filters.
 - **Checks:** `pnpm validate` → `pnpm build` (runs validate, `tsc -b`, `vite build`) and
   `pnpm lint`. No automated tests yet; UI changes are checked in the browser at 375px and
   desktop widths.
-- **Deploy:** `.gitlab-ci.yml` has a manual `pages` job on `main` (Node 22 image,
-  `pnpm install`, `pnpm build`, `dist/` → `public/`) that publishes to GitLab Pages. The
-  source is also pushed to a public GitHub repository.
+- **Deploy:** pushing a `v*` tag runs `.github/workflows/deploy.yml` (Node from `.nvmrc`,
+  pnpm 10, `pnpm install --frozen-lockfile`, `pnpm lint`, `pnpm build`), which uploads
+  `dist/` and publishes it to GitHub Pages at `flashcards.pearpages.com`; it can also be
+  run by hand. `public/CNAME` carries the domain into `dist/`, and DNS points the name at
+  `pearpages.github.io`.
 - **Bundle:** small SVGs are inlined as data URIs, so the JS bundle is ~750 kB (~175 kB
   gzipped) and Vite warns about chunk size.
