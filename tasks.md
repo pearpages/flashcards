@@ -29,6 +29,7 @@ item, and add a dated line at the top of **Done**.
 
 ## Done
 
+- [x] 2026-10-15: Released v0.2.1.
 - [x] 2026-10-15: "Made by pearpages" footer (`@pearpages/credit`) on every screen.
 - [x] 2026-10-15: Released v0.2.0.
 - [x] 2026-10-15: Maturity assessment — verdict Ready after blockers, 1 gap added to Open.
