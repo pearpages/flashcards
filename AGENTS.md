@@ -44,6 +44,8 @@ it to GitHub Pages at flashcards.pearpages.com.
 - `pnpm build`: validate decks, type-check (`tsc -b`) and build to `dist/`.
 - `pnpm lint`: ESLint over the repo.
 - `pnpm preview`: serve the production build locally.
+- `/release patch|minor|major` (skill in `.claude/skills/release/`): bump the version, tag
+  `v*`, push and create the GitHub release; the tag deploys the site. Only from `main`.
 
 There is no test suite yet; `pnpm validate`, `pnpm build` and `pnpm lint` are the checks.
 

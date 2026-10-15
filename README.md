@@ -98,9 +98,13 @@ In the design-system deck, `layer` means `primitive` (unopinionated building blo
 
 ## Deployment
 
-Pushing a version tag (`v*`, e.g. `git tag v1.0.0 && git push origin v1.0.0`) builds the app
+Pushing a version tag (`v*`) builds the app
 with GitHub Actions and publishes it to **GitHub Pages** at https://flashcards.pearpages.com.
 The workflow can also be run by hand from the Actions tab.
+
+To release from `main`: `npm version patch|minor|major -m "release %s"` (bumps
+`package.json`, commits and tags `v<version>`), push `main`, push the tag, then create the
+GitHub release. In Claude Code, `/release <bump>` runs these steps.
 
 ## Getting Started
 

@@ -84,7 +84,8 @@ No state is persisted: reload starts from the URL hash with no filters.
 - **Deploy:** pushing a `v*` tag runs `.github/workflows/deploy.yml` (Node from `.nvmrc`,
   pnpm 10, `pnpm install --frozen-lockfile`, `pnpm lint`, `pnpm build`), which uploads
   `dist/` and publishes it to GitHub Pages at `flashcards.pearpages.com`; it can also be
-  run by hand. `public/CNAME` carries the domain into `dist/`, and DNS points the name at
+  run by hand. The tag always equals the `package.json` version (`npm version`); the
+  `release` skill in `.claude/skills/` runs the whole release. `public/CNAME` carries the domain into `dist/`, and DNS points the name at
   `pearpages.github.io`.
 - **Bundle:** small SVGs are inlined as data URIs, so the JS bundle is ~750 kB (~175 kB
   gzipped) and Vite warns about chunk size.
