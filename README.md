@@ -20,7 +20,7 @@ A mobile-first flashcard deck for learning design system components: 119 compone
 
 - **Component deck** — name, purpose, layer, atomic level, wireframe illustration and one-line purpose on the front
 - **Tap to reveal** — tap/click (or arrow up/down) to show when to use it, nearest alternatives and accessibility notes
-- **Filters** — narrow the deck by purpose, layer and/or atomic design level, in any combination (each deck declares its own filters)
+- **Filters** — narrow the deck by purpose and/or layer (each deck declares its own filters); the atomic design level is shown as a badge
 - **Desktop + mobile** — components that change shape on small screens show both versions side by side
 - **Multiple decks** — add a folder under `src/decks/` and it shows up in the deck picker
 - **Swipe navigation** — swipe left/right to navigate between cards
@@ -83,6 +83,8 @@ Create `src/decks/<deck-id>/` with a `deck.json` (its `id` must match the folder
   "facets": [{ "key": "module", "label": "Module", "values": ["box model", "flexbox", "grid"] }]
 }
 ```
+
+Add `"filter": false` to a facet to show it as a badge on each card without a filter row (the design-system deck does this for `atomic`).
 
 In the design-system deck, `layer` means `primitive` (unopinionated building block), `component` or `pattern` (a composition that solves a recurring problem).
 

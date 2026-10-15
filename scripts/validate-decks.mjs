@@ -47,6 +47,9 @@ for (const folder of deckFolders) {
     if (!isNonEmptyString(facet.key) || !isNonEmptyString(facet.label) || !Array.isArray(facet.values) || facet.values.length === 0) {
       errors.push(`${where("deck.json")}: each facet needs key, label and a non-empty values array`);
     }
+    if (facet.filter !== undefined && typeof facet.filter !== "boolean") {
+      errors.push(`${where("deck.json")}: facet "${facet.key}" filter must be true or false`);
+    }
   }
 
   if (!Array.isArray(cards)) {

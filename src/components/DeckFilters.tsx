@@ -45,15 +45,17 @@ function ChipRow({ label, options, value, onChange }: ChipRowProps) {
 export default function DeckFilters({ facets, filters, count, onChange }: DeckFiltersProps) {
   return (
     <div className="deck-filters">
-      {facets.map((facet) => (
-        <ChipRow
-          key={facet.key}
-          label={facet.label}
-          options={facet.values}
-          value={filters[facet.key] ?? null}
-          onChange={(value) => onChange({ ...filters, [facet.key]: value })}
-        />
-      ))}
+      {facets
+        .filter((facet) => facet.filter !== false)
+        .map((facet) => (
+          <ChipRow
+            key={facet.key}
+            label={facet.label}
+            options={facet.values}
+            value={filters[facet.key] ?? null}
+            onChange={(value) => onChange({ ...filters, [facet.key]: value })}
+          />
+        ))}
       <p className="deck-filters__count" aria-live="polite">
         {count} {count === 1 ? "card" : "cards"}
       </p>

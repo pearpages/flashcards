@@ -2,6 +2,8 @@ export interface Facet {
   key: string;
   label: string;
   values: string[];
+  /** Set to false to show the facet as a card badge without a filter row. */
+  filter?: boolean;
 }
 
 export interface Flashcard {
