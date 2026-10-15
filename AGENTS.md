@@ -47,7 +47,11 @@ it to GitHub Pages at flashcards.pearpages.com.
 - `/release patch|minor|major` (skill in `.claude/skills/release/`): bump the version, tag
   `v*`, push and create the GitHub release; the tag deploys the site. Only from `main`.
 
-There is no test suite yet; `pnpm validate`, `pnpm build` and `pnpm lint` are the checks.
+- `pnpm test --run`: Vitest once (plain `pnpm test` starts watch mode). Tests sit next to
+  the code as `*.test.ts`.
+
+The checks are `pnpm validate`, `pnpm lint`, `pnpm test --run` and `pnpm build`; CI runs
+them on every push to `main` and every pull request.
 
 ## Pitfalls that have bitten before
 

@@ -14,23 +14,25 @@ item, and add a dated line at the top of **Done**.
       written from memory — check against current docs in `cards.json`.
 - [ ] **Bundle size.** Inlined SVGs push the JS to ~750 kB (~175 kB gzipped) — consider
       `build.assetsInlineLimit` or lazy-loading images.
-- [ ] **Retake the README demo screenshot.** `docs/static/demo.png` still shows the old
-      generic deck.
+- [ ] **Review Proposed ADRs 0006–0007** (GitHub Pages on `v*` tags; Vitest and CI).
 
-- [ ] **Set GitHub Pages up for the tag deploy** (needs the owner): Settings → Pages →
-      Source "GitHub Actions", custom domain `flashcards.pearpages.com`, Enforce HTTPS; allow
-      `v*` tags in the `github-pages` environment's deployment rules.
-- [ ] **Review Proposed ADR 0006** (GitHub Pages on `v*` tags).
+### Advertising readiness
+
+- [ ] **A8 Open Graph live.** The tags and `og.webp` exist in the repo but the live site has
+      none yet (og.webp 404), so shared links show no preview — commit, then `/release minor`
+      to deploy, and check a LinkedIn preview (WebP card; switch to PNG if it comes up blank).
 
 ### Scaffold follow-ups
 
-- [ ] **Enable GitHub private vulnerability reporting** — security.md points reporters
-      there — repository Settings → Security.
 - [ ] **Review Proposed ADRs 0002–0005** — reconstructed from this session's work — accept
       or amend in `docs/adr/` and `decisions.md`.
 
 ## Done
 
+- [x] 2026-10-15: Maturity assessment — verdict Ready after blockers, 1 gap added to Open.
+- [x] 2026-10-15: Advertising readiness: OG/Twitter tags and 1200×630 card, favicon and touch icon, meta description, README badges/live link/new screenshot/155 count, package.json metadata, GitHub About and topics, private vulnerability reporting, Vitest + CI on push/PR, CONTRIBUTING, code of conduct, issue/PR templates.
+- [x] 2026-10-15: Maturity assessment — verdict Ready after blockers, 10 gaps added to Open.
+- [x] 2026-10-15: GitHub Pages set up for the tag deploy (Actions source, custom domain, HTTPS, `v*` tag rule).
 - [x] 2026-10-15: Released v0.1.0.
 - [x] 2026-10-15: `release` skill: bump with `npm version`, tag `v*`, push, GitHub release.
 - [x] 2026-10-15: GitHub Actions deploy to GitHub Pages (flashcards.pearpages.com) on `v*` tags; removed the GitLab Pages job.

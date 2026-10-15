@@ -9,9 +9,8 @@ input, endpoint, secret, dependency, permission).
 
 Use GitHub's private vulnerability reporting on
 [pearpages/flashcards](https://github.com/pearpages/flashcards) (Security → Report a
-vulnerability). Never open a public issue for an unfixed vulnerability.
-TODO: enable private vulnerability reporting in the repository settings (tracked in
-[tasks.md](tasks.md)).
+vulnerability). Never open a public issue for an unfixed vulnerability. Private
+reporting is enabled, and the issue form links to it.
 
 ## Surface
 
@@ -33,13 +32,16 @@ its own. Everything it shows is bundled at build time from `src/decks/`.
 
 - None. The app and its build use no API keys or tokens.
 - `.env*` files are gitignored; an example file (`.env.example`) would list names only.
+- CI (`ci.yml`) runs with a read-only `GITHUB_TOKEN`, including on pull requests from
+  forks, and has no secrets to leak.
 - GitHub Pages deploys with the workflow's `GITHUB_TOKEN` (`contents: read`, `pages: write`,
   `id-token: write`) only. No stored secrets.
 - Anyone who can push a `v*` tag can publish the site; only the repository owner can push.
 
 ## Dependencies
 
-- Runtime: `react`, `react-dom`, `framer-motion`. Everything else is build-time tooling.
+- Runtime: `react`, `react-dom`, `framer-motion`. Everything else is build-time tooling
+  (including `vitest` for tests).
 - `pnpm-lock.yaml` is the committed lockfile; the GitHub workflow installs with
   `--frozen-lockfile`.
 - The deploy workflow uses GitHub's own actions plus `pnpm/action-setup`, pinned to major

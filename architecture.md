@@ -78,9 +78,14 @@ No state is persisted: reload starts from the URL hash with no filters.
 ## Build, test, deploy
 
 - **Toolchain:** pnpm, Node 22 (`.nvmrc`), Vite 7, TypeScript ~5.9 (strict), ESLint 9.
-- **Checks:** `pnpm validate` → `pnpm build` (runs validate, `tsc -b`, `vite build`) and
-  `pnpm lint`. No automated tests yet; UI changes are checked in the browser at 375px and
-  desktop widths.
+- **Checks:** `pnpm validate` → `pnpm build` (runs validate, `tsc -b`, `vite build`),
+  `pnpm lint` and `pnpm test --run` (Vitest, node environment; `src/route.test.ts`,
+  `src/decks/index.test.ts`). `.github/workflows/ci.yml` runs lint, tests and build on
+  every push to `main` and every pull request. UI changes are also checked in the browser
+  at 375px and desktop widths.
+- **Static assets:** `public/` holds `CNAME`, `favicon.svg`, `apple-touch-icon.png` and
+  `og.webp` (the 1200×630 social card). `index.html` carries the meta description and the
+  Open Graph / Twitter tags, so link previews work without running the app.
 - **Deploy:** pushing a `v*` tag runs `.github/workflows/deploy.yml` (Node from `.nvmrc`,
   pnpm 10, `pnpm install --frozen-lockfile`, `pnpm lint`, `pnpm build`), which uploads
   `dist/` and publishes it to GitHub Pages at `flashcards.pearpages.com`; it can also be

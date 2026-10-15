@@ -2,6 +2,24 @@
   "name": "flashcards",
   "private": true,
   "version": "0.1.0",
+  "description": "Mobile-first flashcards for learning design system components, with drawings, filters and iOS/Android equivalents.",
+  "keywords": [
+    "flashcards",
+    "design-system",
+    "ui-components",
+    "learning",
+    "react",
+    "vite"
+  ],
+  "homepage": "https://flashcards.pearpages.com",
+  "bugs": {
+    "url": "https://github.com/pearpages/flashcards/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pearpages/flashcards.git"
+  },
+  "author": "pearpages",
   "license": "MIT",
   "type": "module",
   "scripts": {
@@ -9,7 +27,8 @@
     "validate": "node scripts/validate-decks.mjs",
     "build": "node scripts/validate-decks.mjs && tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest"
   },
   "dependencies": {
     "framer-motion": "^12.33.0",
@@ -28,6 +47,7 @@
     "globals": "^16.5.0",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.46.4",
-    "vite": "^7.2.4"
+    "vite": "^7.2.4",
+    "vitest": "^3.2.7"
   }
 }

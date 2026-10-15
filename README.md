@@ -1,8 +1,16 @@
 # Design System Flashcards
 
-A mobile-first flashcard deck for learning design system components: 119 components, each tagged three ways: its purpose (forms, navigation, overlays…), its layer (primitive, component, pattern) and its atomic design level (atom, molecule, organism, template).
+[![Live site](https://img.shields.io/badge/live-flashcards.pearpages.com-5b5bd6)](https://flashcards.pearpages.com)
+[![CI](https://github.com/pearpages/flashcards/actions/workflows/ci.yml/badge.svg)](https://github.com/pearpages/flashcards/actions/workflows/ci.yml)
+[![Deploy](https://github.com/pearpages/flashcards/actions/workflows/deploy.yml/badge.svg)](https://github.com/pearpages/flashcards/actions/workflows/deploy.yml)
+[![Release](https://img.shields.io/github/v/release/pearpages/flashcards)](https://github.com/pearpages/flashcards/releases)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-<img src="./docs/static/demo.png" alt="demo image" width="300" />
+A mobile-first flashcard deck for learning design system components: 155 components, each tagged three ways: its purpose (forms, navigation, overlays…), its layer (primitive, component, pattern) and its atomic design level (atom, molecule, organism, template). Each card has wireframe drawings and, for most, the iOS and Android equivalents.
+
+**Try it: [flashcards.pearpages.com](https://flashcards.pearpages.com)** — works on phones and desktop, no sign-up.
+
+<img src="./docs/static/demo.png" alt="Two phone screens: the Sheet card in study mode with desktop and mobile drawings, and the browse list grouped by purpose" width="500" />
 
 ## Tech Stack
 
@@ -10,6 +18,7 @@ A mobile-first flashcard deck for learning design system components: 119 compone
 - **Framer Motion** — card stack animations, swipe gestures, spring physics
 - **Plain CSS** — no utility frameworks
 - **pnpm** — package manager
+- **Vitest** — unit tests
 
 ## Requirements
 
@@ -117,6 +126,9 @@ pnpm dev
 
 # Validate deck data
 pnpm validate
+
+# Run the tests once
+pnpm test --run
 
 # Build for production
 pnpm build
