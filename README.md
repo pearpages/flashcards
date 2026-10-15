@@ -18,6 +18,8 @@ A mobile-first flashcard deck for learning design system components: 119 compone
 
 ## Features
 
+- **Browse by purpose** — every component listed in sections by purpose, with search (names, other names, summaries) and a jump bar; tap one to study it. A sidebar next to the cards on desktop, a Study/Browse switch on mobile
+- **Shareable links** — the URL follows the card you're on (`#card/sheet`) or the list (`#browse`), and the Back button works
 - **Component deck** — name, purpose, layer, atomic level, wireframe illustration and one-line purpose on the front
 - **Tap to reveal** — tap/click (or arrow up/down) to show when to use it, nearest alternatives and accessibility notes
 - **Filters** — narrow the deck by purpose and/or layer (each deck declares its own filters); the atomic design level is shown as a badge

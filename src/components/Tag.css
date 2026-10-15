@@ -1,0 +1,43 @@
+.tag {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: #f0f0f6;
+  color: #55556a;
+  white-space: nowrap;
+}
+
+.tag--sm {
+  font-size: 0.6rem;
+  padding: 0.1rem 0.4rem;
+}
+
+.tag--primitive,
+.tag--component,
+.tag--pattern {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px #d0d0e0;
+}
+
+.tag--atom {
+  background: #e6f4ea;
+  color: #1e7a3c;
+}
+
+.tag--molecule {
+  background: #e8eefc;
+  color: #2f5bc4;
+}
+
+.tag--organism {
+  background: #f3e8fc;
+  color: #7a3cc4;
+}
+
+.tag--template {
+  background: #fdf0e1;
+  color: #a85d10;
+}

@@ -1,0 +1,238 @@
+.browse {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Search + filters + jump bar stay pinned while the list scrolls */
+.browse__toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.75rem 1rem 0.6rem;
+  background: rgba(244, 246, 250, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid #e4e4ee;
+}
+
+.browse__search {
+  width: 100%;
+  font: inherit;
+  font-size: 0.95rem;
+  padding: 0.6rem 0.9rem;
+  border: 1px solid #d8d8e4;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #1a1a2e;
+}
+
+.browse__search:focus-visible {
+  outline: 2px solid #5b5bd6;
+  outline-offset: 1px;
+}
+
+.browse__filters {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.browse__filters-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #888;
+}
+
+.browse__filter-chip {
+  border: none;
+  border-radius: 999px;
+  padding: 0.25rem 0.6rem;
+  font: inherit;
+  font-size: 0.8rem;
+  text-transform: capitalize;
+  background: #1a1a2e;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.browse__jump {
+  display: flex;
+  gap: 0.35rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  margin: 0 -1rem;
+  padding: 0 1rem;
+}
+
+.browse__jump::-webkit-scrollbar {
+  display: none;
+}
+
+.browse__jump-chip {
+  flex-shrink: 0;
+  border: none;
+  border-radius: 999px;
+  padding: 0.3rem 0.7rem;
+  font: inherit;
+  font-size: 0.8rem;
+  text-transform: capitalize;
+  background: #ffffff;
+  color: #1a1a2e;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.browse__jump-chip[aria-current="true"] {
+  background: #5b5bd6;
+  color: #ffffff;
+}
+
+.browse__jump-chip:focus-visible,
+.browse__filter-chip:focus-visible,
+.browse__item:focus-visible {
+  outline: 2px solid #5b5bd6;
+  outline-offset: 2px;
+}
+
+.browse__list {
+  /* Offset parent for rows and sections, used when scrolling them into view */
+  position: relative;
+  padding: 0.25rem 0.75rem 2rem;
+}
+
+.browse__group {
+  /* Leave room for the sticky toolbar when jumping to a section */
+  scroll-margin-top: 9rem;
+}
+
+.browse__group-title {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  margin: 1rem 0.25rem 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #55556a;
+}
+
+.browse__group-count {
+  font-weight: 500;
+  color: #aaa;
+}
+
+.browse__items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.browse__item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.45rem 0.5rem;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
+  scroll-margin: 9rem 0 1rem;
+}
+
+.browse__item:hover {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.browse__item[aria-current="true"] {
+  background: #ffffff;
+  box-shadow:
+    inset 3px 0 0 #5b5bd6,
+    0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.browse__thumb {
+  flex-shrink: 0;
+  width: 56px;
+  height: 42px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: inset 0 0 0 1px #ececf4;
+}
+
+.browse__thumb--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #c0c0d0;
+  font-weight: 700;
+}
+
+.browse__item-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.browse__item-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+.browse__item-summary {
+  font-size: 0.8rem;
+  color: #777;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.browse__item-tags {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.2rem;
+}
+
+.browse__empty {
+  margin: 2rem 1rem;
+  text-align: center;
+  color: #888;
+}
+
+/* Desktop: the list is its own scroll area inside the sidebar */
+@media (min-width: 960px) {
+  .browse {
+    height: 100%;
+  }
+
+  .browse__list {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  .browse__group,
+  .browse__item {
+    scroll-margin-top: 0.5rem;
+  }
+}

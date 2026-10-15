@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence, type PanInfo } from "framer-motion";
 import type { Deck, Flashcard } from "../types";
 import FlashCard from "./FlashCard";
@@ -8,6 +8,9 @@ import "./CardStack.css";
 interface CardStackProps {
   deck: Deck;
   cards: Flashcard[];
+  /** Card to open first; falls back to the first card when it isn't in `cards`. */
+  startCardId?: string;
+  onCardChange?: (cardId: string) => void;
 }
 
 const SWIPE_THRESHOLD = 50;
@@ -46,9 +49,12 @@ function shuffleArray<T>(array: T[]): T[] {
   return shuffled;
 }
 
-export default function CardStack({ deck, cards }: CardStackProps) {
+export default function CardStack({ deck, cards, startCardId, onCardChange }: CardStackProps) {
   const [stack, setStack] = useState(cards);
-  const [[currentIndex, direction], setPage] = useState([0, 0]);
+  const [[currentIndex, direction], setPage] = useState(() => [
+    Math.max(0, cards.findIndex((card) => card.id === startCardId)),
+    0,
+  ]);
   const [revealedIds, setRevealedIds] = useState<Set<string>>(new Set());
 
   const goNext = useCallback(() => {
@@ -83,6 +89,11 @@ export default function CardStack({ deck, cards }: CardStackProps) {
   };
 
   useKeyboardNav(goPrev, goNext, revealCard);
+
+  const currentCardId = stack[currentIndex]?.id;
+  useEffect(() => {
+    if (currentCardId) onCardChange?.(currentCardId);
+  }, [currentCardId, onCardChange]);
 
   const handleDragEnd = (_: unknown, info: PanInfo) => {
     if (info.offset.x > SWIPE_THRESHOLD) {

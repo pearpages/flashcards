@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import type { Deck, Flashcard } from "../types";
 import { getCardImages } from "../decks";
+import Tag from "./Tag";
 import "./FlashCard.css";
 
 interface FlashCardProps {
@@ -16,14 +17,9 @@ export default function FlashCard({ deck, card, revealed, onReveal }: FlashCardP
   return (
     <div className="flashcard" onClick={onReveal}>
       <div className="flashcard-tags">
-        {deck.facets.map(({ key }) => {
-          const value = card.facets[key];
-          return value ? (
-            <span key={key} className={`flashcard__tag flashcard__tag--${value}`}>
-              {value}
-            </span>
-          ) : null;
-        })}
+        {deck.facets.map(({ key }) =>
+          card.facets[key] ? <Tag key={key} value={card.facets[key]} /> : null,
+        )}
       </div>
 
       <h2 className="flashcard-title">{card.title}</h2>
