@@ -67,7 +67,7 @@
   object-fit: contain;
 }
 
-/* Desktop + mobile variants side by side */
+/* Desktop + phone variants (mobile, or iOS + Android) side by side */
 .flashcard-image--split {
   gap: 1rem;
   padding: 0.75rem;
@@ -99,13 +99,23 @@
   max-width: 190px;
 }
 
-.flashcard-image__variant--mobile {
+.flashcard-image__variant--phone {
   flex-shrink: 0;
 }
 
-.flashcard-image__variant--mobile img {
+.flashcard-image__variant--phone img {
   width: auto;
   max-width: none;
+}
+
+/* Three images: smaller phones and tighter gaps so all fit a narrow card */
+.flashcard-image--triple {
+  gap: 0.6rem;
+  padding: 0.6rem;
+}
+
+.flashcard-image--triple .flashcard-image__variant img {
+  height: 112px;
 }
 
 .flashcard-image__variant figcaption {
@@ -166,6 +176,32 @@
 .flashcard-description .flashcard-aliases {
   font-size: 0.8rem;
   color: #888;
+}
+
+.flashcard-platforms {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.flashcard-platforms__row {
+  display: flex;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+.flashcard-platforms dt {
+  flex-shrink: 0;
+  font-weight: 700;
+  color: #55556a;
+}
+
+.flashcard-platforms dd {
+  margin: 0;
+  color: #777;
 }
 
 .flashcard-hint {

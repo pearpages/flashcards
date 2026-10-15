@@ -50,7 +50,15 @@ function scrollToElement(list: HTMLElement, el: HTMLElement, block: Block, smoot
 
 function matches(card: Flashcard, query: string) {
   if (!query) return true;
-  const haystack = [card.title, card.summary, ...(card.aliases ?? [])].join(" ").toLowerCase();
+  const haystack = [
+    card.title,
+    card.summary,
+    ...(card.aliases ?? []),
+    card.platforms?.ios ?? "",
+    card.platforms?.android ?? "",
+  ]
+    .join(" ")
+    .toLowerCase();
   return haystack.includes(query);
 }
 

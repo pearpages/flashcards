@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import type { Deck, Flashcard } from "../types";
-import { getCardImages } from "../decks";
+import { getCardImages, type CardImages } from "../decks";
 import Tag from "./Tag";
 import "./FlashCard.css";
 
@@ -11,8 +11,29 @@ interface FlashCardProps {
   onReveal: () => void;
 }
 
+interface ImageVariant {
+  key: string;
+  label: string;
+  src: string;
+  phone: boolean;
+}
+
+/** Desktop image plus, when present, either iOS + Android drawings or one generic mobile drawing. */
+function imageVariants(images: CardImages): ImageVariant[] {
+  if (!images.desktop) return [];
+  const variants: ImageVariant[] = [{ key: "desktop", label: "Desktop", src: images.desktop, phone: false }];
+  if (images.ios && images.android) {
+    variants.push({ key: "ios", label: "iOS", src: images.ios, phone: true });
+    variants.push({ key: "android", label: "Android", src: images.android, phone: true });
+  } else if (images.mobile) {
+    variants.push({ key: "mobile", label: "Mobile", src: images.mobile, phone: true });
+  }
+  return variants;
+}
+
 export default function FlashCard({ deck, card, revealed, onReveal }: FlashCardProps) {
-  const { desktop, mobile } = getCardImages(deck.id, card.id);
+  const variants = imageVariants(getCardImages(deck.id, card.id));
+  const { ios, android } = card.platforms ?? {};
 
   return (
     <div className="flashcard" onClick={onReveal}>
@@ -25,21 +46,24 @@ export default function FlashCard({ deck, card, revealed, onReveal }: FlashCardP
       <h2 className="flashcard-title">{card.title}</h2>
 
       <div className="flashcard-body">
-        {desktop && mobile ? (
-          <div className="flashcard-image flashcard-image--split">
-            <figure className="flashcard-image__variant flashcard-image__variant--desktop">
-              <img src={desktop} alt="" draggable={false} />
-              <figcaption>Desktop</figcaption>
-            </figure>
-            <figure className="flashcard-image__variant flashcard-image__variant--mobile">
-              <img src={mobile} alt="" draggable={false} />
-              <figcaption>Mobile</figcaption>
-            </figure>
+        {variants.length > 1 ? (
+          <div
+            className={`flashcard-image flashcard-image--split ${variants.length > 2 ? "flashcard-image--triple" : ""}`}
+          >
+            {variants.map((variant) => (
+              <figure
+                key={variant.key}
+                className={`flashcard-image__variant flashcard-image__variant--${variant.phone ? "phone" : "desktop"}`}
+              >
+                <img src={variant.src} alt="" draggable={false} />
+                <figcaption>{variant.label}</figcaption>
+              </figure>
+            ))}
           </div>
         ) : (
           <div className="flashcard-image">
-            {desktop ? (
-              <img src={desktop} alt="" draggable={false} />
+            {variants[0] ? (
+              <img src={variants[0].src} alt="" draggable={false} />
             ) : (
               <span className="flashcard-placeholder">?</span>
             )}
@@ -60,6 +84,22 @@ export default function FlashCard({ deck, card, revealed, onReveal }: FlashCardP
           <p>{card.description}</p>
           {card.aliases && card.aliases.length > 0 && (
             <p className="flashcard-aliases">Also known as: {card.aliases.join(", ")}</p>
+          )}
+          {(ios || android) && (
+            <dl className="flashcard-platforms">
+              {ios && (
+                <div className="flashcard-platforms__row">
+                  <dt>iOS</dt>
+                  <dd>{ios}</dd>
+                </div>
+              )}
+              {android && (
+                <div className="flashcard-platforms__row">
+                  <dt>Android</dt>
+                  <dd>{android}</dd>
+                </div>
+              )}
+            </dl>
           )}
         </motion.div>
       </div>

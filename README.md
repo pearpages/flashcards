@@ -23,7 +23,8 @@ A mobile-first flashcard deck for learning design system components: 119 compone
 - **Component deck** — name, purpose, layer, atomic level, wireframe illustration and one-line purpose on the front
 - **Tap to reveal** — tap/click (or arrow up/down) to show when to use it, nearest alternatives and accessibility notes
 - **Filters** — narrow the deck by purpose and/or layer (each deck declares its own filters); the atomic design level is shown as a badge
-- **Desktop + mobile** — components that change shape on small screens show both versions side by side
+- **Desktop + mobile** — components that change shape on small screens show both versions side by side, or desktop · iOS · Android when the platforms differ
+- **Native equivalents** — revealing a card shows its iOS (SwiftUI/UIKit) and Android (Compose Material 3) counterparts; search finds them too
 - **Multiple decks** — add a folder under `src/decks/` and it shows up in the deck picker
 - **Swipe navigation** — swipe left/right to navigate between cards
 - **Keyboard navigation** — left/right arrow keys
@@ -54,7 +55,8 @@ Add an entry to `src/decks/<deck>/cards.json`:
   "facets": { "purpose": "actions", "layer": "component", "atomic": "atom" },
   "summary": "A compact button that shows only an icon.",
   "description": "When to use it, how it differs from its siblings, accessibility notes.",
-  "aliases": ["Icon-only button"]
+  "aliases": ["Icon-only button"],
+  "platforms": { "ios": "Button with SF Symbol", "android": "IconButton" }
 }
 ```
 
@@ -66,10 +68,13 @@ Add an entry to `src/decks/<deck>/cards.json`:
 | `summary`     | Yes      | One line, shown on the front (≤ 90 chars)                            |
 | `description` | Yes      | Revealed on tap (≤ 280 chars to fit the card)                        |
 | `aliases`     | No       | Other names for the same thing                                       |
+| `platforms`   | No       | Native equivalents: `ios` (SwiftUI/UIKit), `android` (Compose M3), ≤ 60 chars each |
 
 Optionally add `images/<id>.svg` (160×120). Cards without one show a `?` placeholder.
 
 If the component looks different on small screens, also add `images/<id>.mobile.svg` (60×120, drawn inside a phone frame). The card then shows the desktop and mobile versions side by side.
+
+When iOS and Android differ visibly (Switch, Date picker, Tabs…), add `images/<id>.ios.svg` and `images/<id>.android.svg` instead. The pair replaces the generic mobile drawing, so the card shows Desktop · iOS · Android.
 
 Then run `pnpm validate`. It checks ids, required fields, facet values and text lengths, and warns about missing or orphan images. `pnpm build` runs it first and fails on errors.
 

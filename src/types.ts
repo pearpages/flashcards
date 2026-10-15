@@ -13,6 +13,8 @@ export interface Flashcard {
   summary: string;
   description: string;
   aliases?: string[];
+  /** Native equivalents, e.g. { ios: "Toggle", android: "Switch" }. */
+  platforms?: { ios?: string; android?: string };
 }
 
 export interface Deck {

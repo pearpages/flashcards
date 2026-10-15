@@ -8,7 +8,11 @@
       "atomic": "atom"
     },
     "summary": "Titles a page or section and builds the document outline.",
-    "description": "Separate the semantic level (h1–h6) from the visual size so outline and style can vary independently. Never skip levels for looks: screen reader users jump between headings to navigate."
+    "description": "Separate the semantic level (h1–h6) from the visual size so outline and style can vary independently. Never skip levels for looks: screen reader users jump between headings to navigate.",
+    "platforms": {
+      "ios": "Text with .title font",
+      "android": "Text with headline style"
+    }
   },
   {
     "id": "text",
@@ -23,7 +27,11 @@
     "aliases": [
       "Typography",
       "Paragraph"
-    ]
+    ],
+    "platforms": {
+      "ios": "Text",
+      "android": "Text"
+    }
   },
   {
     "id": "link",
@@ -37,7 +45,11 @@
     "description": "If it goes somewhere, it's a Link (<a href>); if it does something, it's a Button. Links must be distinguishable by more than colour (underline) and should flag external targets.",
     "aliases": [
       "Anchor"
-    ]
+    ],
+    "platforms": {
+      "ios": "Link",
+      "android": "Text with LinkAnnotation"
+    }
   },
   {
     "id": "label",
@@ -48,22 +60,81 @@
       "atomic": "atom"
     },
     "summary": "Names a form control so users and assistive tech know what it is.",
-    "description": "Bound to its control via htmlFor/id, which also makes the text clickable to focus the input. Placeholders are not a label substitute: they vanish on typing and often fail contrast."
+    "description": "Bound to its control via htmlFor/id, which also makes the text clickable to focus the input. Placeholders are not a label substitute: they vanish on typing and often fail contrast.",
+    "platforms": {
+      "ios": "LabeledContent",
+      "android": "TextField label slot"
+    }
   },
   {
     "id": "code",
-    "title": "Code / Kbd",
+    "title": "Code",
     "facets": {
       "purpose": "typography",
       "layer": "component",
       "atomic": "atom"
     },
-    "summary": "Shows inline code snippets or keyboard keys in a monospace style.",
-    "description": "<code> marks machine text like `npm install`; <kbd> marks keys the user presses, like ⌘ K. For multi-line snippets use a CodeBlock with syntax highlighting and a copy button.",
+    "summary": "Marks inline code like a command, file name or variable.",
+    "description": "<code> in a monospace style for machine text inside a sentence, like `npm install`. For multi-line snippets use a CodeBlock; for keys the user presses, use Kbd.",
     "aliases": [
-      "InlineCode",
-      "Keyboard key"
+      "InlineCode"
+    ],
+    "platforms": {
+      "ios": "Text with .monospaced()",
+      "android": "Text with FontFamily.Monospace"
+    }
+  },
+  {
+    "id": "kbd",
+    "title": "Kbd",
+    "facets": {
+      "purpose": "typography",
+      "layer": "component",
+      "atomic": "atom"
+    },
+    "summary": "Shows a key or shortcut the user presses, like ⌘ K.",
+    "description": "<kbd> styled as a keycap. Use platform-appropriate symbols (⌘ on Mac, Ctrl elsewhere) and group combos like ⌘ + Shift + P. Pair with a text label so the shortcut isn't the only hint.",
+    "aliases": [
+      "Keyboard key",
+      "Shortcut"
     ]
+  },
+  {
+    "id": "mark",
+    "title": "Mark",
+    "facets": {
+      "purpose": "typography",
+      "layer": "component",
+      "atomic": "atom"
+    },
+    "summary": "Highlights a run of text, like search matches.",
+    "description": "The semantic <mark> element: text relevant in the current context, typically search hits. It's announced inconsistently, so don't rely on it alone to convey meaning.",
+    "aliases": [
+      "Highlight"
+    ],
+    "platforms": {
+      "ios": "AttributedString background color",
+      "android": "SpanStyle(background)"
+    }
+  },
+  {
+    "id": "truncate",
+    "title": "Truncate",
+    "facets": {
+      "purpose": "typography",
+      "layer": "primitive",
+      "atomic": "atom"
+    },
+    "summary": "Cuts text to one or more lines with an ellipsis.",
+    "description": "CSS text-overflow or line-clamp to keep layouts tidy. Always give access to the full text: a tooltip, expand toggle or detail view. Never truncate critical info like prices or errors.",
+    "aliases": [
+      "Line clamp",
+      "Ellipsis"
+    ],
+    "platforms": {
+      "ios": ".lineLimit(n)",
+      "android": "maxLines + TextOverflow.Ellipsis"
+    }
   },
   {
     "id": "blockquote",
@@ -80,6 +151,22 @@
     ]
   },
   {
+    "id": "code-block",
+    "title": "CodeBlock",
+    "facets": {
+      "purpose": "content",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "Displays multi-line code with highlighting and a copy button.",
+    "description": "A <pre><code> with syntax highlighting, optional line numbers, language label and CopyButton. Scrolls horizontally instead of wrapping, and must stay keyboard scrollable.",
+    "aliases": [
+      "Pre",
+      "Syntax highlighter",
+      "Snippet"
+    ]
+  },
+  {
     "id": "list",
     "title": "List",
     "facets": {
@@ -88,7 +175,11 @@
       "atomic": "molecule"
     },
     "summary": "Groups related items as bulleted, numbered or unstyled rows.",
-    "description": "Ordered (<ol>) when sequence matters, unordered (<ul>) when it doesn't. Screen readers announce the item count, so keep list semantics even when removing bullets visually."
+    "description": "Ordered (<ol>) when sequence matters, unordered (<ul>) when it doesn't. Screen readers announce the item count, so keep list semantics even when removing bullets visually.",
+    "platforms": {
+      "ios": "List",
+      "android": "LazyColumn + ListItem"
+    }
   },
   {
     "id": "prose",
@@ -103,7 +194,11 @@
     "aliases": [
       "RichText",
       "Typography plugin"
-    ]
+    ],
+    "platforms": {
+      "ios": "Text with Markdown / AttributedString",
+      "android": "Text with AnnotatedString"
+    }
   },
   {
     "id": "box",
@@ -118,7 +213,11 @@
     "aliases": [
       "View",
       "Surface"
-    ]
+    ],
+    "platforms": {
+      "ios": "View + padding/background modifiers",
+      "android": "Box"
+    }
   },
   {
     "id": "stack",
@@ -133,7 +232,11 @@
     "aliases": [
       "VStack",
       "Flow"
-    ]
+    ],
+    "platforms": {
+      "ios": "VStack",
+      "android": "Column"
+    }
   },
   {
     "id": "inline",
@@ -149,7 +252,11 @@
       "Cluster",
       "HStack",
       "Group"
-    ]
+    ],
+    "platforms": {
+      "ios": "HStack",
+      "android": "Row / FlowRow"
+    }
   },
   {
     "id": "grid",
@@ -164,7 +271,30 @@
     "aliases": [
       "SimpleGrid",
       "Columns"
-    ]
+    ],
+    "platforms": {
+      "ios": "Grid / LazyVGrid",
+      "android": "LazyVerticalGrid"
+    }
+  },
+  {
+    "id": "masonry",
+    "title": "Masonry",
+    "facets": {
+      "purpose": "layout",
+      "layer": "primitive",
+      "atomic": "atom"
+    },
+    "summary": "Packs items of different heights into columns without gaps.",
+    "description": "The Pinterest layout. Visual order differs from DOM order, which can confuse keyboard users, so keep reading order sensible. CSS grid-lanes is coming; today it's JS or columns.",
+    "aliases": [
+      "Waterfall",
+      "Staggered grid"
+    ],
+    "platforms": {
+      "ios": "Custom Layout",
+      "android": "LazyVerticalStaggeredGrid"
+    }
   },
   {
     "id": "container",
@@ -179,7 +309,11 @@
     "aliases": [
       "Wrapper",
       "PageContainer"
-    ]
+    ],
+    "platforms": {
+      "ios": "readableContentGuide",
+      "android": "Modifier.widthIn(max = …)"
+    }
   },
   {
     "id": "spacer",
@@ -190,7 +324,11 @@
       "atomic": "atom"
     },
     "summary": "An empty element that inserts a fixed or flexible gap.",
-    "description": "Useful to push items apart in a flex row (flex: 1) or add a one-off token-sized gap. Prefer gap on the parent; reach for Spacer when only one gap is different."
+    "description": "Useful to push items apart in a flex row (flex: 1) or add a one-off token-sized gap. Prefer gap on the parent; reach for Spacer when only one gap is different.",
+    "platforms": {
+      "ios": "Spacer",
+      "android": "Spacer"
+    }
   },
   {
     "id": "divider",
@@ -205,7 +343,11 @@
     "aliases": [
       "Separator",
       "Rule"
-    ]
+    ],
+    "platforms": {
+      "ios": "Divider",
+      "android": "HorizontalDivider"
+    }
   },
   {
     "id": "aspect-ratio",
@@ -216,7 +358,11 @@
       "atomic": "atom"
     },
     "summary": "Keeps a box at a fixed width-to-height ratio, like 16:9.",
-    "description": "Reserves space for media before it loads, preventing layout shift. Now mostly a thin wrapper around the CSS aspect-ratio property."
+    "description": "Reserves space for media before it loads, preventing layout shift. Now mostly a thin wrapper around the CSS aspect-ratio property.",
+    "platforms": {
+      "ios": ".aspectRatio()",
+      "android": "Modifier.aspectRatio()"
+    }
   },
   {
     "id": "center",
@@ -230,7 +376,11 @@
     "description": "A tiny convenience primitive for icons in circles, empty states or loaders. Saves repeating the same flexbox incantation everywhere.",
     "aliases": [
       "Absolute center"
-    ]
+    ],
+    "platforms": {
+      "ios": "ZStack (centres by default)",
+      "android": "Box(contentAlignment = Center)"
+    }
   },
   {
     "id": "card",
@@ -245,7 +395,11 @@
     "aliases": [
       "Tile",
       "Panel"
-    ]
+    ],
+    "platforms": {
+      "ios": "GroupBox / List section",
+      "android": "Card / ElevatedCard / OutlinedCard"
+    }
   },
   {
     "id": "scroll-area",
@@ -259,7 +413,11 @@
     "description": "Keeps native scrolling but restyles scrollbars cross-platform. Scrollable regions need to be keyboard focusable (tabindex=0) so non-mouse users can scroll them.",
     "aliases": [
       "ScrollView"
-    ]
+    ],
+    "platforms": {
+      "ios": "ScrollView",
+      "android": "Modifier.verticalScroll / LazyColumn"
+    }
   },
   {
     "id": "resizable",
@@ -274,7 +432,11 @@
     "aliases": [
       "SplitPane",
       "Splitter"
-    ]
+    ],
+    "platforms": {
+      "ios": "HSplitView (macOS)",
+      "android": "Adaptive pane scaffold with drag handle"
+    }
   },
   {
     "id": "app-shell",
@@ -290,7 +452,11 @@
       "Layout",
       "Frame",
       "Scaffold"
-    ]
+    ],
+    "platforms": {
+      "ios": "TabView + NavigationStack",
+      "android": "Scaffold"
+    }
   },
   {
     "id": "sidebar-layout",
@@ -305,7 +471,11 @@
     "aliases": [
       "Two-column layout",
       "Master-detail"
-    ]
+    ],
+    "platforms": {
+      "ios": "NavigationSplitView",
+      "android": "ListDetailPaneScaffold"
+    }
   },
   {
     "id": "page-header",
@@ -319,6 +489,24 @@
     "description": "Standardises where the page title (h1) and main actions live so every page feels consistent. Not to be confused with the site-wide NavBar.",
     "aliases": [
       "Page title bar"
+    ],
+    "platforms": {
+      "ios": ".navigationTitle (large title)",
+      "android": "LargeTopAppBar"
+    }
+  },
+  {
+    "id": "footer",
+    "title": "Footer",
+    "facets": {
+      "purpose": "layout",
+      "layer": "pattern",
+      "atomic": "organism"
+    },
+    "summary": "The bottom of a site: secondary links, legal and contact info.",
+    "description": "A <footer> landmark with grouped link columns, copyright and social links. On phones the columns stack or collapse into accordions. Don't hide primary navigation here.",
+    "aliases": [
+      "Site footer"
     ]
   },
   {
@@ -330,7 +518,11 @@
       "atomic": "atom"
     },
     "summary": "Triggers an action like submit, save or open.",
-    "description": "Variants express hierarchy (primary, secondary, ghost, destructive): one primary per view. Use a real <button>, keep it enabled with an explanation over silently disabling it, and show loading state inline."
+    "description": "Variants express hierarchy (primary, secondary, ghost, destructive): one primary per view. Use a real <button>, keep it enabled with an explanation over silently disabling it, and show loading state inline.",
+    "platforms": {
+      "ios": "Button (.borderedProminent)",
+      "android": "Button / FilledTonalButton / OutlinedButton"
+    }
   },
   {
     "id": "icon-button",
@@ -341,7 +533,29 @@
       "atomic": "atom"
     },
     "summary": "A compact button that shows only an icon.",
-    "description": "Perfect for toolbars and dense UIs, but the icon carries no name: it always needs an aria-label, ideally mirrored in a Tooltip. Hit area should stay at least 24–44px."
+    "description": "Perfect for toolbars and dense UIs, but the icon carries no name: it always needs an aria-label, ideally mirrored in a Tooltip. Hit area should stay at least 24–44px.",
+    "platforms": {
+      "ios": "Button with SF Symbol",
+      "android": "IconButton"
+    }
+  },
+  {
+    "id": "close-button",
+    "title": "CloseButton",
+    "facets": {
+      "purpose": "actions",
+      "layer": "component",
+      "atomic": "atom"
+    },
+    "summary": "The ✕ button that dismisses a dialog, panel or message.",
+    "description": "An IconButton with a fixed 'Close' label and consistent placement (usually top-right). Escape should do the same. Standardising it keeps every overlay dismissable the same way.",
+    "aliases": [
+      "Dismiss button"
+    ],
+    "platforms": {
+      "ios": "Toolbar xmark button",
+      "android": "IconButton with Close icon"
+    }
   },
   {
     "id": "chip",
@@ -356,7 +570,11 @@
     "aliases": [
       "Pill",
       "FilterChip"
-    ]
+    ],
+    "platforms": {
+      "ios": "No native chip (custom capsule)",
+      "android": "FilterChip / AssistChip / InputChip"
+    }
   },
   {
     "id": "toggle-button",
@@ -367,7 +585,29 @@
       "atomic": "atom"
     },
     "summary": "A button that stays pressed or unpressed, like Bold in an editor.",
-    "description": "Communicates its state with aria-pressed. Use for immediate on/off formatting or view options; for settings that persist, a Switch reads more clearly."
+    "description": "Communicates its state with aria-pressed. Use for immediate on/off formatting or view options; for settings that persist, a Switch reads more clearly.",
+    "platforms": {
+      "ios": "Toggle (.button style)",
+      "android": "IconToggleButton"
+    }
+  },
+  {
+    "id": "toggle-group",
+    "title": "ToggleGroup",
+    "facets": {
+      "purpose": "actions",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "A set of toggle buttons where several can be on, like B / I / U.",
+    "description": "Like a SegmentedControl but multi-select: each button keeps its own aria-pressed. Arrow keys move between items. Use for independent options such as text formatting.",
+    "aliases": [
+      "ToggleButtonGroup"
+    ],
+    "platforms": {
+      "ios": "ControlGroup of Toggles",
+      "android": "MultiChoiceSegmentedButtonRow"
+    }
   },
   {
     "id": "button-group",
@@ -378,7 +618,11 @@
       "atomic": "molecule"
     },
     "summary": "Visually joins related buttons into one control.",
-    "description": "Groups actions like Undo/Redo or alignment options with shared borders and consistent spacing. If only one option can be active, you probably want a SegmentedControl."
+    "description": "Groups actions like Undo/Redo or alignment options with shared borders and consistent spacing. If only one option can be active, you probably want a SegmentedControl.",
+    "platforms": {
+      "ios": "ControlGroup",
+      "android": "ButtonGroup (M3 Expressive)"
+    }
   },
   {
     "id": "split-button",
@@ -392,7 +636,11 @@
     "description": "The left part runs the default (e.g. Merge), the arrow opens a Menu of variants (Squash, Rebase). Each part is a separate focusable button with its own label.",
     "aliases": [
       "Dropdown button"
-    ]
+    ],
+    "platforms": {
+      "ios": "Menu with primaryAction",
+      "android": "SplitButtonLayout (M3 Expressive)"
+    }
   },
   {
     "id": "fab",
@@ -406,7 +654,11 @@
     "description": "Material Design pattern, mostly mobile: a round button pinned above content, e.g. Compose. Only one per screen, and it must not cover important content.",
     "aliases": [
       "Floating action button"
-    ]
+    ],
+    "platforms": {
+      "ios": "No native equivalent",
+      "android": "FloatingActionButton"
+    }
   },
   {
     "id": "copy-button",
@@ -420,7 +672,11 @@
     "description": "Combines an IconButton with the Clipboard API and transient feedback (icon swap or Tooltip 'Copied!'). Announce the confirmation through a live region for screen readers.",
     "aliases": [
       "ClipboardButton"
-    ]
+    ],
+    "platforms": {
+      "ios": "UIPasteboard + confirmation",
+      "android": "ClipboardManager + Snackbar"
+    }
   },
   {
     "id": "toolbar",
@@ -434,7 +690,51 @@
     "description": "Editor formatting bars, table bulk actions. Uses role=toolbar with roving tabindex: Tab enters once, arrow keys move between controls inside.",
     "aliases": [
       "ActionBar"
-    ]
+    ],
+    "platforms": {
+      "ios": ".toolbar (bottom bar)",
+      "android": "BottomAppBar / FloatingToolbar"
+    }
+  },
+  {
+    "id": "action-bar",
+    "title": "ActionBar",
+    "facets": {
+      "purpose": "actions",
+      "layer": "component",
+      "atomic": "organism"
+    },
+    "summary": "Appears when items are selected and offers actions for all of them.",
+    "description": "Shows '3 selected' plus bulk actions (Delete, Move, Export) and Clear. Floats at the bottom on mobile. Announce the selection count and keep the bar reachable by keyboard.",
+    "aliases": [
+      "Bulk actions bar",
+      "Selection toolbar",
+      "Contextual action bar"
+    ],
+    "platforms": {
+      "ios": "Bottom toolbar in edit mode",
+      "android": "Contextual top app bar"
+    }
+  },
+  {
+    "id": "overflow-menu",
+    "title": "OverflowMenu",
+    "facets": {
+      "purpose": "actions",
+      "layer": "pattern",
+      "atomic": "molecule"
+    },
+    "summary": "Moves actions that don't fit into a ⋯ More menu.",
+    "description": "Priority+ pattern: show the most important actions inline and push the rest into a menu as space shrinks. Keep the order stable so users find actions in the same place.",
+    "aliases": [
+      "Priority+",
+      "More menu",
+      "Kebab"
+    ],
+    "platforms": {
+      "ios": "Menu with ellipsis.circle",
+      "android": "DropdownMenu from TopAppBar ⋮"
+    }
   },
   {
     "id": "field",
@@ -449,7 +749,11 @@
     "aliases": [
       "FormField",
       "FormControl"
-    ]
+    ],
+    "platforms": {
+      "ios": "Form row / LabeledContent",
+      "android": "TextField label + supportingText"
+    }
   },
   {
     "id": "text-field",
@@ -464,7 +768,31 @@
     "aliases": [
       "Input",
       "TextInput"
-    ]
+    ],
+    "platforms": {
+      "ios": "TextField",
+      "android": "TextField / OutlinedTextField"
+    }
+  },
+  {
+    "id": "input-group",
+    "title": "InputGroup",
+    "facets": {
+      "purpose": "forms",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "An input with attached prefix or suffix, like € or .com.",
+    "description": "Adds units, icons or buttons inside the field border, e.g. 'https://' + input + 'Go'. Add-on text must be part of the label or description so screen readers hear it.",
+    "aliases": [
+      "Input adornment",
+      "Prefix/suffix",
+      "Addon"
+    ],
+    "platforms": {
+      "ios": "TextField in HStack with Text",
+      "android": "TextField prefix / suffix slots"
+    }
   },
   {
     "id": "textarea",
@@ -475,7 +803,11 @@
       "atomic": "atom"
     },
     "summary": "A multi-line text input for longer free-form answers.",
-    "description": "Often auto-grows with content and shows a character count. Size it to hint at the expected length of the answer."
+    "description": "Often auto-grows with content and shows a character count. Size it to hint at the expected length of the answer.",
+    "platforms": {
+      "ios": "TextEditor / TextField(axis: .vertical)",
+      "android": "TextField(singleLine = false)"
+    }
   },
   {
     "id": "checkbox",
@@ -486,7 +818,29 @@
       "atomic": "atom"
     },
     "summary": "Selects zero, one or many options independently.",
-    "description": "Also has an indeterminate state for 'some children selected'. In a form, checking it takes effect on submit; for instant on/off use a Switch."
+    "description": "Also has an indeterminate state for 'some children selected'. In a form, checking it takes effect on submit; for instant on/off use a Switch.",
+    "platforms": {
+      "ios": "Checkmarks in a List (no checkbox)",
+      "android": "Checkbox"
+    }
+  },
+  {
+    "id": "checkbox-group",
+    "title": "CheckboxGroup",
+    "facets": {
+      "purpose": "forms",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "A labelled set of checkboxes for picking several options.",
+    "description": "A fieldset with a legend and checkboxes, optionally with a 'Select all' that goes indeterminate. Validation like 'pick at least one' belongs to the group, not each box.",
+    "aliases": [
+      "Multi-select checkboxes"
+    ],
+    "platforms": {
+      "ios": "Multi-select List with checkmarks",
+      "android": "Column of Checkbox rows / TriStateCheckbox"
+    }
   },
   {
     "id": "radio-group",
@@ -500,7 +854,11 @@
     "description": "A Radio alone is an atom; the group with its legend is the molecule. Arrow keys move selection within the group. Over ~5 options, consider a Select.",
     "aliases": [
       "Radio buttons"
-    ]
+    ],
+    "platforms": {
+      "ios": "Picker (.inline) with checkmark",
+      "android": "RadioButton + selectableGroup"
+    }
   },
   {
     "id": "switch",
@@ -514,7 +872,11 @@
     "description": "Like a light switch: no Save button needed. Uses role=switch with aria-checked. If the change needs confirming on submit, a Checkbox is the better fit.",
     "aliases": [
       "Toggle"
-    ]
+    ],
+    "platforms": {
+      "ios": "Toggle (switch style)",
+      "android": "Switch"
+    }
   },
   {
     "id": "select",
@@ -528,7 +890,11 @@
     "description": "Native <select> is the most accessible and mobile-friendly. Use custom ones only when you need rich option content; add search (Combobox) once the list gets long.",
     "aliases": [
       "Dropdown"
-    ]
+    ],
+    "platforms": {
+      "ios": "Picker (.menu style)",
+      "android": "ExposedDropdownMenuBox"
+    }
   },
   {
     "id": "combobox",
@@ -543,7 +909,11 @@
     "aliases": [
       "Autocomplete",
       "Typeahead"
-    ]
+    ],
+    "platforms": {
+      "ios": ".searchable with suggestions",
+      "android": "ExposedDropdownMenuBox (editable)"
+    }
   },
   {
     "id": "listbox",
@@ -557,7 +927,11 @@
     "description": "The option list that powers Select and Combobox, also usable inline. Supports keyboard navigation, type-ahead and aria-selected. Not for actions — that's a Menu.",
     "aliases": [
       "OptionList"
-    ]
+    ],
+    "platforms": {
+      "ios": "List(selection:)",
+      "android": "LazyColumn with selectable rows"
+    }
   },
   {
     "id": "picker",
@@ -571,7 +945,11 @@
     "description": "Generic pattern behind date, time, colour and emoji pickers: a button showing the current value opens a Popover (or Sheet on mobile) with a specialised chooser.",
     "aliases": [
       "Wheel picker"
-    ]
+    ],
+    "platforms": {
+      "ios": "Picker",
+      "android": "Dropdown or dialog picker"
+    }
   },
   {
     "id": "segmented-control",
@@ -584,9 +962,13 @@
     "summary": "A row of joined buttons where exactly one is selected.",
     "description": "Good for 2–5 short options like Day / Week / Month that change a view. Behaves like a radio group. If it swaps whole panels of content, use Tabs instead.",
     "aliases": [
-      "ToggleGroup",
+      "Segmented button",
       "Button toggle group"
-    ]
+    ],
+    "platforms": {
+      "ios": "Picker (.segmented)",
+      "android": "SingleChoiceSegmentedButtonRow"
+    }
   },
   {
     "id": "slider",
@@ -597,7 +979,11 @@
       "atomic": "atom"
     },
     "summary": "Chooses a value from a continuous range by dragging a thumb.",
-    "description": "Great for approximate values like volume. For precise numbers, pair it with a NumberInput. Arrow keys step, Page Up/Down jump, and aria-valuetext can add units."
+    "description": "Great for approximate values like volume. For precise numbers, pair it with a NumberInput. Arrow keys step, Page Up/Down jump, and aria-valuetext can add units.",
+    "platforms": {
+      "ios": "Slider",
+      "android": "Slider"
+    }
   },
   {
     "id": "range-slider",
@@ -608,7 +994,11 @@
       "atomic": "molecule"
     },
     "summary": "Selects a min–max range with two thumbs on one track.",
-    "description": "Typical for price filters. Each thumb is a separate slider with its own label, and thumbs must not cross each other."
+    "description": "Typical for price filters. Each thumb is a separate slider with its own label, and thumbs must not cross each other.",
+    "platforms": {
+      "ios": "No native control (custom)",
+      "android": "RangeSlider"
+    }
   },
   {
     "id": "number-input",
@@ -623,7 +1013,11 @@
     "aliases": [
       "Stepper input",
       "Spinbutton"
-    ]
+    ],
+    "platforms": {
+      "ios": "Stepper (+ TextField)",
+      "android": "TextField with KeyboardType.Number"
+    }
   },
   {
     "id": "password-input",
@@ -634,7 +1028,11 @@
       "atomic": "molecule"
     },
     "summary": "A masked text field with a show/hide toggle.",
-    "description": "The reveal toggle reduces typos. Set autocomplete to current-password or new-password so password managers work, and never block paste."
+    "description": "The reveal toggle reduces typos. Set autocomplete to current-password or new-password so password managers work, and never block paste.",
+    "platforms": {
+      "ios": "SecureField",
+      "android": "SecureTextField"
+    }
   },
   {
     "id": "search-field",
@@ -649,7 +1047,11 @@
     "aliases": [
       "SearchInput",
       "SearchBar"
-    ]
+    ],
+    "platforms": {
+      "ios": ".searchable / UISearchBar",
+      "android": "SearchBar / DockedSearchBar"
+    }
   },
   {
     "id": "pin-input",
@@ -664,7 +1066,11 @@
     "aliases": [
       "OTP input",
       "Verification code"
-    ]
+    ],
+    "platforms": {
+      "ios": "TextField + .oneTimeCode content type",
+      "android": "BasicTextField + SMS autofill"
+    }
   },
   {
     "id": "tag-input",
@@ -679,7 +1085,11 @@
     "aliases": [
       "ChipInput",
       "Multi-value input"
-    ]
+    ],
+    "platforms": {
+      "ios": "UISearchTextField tokens",
+      "android": "InputChip in a FlowRow"
+    }
   },
   {
     "id": "file-upload",
@@ -689,12 +1099,35 @@
       "layer": "component",
       "atomic": "molecule"
     },
-    "summary": "Selects files via a button or by dropping them on a zone.",
-    "description": "Drag-and-drop is an enhancement: always keep a real file input button. Show accepted types and size limits up front, then per-file progress and errors.",
+    "summary": "Picks files with a button and lists them with progress and errors.",
+    "description": "A real file input styled as a button, plus a list of chosen files with size, progress and remove actions. State accepted types and size limits up front. Add a Dropzone as an enhancement, never instead.",
     "aliases": [
-      "Dropzone",
-      "FileInput"
-    ]
+      "FileInput",
+      "Uploader"
+    ],
+    "platforms": {
+      "ios": ".fileImporter / PhotosPicker",
+      "android": "Photo picker / GetContent contract"
+    }
+  },
+  {
+    "id": "dropzone",
+    "title": "Dropzone",
+    "facets": {
+      "purpose": "forms",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "An area that accepts files dragged onto it.",
+    "description": "A dashed target that highlights on drag-over and accepts dropped files. Drag and drop isn't possible for everyone, so it must contain a regular file button too.",
+    "aliases": [
+      "Drop target",
+      "Drag and drop upload"
+    ],
+    "platforms": {
+      "ios": ".dropDestination (iPad)",
+      "android": "Modifier.dragAndDropTarget"
+    }
   },
   {
     "id": "color-picker",
@@ -708,6 +1141,24 @@
     "description": "Combines several molecules: saturation/brightness area, hue slider, alpha slider and text field. Always offer a typed input (hex) as an accessible fallback.",
     "aliases": [
       "ColorInput"
+    ],
+    "platforms": {
+      "ios": "ColorPicker",
+      "android": "No M3 component (custom)"
+    }
+  },
+  {
+    "id": "color-swatch",
+    "title": "ColorSwatch",
+    "facets": {
+      "purpose": "forms",
+      "layer": "component",
+      "atomic": "atom"
+    },
+    "summary": "A small chip that shows a colour, often selectable.",
+    "description": "Used in palettes, theme pickers and product variants. Selected state needs more than a colour change (ring or check), and each swatch needs a name like 'Navy'.",
+    "aliases": [
+      "Swatch"
     ]
   },
   {
@@ -722,7 +1173,11 @@
     "description": "A grid with arrow-key navigation, month paging and disabled dates. Must respect locale: first day of week, month names and date format.",
     "aliases": [
       "DateGrid"
-    ]
+    ],
+    "platforms": {
+      "ios": "DatePicker (.graphical)",
+      "android": "DatePicker"
+    }
   },
   {
     "id": "date-picker",
@@ -736,7 +1191,30 @@
     "description": "Field + Popover + Calendar. Let users type the date too — clicking back 40 years to a birthday is painful. For known dates like birthdays, plain fields often work better.",
     "aliases": [
       "DateInput"
-    ]
+    ],
+    "platforms": {
+      "ios": "DatePicker (.compact / .wheel)",
+      "android": "DatePickerDialog"
+    }
+  },
+  {
+    "id": "date-field",
+    "title": "DateField",
+    "facets": {
+      "purpose": "forms",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "Types a date in separate day, month and year segments.",
+    "description": "Faster than a calendar for known dates like birthdays. Each segment is a spinbutton with arrow-key stepping, and segment order follows the locale (DD/MM vs MM/DD).",
+    "aliases": [
+      "Date input",
+      "Segmented date input"
+    ],
+    "platforms": {
+      "ios": "DatePicker (.compact)",
+      "android": "DatePicker (DisplayMode.Input)"
+    }
   },
   {
     "id": "date-range-picker",
@@ -747,7 +1225,11 @@
       "atomic": "organism"
     },
     "summary": "Selects a start and end date, often over two calendars.",
-    "description": "Common in bookings and analytics. Show the range highlighted while hovering, and offer presets like 'Last 7 days' which cover most needs."
+    "description": "Common in bookings and analytics. Show the range highlighted while hovering, and offer presets like 'Last 7 days' which cover most needs.",
+    "platforms": {
+      "ios": "MultiDatePicker / custom",
+      "android": "DateRangePicker"
+    }
   },
   {
     "id": "time-picker",
@@ -761,7 +1243,11 @@
     "description": "Segmented fields (hh : mm AM/PM) suit free entry; a list suits fixed slots like appointments. Respect the user's 12/24-hour locale.",
     "aliases": [
       "TimeField"
-    ]
+    ],
+    "platforms": {
+      "ios": "DatePicker (.hourAndMinute, wheel)",
+      "android": "TimePicker / TimeInput"
+    }
   },
   {
     "id": "rating",
@@ -775,7 +1261,11 @@
     "description": "As input it's essentially a radio group with star visuals. As display it's read-only with a text equivalent like '4.5 out of 5'.",
     "aliases": [
       "StarRating"
-    ]
+    ],
+    "platforms": {
+      "ios": "No native control (custom)",
+      "android": "No M3 component (custom)"
+    }
   },
   {
     "id": "fieldset",
@@ -790,7 +1280,11 @@
     "aliases": [
       "FormGroup",
       "FormSection"
-    ]
+    ],
+    "platforms": {
+      "ios": "Form Section with header",
+      "android": "Column with section header"
+    }
   },
   {
     "id": "form",
@@ -801,21 +1295,97 @@
       "atomic": "organism"
     },
     "summary": "Collects fields, validation and submission into one unit.",
-    "description": "Manages values, validation timing (on blur / on submit) and error summary. On failed submit, move focus to the first error or a summary that links to each field."
+    "description": "Manages values, validation timing (on blur / on submit) and error summary. On failed submit, move focus to the first error or a summary that links to each field.",
+    "platforms": {
+      "ios": "Form",
+      "android": "Column of fields (no Form component)"
+    }
   },
   {
-    "id": "stepper",
-    "title": "Stepper / Wizard",
+    "id": "editable-text",
+    "title": "EditableText",
+    "facets": {
+      "purpose": "forms",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "Text that turns into an input when clicked, for quick renames.",
+    "description": "Click or press Enter to edit, Enter to save, Escape to cancel. Make the editable affordance visible (pencil icon or hover) and keep it a real button for keyboard users.",
+    "aliases": [
+      "Inline edit",
+      "Editable"
+    ],
+    "platforms": {
+      "ios": "TextField styled as Text",
+      "android": "BasicTextField styled as Text"
+    }
+  },
+  {
+    "id": "rich-text-editor",
+    "title": "RichTextEditor",
+    "facets": {
+      "purpose": "forms",
+      "layer": "component",
+      "atomic": "organism"
+    },
+    "summary": "Edits formatted text with a toolbar: bold, lists, links, images.",
+    "description": "Built on contenteditable via a framework (ProseMirror, Lexical, TipTap). Needs keyboard shortcuts, an accessible toolbar and paste cleanup. Consider markdown for technical users.",
+    "aliases": [
+      "WYSIWYG",
+      "Text editor"
+    ],
+    "platforms": {
+      "ios": "UITextView (allowsEditingTextAttributes)",
+      "android": "BasicTextField + spans (no built-in)"
+    }
+  },
+  {
+    "id": "transfer-list",
+    "title": "TransferList",
+    "facets": {
+      "purpose": "forms",
+      "layer": "component",
+      "atomic": "organism"
+    },
+    "summary": "Moves items between an 'available' and a 'selected' list.",
+    "description": "Two Listboxes with move buttons in between. Good for picking many items from a long set with order. On small screens a checkbox list with search is usually better.",
+    "aliases": [
+      "Dual list",
+      "Shuttle",
+      "Dual listbox"
+    ]
+  },
+  {
+    "id": "wizard",
+    "title": "Wizard",
     "facets": {
       "purpose": "forms",
       "layer": "pattern",
       "atomic": "organism"
     },
     "summary": "Splits a long task into ordered steps with Back and Next.",
-    "description": "Reduces cognitive load in checkouts and onboarding. Shows progress via a Steps indicator and keeps data when going back. Use it only when steps are truly sequential.",
+    "description": "Reduces cognitive load in checkouts and onboarding. Shows progress with a Stepper and keeps data when going back. Use it only when steps are truly sequential; otherwise one long form is faster.",
     "aliases": [
-      "Wizard",
-      "Multi-step form"
+      "Multi-step form",
+      "Guided flow"
+    ],
+    "platforms": {
+      "ios": "NavigationStack pushes / TabView (.page)",
+      "android": "HorizontalPager / nav graph steps"
+    }
+  },
+  {
+    "id": "error-summary",
+    "title": "ErrorSummary",
+    "facets": {
+      "purpose": "feedback",
+      "layer": "pattern",
+      "atomic": "organism"
+    },
+    "summary": "Lists all form errors at the top, each linking to its field.",
+    "description": "Shown on failed submit with focus moved to it, so users know how many problems there are. Each item links to the field. Pioneered by GOV.UK and essential for long forms.",
+    "aliases": [
+      "Validation summary"
     ]
   },
   {
@@ -827,7 +1397,11 @@
       "atomic": "molecule"
     },
     "summary": "Switches between panels of related content in the same place.",
-    "description": "A tablist of tabs, each controlling a tabpanel. Arrow keys move between tabs. Content is peer-level; if tabs change the URL as primary navigation, they're really a nav with links."
+    "description": "A tablist of tabs, each controlling a tabpanel. Arrow keys move between tabs. Content is peer-level; if tabs change the URL as primary navigation, they're really a nav with links.",
+    "platforms": {
+      "ios": "Picker (.segmented) or TabView (.page)",
+      "android": "PrimaryTabRow / SecondaryTabRow"
+    }
   },
   {
     "id": "accordion",
@@ -840,10 +1414,32 @@
     "summary": "Stacks sections whose content expands and collapses on demand.",
     "description": "Each header is a button with aria-expanded. Great for FAQs and progressive disclosure on mobile; bad for content most users need, which then hides behind clicks.",
     "aliases": [
-      "Collapsible",
+      "Expansion panels"
+    ],
+    "platforms": {
+      "ios": "List of DisclosureGroups",
+      "android": "LazyColumn of expandable rows"
+    }
+  },
+  {
+    "id": "collapsible",
+    "title": "Collapsible",
+    "facets": {
+      "purpose": "navigation",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "One section that shows or hides its content with a toggle.",
+    "description": "The single building block of an Accordion: a button with aria-expanded controlling a region. The native <details>/<summary> gives this behaviour for free.",
+    "aliases": [
       "Disclosure",
+      "Details/Summary",
       "Expander"
-    ]
+    ],
+    "platforms": {
+      "ios": "DisclosureGroup",
+      "android": "AnimatedVisibility"
+    }
   },
   {
     "id": "pagination",
@@ -857,7 +1453,31 @@
     "description": "Wrapped in a nav landmark, with aria-current on the active page. Better than infinite scroll when users need to find their way back or reach the footer.",
     "aliases": [
       "Pager"
-    ]
+    ],
+    "platforms": {
+      "ios": "TabView (.page) page dots",
+      "android": "HorizontalPager + indicator"
+    }
+  },
+  {
+    "id": "infinite-scroll",
+    "title": "InfiniteScroll",
+    "facets": {
+      "purpose": "data",
+      "layer": "pattern",
+      "atomic": "organism"
+    },
+    "summary": "Loads more items automatically as the user nears the end.",
+    "description": "Great for feeds, bad for finding things again or reaching the footer. Prefer a 'Load more' button, keep scroll position on Back, and announce new items to screen readers.",
+    "aliases": [
+      "Endless scroll",
+      "Load more",
+      "Virtual list"
+    ],
+    "platforms": {
+      "ios": "List + load on last row appear",
+      "android": "LazyColumn + Paging 3"
+    }
   },
   {
     "id": "breadcrumbs",
@@ -871,7 +1491,11 @@
     "description": "A trail of links like Home › Products › Shoes, in a nav labelled 'Breadcrumb'. The last item is the current page (aria-current=page) and isn't a link.",
     "aliases": [
       "Breadcrumb"
-    ]
+    ],
+    "platforms": {
+      "ios": "Back button title (NavigationStack)",
+      "android": "Up button in TopAppBar"
+    }
   },
   {
     "id": "nav-bar",
@@ -886,8 +1510,46 @@
     "aliases": [
       "Header",
       "TopBar",
-      "AppBar"
+      "AppBar",
+      "Top app bar"
+    ],
+    "platforms": {
+      "ios": "Navigation bar (NavigationStack)",
+      "android": "TopAppBar"
+    }
+  },
+  {
+    "id": "navigation-menu",
+    "title": "NavigationMenu",
+    "facets": {
+      "purpose": "navigation",
+      "layer": "pattern",
+      "atomic": "organism"
+    },
+    "summary": "Top-level links that open large panels of sub-links: a mega menu.",
+    "description": "For sites with deep information architecture. Open on click (not just hover), close on Escape, and keep links reachable by Tab. On phones it collapses into a drawer with accordions.",
+    "aliases": [
+      "Mega menu",
+      "Flyout menu"
     ]
+  },
+  {
+    "id": "menubar",
+    "title": "Menubar",
+    "facets": {
+      "purpose": "navigation",
+      "layer": "component",
+      "atomic": "organism"
+    },
+    "summary": "A desktop-app style bar of menus: File, Edit, View…",
+    "description": "role=menubar with arrow-key navigation between menus. Suits web apps that behave like desktop software (editors, IDEs). Websites rarely need it — use a NavigationMenu.",
+    "aliases": [
+      "Application menu"
+    ],
+    "platforms": {
+      "ios": "Menu bar (macOS / iPadOS)",
+      "android": "No equivalent"
+    }
   },
   {
     "id": "side-nav",
@@ -901,9 +1563,50 @@
     "description": "Suits apps with many sections. Supports nested groups, icons and a collapsed rail mode. Mark the current link with aria-current=page.",
     "aliases": [
       "Sidebar",
-      "NavigationRail",
-      "Drawer nav"
-    ]
+      "Navigation drawer"
+    ],
+    "platforms": {
+      "ios": "NavigationSplitView sidebar",
+      "android": "ModalNavigationDrawer"
+    }
+  },
+  {
+    "id": "navigation-rail",
+    "title": "NavigationRail",
+    "facets": {
+      "purpose": "navigation",
+      "layer": "component",
+      "atomic": "organism"
+    },
+    "summary": "A narrow vertical bar of 3–7 icon destinations on the side.",
+    "description": "Material's middle ground between bottom navigation (phones) and a full drawer (desktop), used on tablets. Each item needs a visible label or at least a tooltip.",
+    "aliases": [
+      "Rail"
+    ],
+    "platforms": {
+      "ios": "Sidebar-adaptable TabView (iPad)",
+      "android": "NavigationRail"
+    }
+  },
+  {
+    "id": "bottom-navigation",
+    "title": "BottomNavigation",
+    "facets": {
+      "purpose": "navigation",
+      "layer": "component",
+      "atomic": "organism"
+    },
+    "summary": "A bar of 3–5 top-level destinations at the bottom of a phone screen.",
+    "description": "Thumb-friendly primary navigation for mobile apps: icon + label, current item highlighted. Each tab keeps its own history. Not for actions — those go in a toolbar or FAB.",
+    "aliases": [
+      "Tab bar",
+      "Navigation bar",
+      "Bottom tabs"
+    ],
+    "platforms": {
+      "ios": "TabView (tab bar)",
+      "android": "NavigationBar"
+    }
   },
   {
     "id": "nav-link",
@@ -917,20 +1620,25 @@
     "description": "A Link with an active state, set via aria-current=page so it's announced, not only coloured. The building block of NavBar, SideNav and Tabs-as-navigation.",
     "aliases": [
       "NavItem"
-    ]
+    ],
+    "platforms": {
+      "ios": "NavigationLink",
+      "android": "Clickable ListItem → destination"
+    }
   },
   {
-    "id": "steps",
-    "title": "Steps",
+    "id": "stepper",
+    "title": "Stepper",
     "facets": {
       "purpose": "navigation",
       "layer": "component",
       "atomic": "molecule"
     },
     "summary": "Shows progress through a sequence: done, current and upcoming steps.",
-    "description": "The visual indicator used by a Stepper/Wizard. Marks the current step with aria-current=step and lets users jump back to completed ones.",
+    "description": "The progress indicator of a Wizard. Marks the current step with aria-current=step and lets users jump back to completed ones. Not to be confused with a number Stepper (+/−), which is a NumberInput.",
     "aliases": [
-      "ProgressSteps",
+      "Steps",
+      "Progress tracker",
       "Step indicator"
     ]
   },
@@ -947,7 +1655,11 @@
     "aliases": [
       "Tree",
       "File tree"
-    ]
+    ],
+    "platforms": {
+      "ios": "OutlineGroup / List(children:)",
+      "android": "No M3 component (custom)"
+    }
   },
   {
     "id": "command-palette",
@@ -963,7 +1675,11 @@
       "Command menu",
       "Spotlight",
       "Quick open"
-    ]
+    ],
+    "platforms": {
+      "ios": ".searchable with commands",
+      "android": "SearchBar with actions"
+    }
   },
   {
     "id": "skip-link",
@@ -1007,7 +1723,11 @@
     "description": "Modal dialogs trap focus, close on Escape and return focus to the trigger. The native <dialog> with showModal() handles much of this. Keep them for focused tasks, not content.",
     "aliases": [
       "Modal"
-    ]
+    ],
+    "platforms": {
+      "ios": ".sheet / .fullScreenCover",
+      "android": "Dialog / full-screen dialog"
+    }
   },
   {
     "id": "dialog-system",
@@ -1036,7 +1756,11 @@
     "description": "role=alertdialog, not dismissible by clicking outside. Buttons say what they do ('Delete project', not 'OK'), and initial focus goes to the safest choice.",
     "aliases": [
       "Confirm dialog"
-    ]
+    ],
+    "platforms": {
+      "ios": ".alert / UIAlertController",
+      "android": "AlertDialog"
+    }
   },
   {
     "id": "sheet",
@@ -1053,7 +1777,11 @@
       "Bottom sheet",
       "Side panel",
       "Offcanvas"
-    ]
+    ],
+    "platforms": {
+      "ios": ".sheet with .presentationDetents",
+      "android": "ModalBottomSheet"
+    }
   },
   {
     "id": "popover",
@@ -1064,7 +1792,11 @@
       "atomic": "molecule"
     },
     "summary": "A floating, interactive panel anchored to a trigger.",
-    "description": "Holds rich content like forms or pickers and opens on click. Unlike a Tooltip it can be focused and interacted with. The native popover attribute now handles top-layer and light dismiss."
+    "description": "Holds rich content like forms or pickers and opens on click. Unlike a Tooltip it can be focused and interacted with. The native popover attribute now handles top-layer and light dismiss.",
+    "platforms": {
+      "ios": ".popover (sheet on iPhone)",
+      "android": "Popup / DropdownMenu"
+    }
   },
   {
     "id": "menu",
@@ -1078,7 +1810,11 @@
     "description": "role=menu with menuitems navigated by arrow keys; selecting one runs an action. If the items are values to choose for a form, it's a Listbox/Select instead.",
     "aliases": [
       "ActionMenu"
-    ]
+    ],
+    "platforms": {
+      "ios": "Menu",
+      "android": "DropdownMenu"
+    }
   },
   {
     "id": "dropdown-menu",
@@ -1092,9 +1828,12 @@
     "description": "Trigger + Menu. Supports sub-menus, groups, checkable items and shortcuts. Keep destructive items separated at the bottom.",
     "aliases": [
       "MenuButton",
-      "Overflow menu",
       "Kebab menu"
-    ]
+    ],
+    "platforms": {
+      "ios": "Menu (button label)",
+      "android": "DropdownMenu + IconButton"
+    }
   },
   {
     "id": "context-menu",
@@ -1108,7 +1847,30 @@
     "description": "Speeds up power users in file managers and editors. It's hidden by nature, so every action must also be available somewhere visible. Shift+F10 opens it from the keyboard.",
     "aliases": [
       "Right-click menu"
-    ]
+    ],
+    "platforms": {
+      "ios": ".contextMenu (long press, preview)",
+      "android": "DropdownMenu on long press"
+    }
+  },
+  {
+    "id": "action-sheet",
+    "title": "ActionSheet",
+    "facets": {
+      "purpose": "overlays",
+      "layer": "component",
+      "atomic": "organism"
+    },
+    "summary": "A list of actions sliding up from the bottom on mobile.",
+    "description": "The phone answer to a Menu: choices for the current context plus Cancel, destructive ones in red. iOS shows a rounded stack; Android uses a modal bottom sheet. On desktop it becomes a Menu or Dialog.",
+    "aliases": [
+      "Confirmation dialog",
+      "Bottom sheet menu"
+    ],
+    "platforms": {
+      "ios": ".confirmationDialog",
+      "android": "ModalBottomSheet with actions"
+    }
   },
   {
     "id": "tooltip",
@@ -1119,7 +1881,11 @@
       "atomic": "atom"
     },
     "summary": "A short text label that appears on hover or focus.",
-    "description": "Plain text only, never interactive or essential. Shows on keyboard focus too, dismisses with Escape. Doesn't work on touch, so don't hide key info in it."
+    "description": "Plain text only, never interactive or essential. Shows on keyboard focus too, dismisses with Escape. Doesn't work on touch, so don't hide key info in it.",
+    "platforms": {
+      "ios": ".help (pointer on iPad/Mac)",
+      "android": "TooltipBox + PlainTooltip"
+    }
   },
   {
     "id": "hover-card",
@@ -1133,7 +1899,11 @@
     "description": "Sits between Tooltip (text only) and Popover (click to open). It's a progressive enhancement for sighted mouse users; the link must make sense without it.",
     "aliases": [
       "Preview card"
-    ]
+    ],
+    "platforms": {
+      "ios": "Context menu preview",
+      "android": "No equivalent"
+    }
   },
   {
     "id": "lightbox",
@@ -1148,7 +1918,32 @@
     "aliases": [
       "Image viewer",
       "Gallery modal"
-    ]
+    ],
+    "platforms": {
+      "ios": "QuickLook / .fullScreenCover",
+      "android": "Full-screen Dialog with zoomable Image"
+    }
+  },
+  {
+    "id": "tour",
+    "title": "Tour",
+    "facets": {
+      "purpose": "overlays",
+      "layer": "pattern",
+      "atomic": "organism"
+    },
+    "summary": "Step-by-step tips pointing at parts of the UI for new users.",
+    "description": "Coachmarks anchored to elements with Next / Skip. Keep it short and skippable, never block the task, and let users replay it. Contextual tips at the moment of need work better.",
+    "aliases": [
+      "Coachmark",
+      "Onboarding",
+      "Walkthrough",
+      "Product tour"
+    ],
+    "platforms": {
+      "ios": "TipKit",
+      "android": "TooltipBox + RichTooltip"
+    }
   },
   {
     "id": "alert",
@@ -1193,7 +1988,11 @@
     "aliases": [
       "Counter",
       "Indicator"
-    ]
+    ],
+    "platforms": {
+      "ios": ".badge() modifier",
+      "android": "BadgedBox + Badge"
+    }
   },
   {
     "id": "progress",
@@ -1207,8 +2006,50 @@
     "description": "Determinate when you know the percentage (uploads), indeterminate when you don't. Uses role=progressbar with aria-valuenow, and a label saying what is progressing.",
     "aliases": [
       "ProgressBar",
-      "Meter"
-    ]
+      "Linear progress"
+    ],
+    "platforms": {
+      "ios": "ProgressView(value:)",
+      "android": "LinearProgressIndicator"
+    }
+  },
+  {
+    "id": "progress-circle",
+    "title": "ProgressCircle",
+    "facets": {
+      "purpose": "feedback",
+      "layer": "component",
+      "atomic": "atom"
+    },
+    "summary": "Shows progress as a ring filling up around a circle.",
+    "description": "The compact cousin of Progress, for tight spaces like buttons, avatars or uploads. Determinate rings should show the percentage in text nearby; indeterminate ones are spinners.",
+    "aliases": [
+      "Circular progress",
+      "Progress ring"
+    ],
+    "platforms": {
+      "ios": "ProgressView (.circular) / Gauge",
+      "android": "CircularProgressIndicator"
+    }
+  },
+  {
+    "id": "meter",
+    "title": "Meter",
+    "facets": {
+      "purpose": "feedback",
+      "layer": "component",
+      "atomic": "atom"
+    },
+    "summary": "Shows a measurement within a known range, like disk usage.",
+    "description": "Unlike Progress, it isn't a task advancing: it's a level (storage, password strength, battery). Native <meter> supports low/high/optimum ranges for colouring.",
+    "aliases": [
+      "Gauge",
+      "Level indicator"
+    ],
+    "platforms": {
+      "ios": "Gauge",
+      "android": "No M3 component (custom)"
+    }
   },
   {
     "id": "spinner",
@@ -1223,7 +2064,30 @@
     "aliases": [
       "Loader",
       "ActivityIndicator"
-    ]
+    ],
+    "platforms": {
+      "ios": "ProgressView()",
+      "android": "CircularProgressIndicator (indeterminate)"
+    }
+  },
+  {
+    "id": "loading-overlay",
+    "title": "LoadingOverlay",
+    "facets": {
+      "purpose": "feedback",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "Covers a region with a spinner while it can't be used.",
+    "description": "Blocks interaction during saves or reloads of a panel. Scope it to the affected region, not the whole page, set aria-busy, and prefer Skeletons for first loads.",
+    "aliases": [
+      "Blocking loader",
+      "Scrim loader"
+    ],
+    "platforms": {
+      "ios": "ProgressView in an .overlay",
+      "android": "Box with scrim + progress indicator"
+    }
   },
   {
     "id": "skeleton",
@@ -1238,7 +2102,11 @@
     "aliases": [
       "Placeholder",
       "Shimmer"
-    ]
+    ],
+    "platforms": {
+      "ios": ".redacted(reason: .placeholder)",
+      "android": "No M3 component (custom shimmer)"
+    }
   },
   {
     "id": "toast",
@@ -1253,7 +2121,11 @@
     "aliases": [
       "Snackbar",
       "Notification"
-    ]
+    ],
+    "platforms": {
+      "ios": "No native toast (banner / HUD)",
+      "android": "Snackbar"
+    }
   },
   {
     "id": "toast-provider",
@@ -1267,8 +2139,32 @@
     "description": "Mounted once near the root, exposing toast(...) to the whole app. Handles stacking, timeouts (paused on hover/focus) and the shared live region.",
     "aliases": [
       "Toaster",
-      "NotificationCenter"
-    ]
+      "SnackbarHost"
+    ],
+    "platforms": {
+      "ios": "No native equivalent",
+      "android": "SnackbarHost + SnackbarHostState"
+    }
+  },
+  {
+    "id": "notification-center",
+    "title": "NotificationCenter",
+    "facets": {
+      "purpose": "feedback",
+      "layer": "pattern",
+      "atomic": "organism"
+    },
+    "summary": "An inbox of past notifications behind a bell icon.",
+    "description": "Collects updates users may have missed, with unread state, mark-all-read and links to each item. The bell shows a Badge count. Group similar items to avoid noise.",
+    "aliases": [
+      "Inbox",
+      "Activity feed",
+      "Notifications panel"
+    ],
+    "platforms": {
+      "ios": "In-app list (system Notification Center)",
+      "android": "In-app list (system notification shade)"
+    }
   },
   {
     "id": "empty-state",
@@ -1283,7 +2179,11 @@
     "aliases": [
       "Blank slate",
       "Zero state"
-    ]
+    ],
+    "platforms": {
+      "ios": "ContentUnavailableView",
+      "android": "No M3 component (custom)"
+    }
   },
   {
     "id": "callout",
@@ -1316,6 +2216,24 @@
     ]
   },
   {
+    "id": "countdown",
+    "title": "Countdown",
+    "facets": {
+      "purpose": "feedback",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "Shows time remaining until a deadline or event.",
+    "description": "Used for sales, OTP expiry or auctions. Don't announce every second to screen readers — update a live region sparingly — and show the absolute end time too.",
+    "aliases": [
+      "Timer"
+    ],
+    "platforms": {
+      "ios": "Text(timerInterval:)",
+      "android": "Chronometer (Views) / custom"
+    }
+  },
+  {
     "id": "validation-message",
     "title": "Validation message",
     "facets": {
@@ -1329,7 +2247,11 @@
       "FieldError",
       "Error text",
       "HelperText"
-    ]
+    ],
+    "platforms": {
+      "ios": "Text below field (no built-in)",
+      "android": "TextField isError + supportingText"
+    }
   },
   {
     "id": "table",
@@ -1340,7 +2262,11 @@
       "atomic": "organism"
     },
     "summary": "Displays data in rows and columns for scanning and comparing.",
-    "description": "Use a real <table> with <th> headers and a caption. Right-align numbers, keep a sticky header for long tables, and let it scroll horizontally on small screens."
+    "description": "Use a real <table> with <th> headers and a caption. Right-align numbers, keep a sticky header for long tables, and let it scroll horizontally on small screens.",
+    "platforms": {
+      "ios": "Table (iPad / macOS)",
+      "android": "No M3 component (LazyColumn rows)"
+    }
   },
   {
     "id": "data-grid",
@@ -1355,7 +2281,30 @@
     "aliases": [
       "DataTable",
       "Spreadsheet"
-    ]
+    ],
+    "platforms": {
+      "ios": "Table with selection and sorting",
+      "android": "No M3 component (custom)"
+    }
+  },
+  {
+    "id": "filter-bar",
+    "title": "FilterBar",
+    "facets": {
+      "purpose": "data",
+      "layer": "component",
+      "atomic": "organism"
+    },
+    "summary": "A row of filter controls and active filter chips above results.",
+    "description": "Dropdown filters, search and sort, with applied filters as removable Chips and 'Clear all'. On phones it collapses to a Filters button that opens a Sheet. Show the result count.",
+    "aliases": [
+      "Faceted filters",
+      "Filter toolbar"
+    ],
+    "platforms": {
+      "ios": "Toolbar Menu filters + .searchable",
+      "android": "FilterChip row"
+    }
   },
   {
     "id": "heatmap",
@@ -1369,7 +2318,11 @@
     "description": "Like a GitHub contribution graph. Needs a legend, a colour-blind-safe sequential palette and tooltips or a table alternative for exact values.",
     "aliases": [
       "Contribution graph"
-    ]
+    ],
+    "platforms": {
+      "ios": "Swift Charts RectangleMark",
+      "android": "No built-in (Canvas / Vico)"
+    }
   },
   {
     "id": "list-item",
@@ -1385,7 +2338,11 @@
       "Cell",
       "Row",
       "List tile"
-    ]
+    ],
+    "platforms": {
+      "ios": "List row / LabeledContent",
+      "android": "ListItem"
+    }
   },
   {
     "id": "description-list",
@@ -1401,7 +2358,11 @@
       "Key-value list",
       "Properties",
       "DataList"
-    ]
+    ],
+    "platforms": {
+      "ios": "LabeledContent in a Form",
+      "android": "ListItem (headline + supporting)"
+    }
   },
   {
     "id": "stat",
@@ -1458,7 +2419,11 @@
       "atomic": "atom"
     },
     "summary": "Represents a person or entity with an image or initials.",
-    "description": "Falls back from photo to initials to a generic icon. Decorative next to a name (alt=\"\"), meaningful when shown alone. Often carries a StatusDot."
+    "description": "Falls back from photo to initials to a generic icon. Decorative next to a name (alt=\"\"), meaningful when shown alone. Often carries a StatusDot.",
+    "platforms": {
+      "ios": "Image clipped to Circle",
+      "android": "Image clipped to CircleShape"
+    }
   },
   {
     "id": "avatar-group",
@@ -1503,7 +2468,11 @@
     "aliases": [
       "Graph",
       "DataViz"
-    ]
+    ],
+    "platforms": {
+      "ios": "Swift Charts",
+      "android": "No built-in (Vico / MPAndroidChart)"
+    }
   },
   {
     "id": "carousel",
@@ -1518,7 +2487,11 @@
     "aliases": [
       "Slider",
       "Slideshow"
-    ]
+    ],
+    "platforms": {
+      "ios": "ScrollView (.paging) / TabView (.page)",
+      "android": "HorizontalMultiBrowseCarousel"
+    }
   },
   {
     "id": "image",
@@ -1529,7 +2502,11 @@
       "atomic": "atom"
     },
     "summary": "Displays a picture responsively, with loading and fallback states.",
-    "description": "Wraps <img> with srcset, lazy loading, aspect ratio and a fallback. Every image needs alt: describe informative images, use alt=\"\" for decorative ones."
+    "description": "Wraps <img> with srcset, lazy loading, aspect ratio and a fallback. Every image needs alt: describe informative images, use alt=\"\" for decorative ones.",
+    "platforms": {
+      "ios": "Image / AsyncImage",
+      "android": "Image / AsyncImage (Coil)"
+    }
   },
   {
     "id": "figure",
@@ -1554,7 +2531,11 @@
     "description": "Captions and transcripts are required for accessibility. Never autoplay with sound; all controls must work by keyboard.",
     "aliases": [
       "MediaPlayer"
-    ]
+    ],
+    "platforms": {
+      "ios": "VideoPlayer (AVKit)",
+      "android": "PlayerView (Media3)"
+    }
   },
   {
     "id": "icon",
@@ -1565,7 +2546,11 @@
       "atomic": "atom"
     },
     "summary": "A small symbol from the system's icon set.",
-    "description": "Sized and coloured by tokens, inheriting currentColor. Decorative by default (aria-hidden); if it conveys meaning alone, it needs a label."
+    "description": "Sized and coloured by tokens, inheriting currentColor. Decorative by default (aria-hidden); if it conveys meaning alone, it needs a label.",
+    "platforms": {
+      "ios": "Image(systemName:) — SF Symbols",
+      "android": "Icon — Material Symbols"
+    }
   },
   {
     "id": "logo",
@@ -1583,6 +2568,58 @@
     ]
   },
   {
+    "id": "qr-code",
+    "title": "QRCode",
+    "facets": {
+      "purpose": "content",
+      "layer": "component",
+      "atomic": "atom"
+    },
+    "summary": "Encodes a URL or text as a scannable square code.",
+    "description": "Bridges screens to phones: pairing, tickets, payments. Keep the quiet zone around it, size it for the scanning distance, and always show the link or code as text too.",
+    "aliases": [
+      "QR"
+    ],
+    "platforms": {
+      "ios": "CIQRCodeGenerator (Core Image)",
+      "android": "ZXing BarcodeEncoder"
+    }
+  },
+  {
+    "id": "map",
+    "title": "Map",
+    "facets": {
+      "purpose": "content",
+      "layer": "component",
+      "atomic": "organism"
+    },
+    "summary": "Shows places on an interactive map with markers and zoom.",
+    "description": "Usually wraps a provider (Mapbox, Google, Apple). Maps are hard for keyboard and screen reader users, so offer the same places as a list and the address as text.",
+    "aliases": [
+      "MapView"
+    ],
+    "platforms": {
+      "ios": "Map (MapKit)",
+      "android": "GoogleMap (Maps Compose)"
+    }
+  },
+  {
+    "id": "comment",
+    "title": "Comment",
+    "facets": {
+      "purpose": "content",
+      "layer": "component",
+      "atomic": "molecule"
+    },
+    "summary": "A message with author, time and text, in threads or chat.",
+    "description": "Avatar + name + timestamp + body, plus actions like reply or react. In chat it becomes a bubble aligned by sender. Use <time> for timestamps and keep threads as nested lists.",
+    "aliases": [
+      "Message bubble",
+      "Chat message",
+      "Reply"
+    ]
+  },
+  {
     "id": "visually-hidden",
     "title": "VisuallyHidden",
     "facets": {
@@ -1595,7 +2632,11 @@
     "aliases": [
       "sr-only",
       "ScreenReaderOnly"
-    ]
+    ],
+    "platforms": {
+      "ios": ".accessibilityLabel",
+      "android": "contentDescription / semantics"
+    }
   },
   {
     "id": "portal",
@@ -1606,7 +2647,11 @@
       "atomic": "atom"
     },
     "summary": "Renders children into another DOM node, usually the body.",
-    "description": "Escapes parent overflow and z-index for overlays like Dialog, Popover and Toast. The native popover/dialog top layer is making it less necessary."
+    "description": "Escapes parent overflow and z-index for overlays like Dialog, Popover and Toast. The native popover/dialog top layer is making it less necessary.",
+    "platforms": {
+      "ios": ".overlay / presentation layer",
+      "android": "Popup / Dialog window"
+    }
   },
   {
     "id": "focus-trap",
@@ -1621,7 +2666,11 @@
     "aliases": [
       "FocusScope",
       "FocusLock"
-    ]
+    ],
+    "platforms": {
+      "ios": "accessibilityViewIsModal",
+      "android": "Dialog window (focus contained)"
+    }
   },
   {
     "id": "theme-provider",
@@ -1636,7 +2685,11 @@
     "aliases": [
       "Design tokens provider",
       "ColorModeProvider"
-    ]
+    ],
+    "platforms": {
+      "ios": "Environment (colorScheme, tint)",
+      "android": "MaterialTheme"
+    }
   },
   {
     "id": "show",
@@ -1652,7 +2705,11 @@
       "Responsive",
       "Hidden",
       "ClientOnly"
-    ]
+    ],
+    "platforms": {
+      "ios": "horizontalSizeClass",
+      "android": "WindowSizeClass"
+    }
   },
   {
     "id": "transition",
@@ -1668,6 +2725,10 @@
       "Presence",
       "Motion",
       "Collapse/Fade"
-    ]
+    ],
+    "platforms": {
+      "ios": ".transition + withAnimation",
+      "android": "AnimatedVisibility / AnimatedContent"
+    }
   }
 ]

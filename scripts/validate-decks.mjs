@@ -7,7 +7,8 @@ const DECKS_DIR = new URL("../src/decks/", import.meta.url).pathname;
 const MAX_SUMMARY = 90;
 const MAX_DESCRIPTION = 280;
 const ID_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
-const MOBILE_SUFFIX = ".mobile";
+const VARIANTS = ["mobile", "ios", "android"];
+const MAX_PLATFORM = 60;
 
 const errors = [];
 const warnings = [];
@@ -76,6 +77,13 @@ for (const folder of deckFolders) {
     if (card.aliases !== undefined && (!Array.isArray(card.aliases) || !card.aliases.every(isNonEmptyString))) {
       errors.push(`${at}: aliases must be an array of strings`);
     }
+    if (card.platforms !== undefined) {
+      for (const [key, value] of Object.entries(card.platforms)) {
+        if (!["ios", "android"].includes(key)) errors.push(`${at}: platforms.${key} is not ios or android`);
+        else if (!isNonEmptyString(value)) errors.push(`${at}: platforms.${key} must be a non-empty string`);
+        else if (value.length > MAX_PLATFORM) errors.push(`${at}: platforms.${key} is ${value.length} chars (max ${MAX_PLATFORM})`);
+      }
+    }
 
     for (const facet of deck.facets) {
       const value = card.facets?.[facet.key];
@@ -93,18 +101,39 @@ for (const folder of deckFolders) {
   const names = existsSync(imagesDir)
     ? readdirSync(imagesDir).filter((f) => f.endsWith(".svg")).map((f) => f.slice(0, -".svg".length))
     : [];
-  const images = new Set(names.filter((n) => !n.endsWith(MOBILE_SUFFIX)));
-  const mobileImages = new Set(
-    names.filter((n) => n.endsWith(MOBILE_SUFFIX)).map((n) => n.slice(0, -MOBILE_SUFFIX.length)),
-  );
+  // "<id>.svg" plus optional "<id>.mobile.svg", "<id>.ios.svg", "<id>.android.svg"
+  const images = new Set();
+  const variants = Object.fromEntries(VARIANTS.map((v) => [v, new Set()]));
+  for (const name of names) {
+    const variant = VARIANTS.find((v) => name.endsWith(`.${v}`));
+    if (variant) variants[variant].add(name.slice(0, -(variant.length + 1)));
+    else images.add(name);
+  }
   for (const id of ids) if (!images.has(id)) warnings.push(`${where("images")}: no ${id}.svg (card shows a placeholder)`);
   for (const image of images) if (!ids.has(image)) warnings.push(`${where("images")}: ${image}.svg has no matching card`);
-  for (const image of mobileImages) {
-    if (!ids.has(image)) warnings.push(`${where("images")}: ${image}${MOBILE_SUFFIX}.svg has no matching card`);
-    else if (!images.has(image)) warnings.push(`${where("images")}: ${image}${MOBILE_SUFFIX}.svg has no desktop ${image}.svg, so it is not shown`);
+  for (const variant of VARIANTS) {
+    for (const image of variants[variant]) {
+      const file = `${image}.${variant}.svg`;
+      if (!ids.has(image)) warnings.push(`${where("images")}: ${file} has no matching card`);
+      else if (!images.has(image)) warnings.push(`${where("images")}: ${file} has no desktop ${image}.svg, so it is not shown`);
+    }
+  }
+  for (const [a, b] of [["ios", "android"], ["android", "ios"]]) {
+    for (const image of variants[a]) {
+      if (!variants[b].has(image)) warnings.push(`${where("images")}: ${image}.${a}.svg needs ${image}.${b}.svg too (shown as a pair)`);
+    }
+  }
+  for (const image of variants.mobile) {
+    if (variants.ios.has(image) && variants.android.has(image)) {
+      warnings.push(`${where("images")}: ${image}.mobile.svg is hidden by the iOS/Android pair`);
+    }
   }
 
-  console.log(`✓ ${folder}: ${cards.length} cards (${mobileImages.size} with mobile variant), ${deck.facets.length} facets`);
+  const withPlatforms = cards.filter((card) => card.platforms).length;
+  console.log(
+    `✓ ${folder}: ${cards.length} cards, ${deck.facets.length} facets; images: ${variants.mobile.size} mobile, ` +
+      `${variants.ios.size} iOS/Android pairs; ${withPlatforms} with native names`,
+  );
 }
 
 if (deckFolders.length === 0) errors.push("no decks found in src/decks/");
