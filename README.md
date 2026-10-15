@@ -21,6 +21,7 @@ A mobile-first flashcard deck for learning design system components: 119 compone
 - **Component deck** — name, purpose, layer, atomic level, wireframe illustration and one-line purpose on the front
 - **Tap to reveal** — tap/click (or arrow up/down) to show when to use it, nearest alternatives and accessibility notes
 - **Filters** — narrow the deck by purpose, layer and/or atomic design level, in any combination (each deck declares its own filters)
+- **Desktop + mobile** — components that change shape on small screens show both versions side by side
 - **Multiple decks** — add a folder under `src/decks/` and it shows up in the deck picker
 - **Swipe navigation** — swipe left/right to navigate between cards
 - **Keyboard navigation** — left/right arrow keys
@@ -65,6 +66,8 @@ Add an entry to `src/decks/<deck>/cards.json`:
 | `aliases`     | No       | Other names for the same thing                                       |
 
 Optionally add `images/<id>.svg` (160×120). Cards without one show a `?` placeholder.
+
+If the component looks different on small screens, also add `images/<id>.mobile.svg` (60×120, drawn inside a phone frame). The card then shows the desktop and mobile versions side by side.
 
 Then run `pnpm validate`. It checks ids, required fields, facet values and text lengths, and warns about missing or orphan images. `pnpm build` runs it first and fails on errors.
 

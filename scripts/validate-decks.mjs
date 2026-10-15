@@ -7,6 +7,7 @@ const DECKS_DIR = new URL("../src/decks/", import.meta.url).pathname;
 const MAX_SUMMARY = 90;
 const MAX_DESCRIPTION = 280;
 const ID_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
+const MOBILE_SUFFIX = ".mobile";
 
 const errors = [];
 const warnings = [];
@@ -86,13 +87,21 @@ for (const folder of deckFolders) {
   });
 
   const imagesDir = join(dir, "images");
-  const images = existsSync(imagesDir)
-    ? new Set(readdirSync(imagesDir).filter((f) => f.endsWith(".svg")).map((f) => f.slice(0, -4)))
-    : new Set();
+  const names = existsSync(imagesDir)
+    ? readdirSync(imagesDir).filter((f) => f.endsWith(".svg")).map((f) => f.slice(0, -".svg".length))
+    : [];
+  const images = new Set(names.filter((n) => !n.endsWith(MOBILE_SUFFIX)));
+  const mobileImages = new Set(
+    names.filter((n) => n.endsWith(MOBILE_SUFFIX)).map((n) => n.slice(0, -MOBILE_SUFFIX.length)),
+  );
   for (const id of ids) if (!images.has(id)) warnings.push(`${where("images")}: no ${id}.svg (card shows a placeholder)`);
   for (const image of images) if (!ids.has(image)) warnings.push(`${where("images")}: ${image}.svg has no matching card`);
+  for (const image of mobileImages) {
+    if (!ids.has(image)) warnings.push(`${where("images")}: ${image}${MOBILE_SUFFIX}.svg has no matching card`);
+    else if (!images.has(image)) warnings.push(`${where("images")}: ${image}${MOBILE_SUFFIX}.svg has no desktop ${image}.svg, so it is not shown`);
+  }
 
-  console.log(`✓ ${folder}: ${cards.length} cards, ${deck.facets.length} facets`);
+  console.log(`✓ ${folder}: ${cards.length} cards (${mobileImages.size} with mobile variant), ${deck.facets.length} facets`);
 }
 
 if (deckFolders.length === 0) errors.push("no decks found in src/decks/");

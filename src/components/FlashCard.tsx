@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import type { Deck, Flashcard } from "../types";
-import { getCardImage } from "../decks";
+import { getCardImages } from "../decks";
 import "./FlashCard.css";
 
 interface FlashCardProps {
@@ -11,7 +11,7 @@ interface FlashCardProps {
 }
 
 export default function FlashCard({ deck, card, revealed, onReveal }: FlashCardProps) {
-  const image = getCardImage(deck.id, card.id);
+  const { desktop, mobile } = getCardImages(deck.id, card.id);
 
   return (
     <div className="flashcard" onClick={onReveal}>
@@ -29,13 +29,26 @@ export default function FlashCard({ deck, card, revealed, onReveal }: FlashCardP
       <h2 className="flashcard-title">{card.title}</h2>
 
       <div className="flashcard-body">
-        <div className="flashcard-image">
-          {image ? (
-            <img src={image} alt="" draggable={false} />
-          ) : (
-            <span className="flashcard-placeholder">?</span>
-          )}
-        </div>
+        {desktop && mobile ? (
+          <div className="flashcard-image flashcard-image--split">
+            <figure className="flashcard-image__variant flashcard-image__variant--desktop">
+              <img src={desktop} alt="" draggable={false} />
+              <figcaption>Desktop</figcaption>
+            </figure>
+            <figure className="flashcard-image__variant flashcard-image__variant--mobile">
+              <img src={mobile} alt="" draggable={false} />
+              <figcaption>Mobile</figcaption>
+            </figure>
+          </div>
+        ) : (
+          <div className="flashcard-image">
+            {desktop ? (
+              <img src={desktop} alt="" draggable={false} />
+            ) : (
+              <span className="flashcard-placeholder">?</span>
+            )}
+          </div>
+        )}
 
         <p className="flashcard-summary">{card.summary}</p>
 

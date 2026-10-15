@@ -26,13 +26,25 @@ export const decks: Deck[] = Object.entries(metaModules)
   })
   .sort((a, b) => a.title.localeCompare(b.title));
 
-const imagesByDeck: Record<string, Record<string, string>> = {};
-for (const [path, url] of Object.entries(imageModules)) {
-  const [deckId, , file] = segments(path);
-  imagesByDeck[deckId] ??= {};
-  imagesByDeck[deckId][file.slice(0, -".svg".length)] = url;
+export interface CardImages {
+  desktop?: string;
+  mobile?: string;
 }
 
-export function getCardImage(deckId: string, cardId: string): string | undefined {
-  return imagesByDeck[deckId]?.[cardId];
+const MOBILE_SUFFIX = ".mobile";
+
+// "<id>.svg" is the default image; "<id>.mobile.svg" is its optional mobile variant.
+const imagesByDeck: Record<string, Record<string, CardImages>> = {};
+for (const [path, url] of Object.entries(imageModules)) {
+  const [deckId, , file] = segments(path);
+  const name = file.slice(0, -".svg".length);
+  const isMobile = name.endsWith(MOBILE_SUFFIX);
+  const cardId = isMobile ? name.slice(0, -MOBILE_SUFFIX.length) : name;
+  imagesByDeck[deckId] ??= {};
+  imagesByDeck[deckId][cardId] ??= {};
+  imagesByDeck[deckId][cardId][isMobile ? "mobile" : "desktop"] = url;
+}
+
+export function getCardImages(deckId: string, cardId: string): CardImages {
+  return imagesByDeck[deckId]?.[cardId] ?? {};
 }
