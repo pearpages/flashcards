@@ -102,7 +102,7 @@ Pushing a version tag (`v*`) builds the app
 with GitHub Actions and publishes it to **GitHub Pages** at https://flashcards.pearpages.com.
 The workflow can also be run by hand from the Actions tab.
 
-To release from `main`: `npm version patch|minor|major -m "release %s"` (bumps
+To release from `main`: `npm version patch|minor|major` (bumps
 `package.json`, commits and tags `v<version>`), push `main`, push the tag, then create the
 GitHub release. In Claude Code, `/release <bump>` runs these steps.
 

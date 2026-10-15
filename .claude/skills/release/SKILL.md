@@ -1,8 +1,8 @@
 ---
 name: release
-description: Release a new version of the app. Bumps package.json (patch, minor or major) with npm version, which commits and creates the matching v* tag, pushes main and the tag (the tag triggers the GitHub Pages deploy to flashcards.pearpages.com) and creates the GitHub release with notes. Use when the user asks to release, publish, ship or deploy a version, or invokes /release [patch|minor|major].
+description: Release a new version of the app. Bumps package.json (patch, minor or major) with npm version, commits it and creates the matching v* tag, pushes main and the tag (the tag triggers the GitHub Pages deploy to flashcards.pearpages.com) and creates the GitHub release with notes. Use when the user asks to release, publish, ship or deploy a version, or invokes /release [patch|minor|major].
 argument-hint: "[patch|minor|major]"
-allowed-tools: Bash(git status:*), Bash(git diff:*), Bash(git log:*), Bash(git fetch:*), Bash(git rev-parse:*), Bash(git describe:*), Bash(git tag:*), Bash(git push:*), Bash(npm version:*), Bash(npm run:*), Bash(gh release:*), Bash(gh run:*), Bash(gh auth status:*), Read, Edit
+allowed-tools: Bash(git status:*), Bash(git diff:*), Bash(git log:*), Bash(git fetch:*), Bash(git rev-parse:*), Bash(git describe:*), Bash(git add:*), Bash(git commit:*), Bash(git tag:*), Bash(git push:*), Bash(npm version:*), Bash(npm run:*), Bash(gh release:*), Bash(gh run:*), Bash(gh auth status:*), Read, Edit
 ---
 
 # release — bump, tag, push and publish a version
@@ -56,15 +56,17 @@ create the GitHub release.
 ## Step 4 — Bump, commit and tag
 
 Add a dated line at the top of **Done** in `tasks.md`
-(`- [x] YYYY-MM-DD: Released v<next>.`) — `npm version` commits tracked changes along
-with the version, so it lands in the same commit. Then:
+(`- [x] YYYY-MM-DD: Released v<next>.`). `npm version` refuses to run with that edit in the
+tree, so bump without git and commit and tag by hand:
 
 ```bash
-npm version <bump> -m "release %s"
+npm version <bump> --no-git-tag-version
+git add package.json tasks.md
+git commit -m "release <next>"
+git tag -a v<next> -m "release <next>"
 ```
 
-This updates `package.json`, commits it as `release <next>` and creates the annotated tag
-`v<next>`. No co-author or AI trailer in the commit.
+No co-author or AI trailer in the commit.
 
 ## Step 5 — Push the commit, then the tag
 
