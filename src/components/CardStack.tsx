@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
-import { motion, AnimatePresence, type PanInfo } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion, type PanInfo } from "framer-motion";
 import type { Deck, Flashcard } from "../types";
 import FlashCard from "./FlashCard";
 import { useKeyboardNav } from "../hooks/useKeyboardNav";
@@ -15,11 +15,13 @@ interface CardStackProps {
 
 const SWIPE_THRESHOLD = 50;
 
+const SLIDE_DISTANCE = 240;
+
 const cardVariants = {
   enter: (direction: number) => ({
-    x: direction > 0 ? 300 : -300,
+    x: direction > 0 ? SLIDE_DISTANCE : -SLIDE_DISTANCE,
     opacity: 0,
-    scale: 0.9,
+    scale: 0.92,
   }),
   center: {
     x: 0,
@@ -27,18 +29,29 @@ const cardVariants = {
     scale: 1,
   },
   exit: (direction: number) => ({
-    x: direction > 0 ? -300 : 300,
+    x: direction > 0 ? -SLIDE_DISTANCE : SLIDE_DISTANCE,
     opacity: 0,
-    scale: 0.9,
+    scale: 0.92,
   }),
 };
 
-const springTransition = {
-  type: "spring" as const,
-  stiffness: 300,
-  damping: 30,
-  mass: 0.8,
+// A soft, critically damped spring (~0.7s, no bounce) for movement, and an eased fade
+// that runs on its own clock so cards don't pop in.
+const glide = { type: "spring" as const, stiffness: 110, damping: 21, mass: 1 };
+const cardTransition = {
+  x: glide,
+  scale: glide,
+  opacity: { duration: 0.45, ease: "easeInOut" as const },
 };
+
+// With reduced motion, cards only cross-fade.
+const reducedVariants = {
+  enter: { opacity: 0 },
+  center: { opacity: 1 },
+  exit: { opacity: 0 },
+};
+const reducedTransition = { opacity: { duration: 0.2 } };
+
 
 function shuffleArray<T>(array: T[]): T[] {
   const shuffled = [...array];
@@ -56,6 +69,7 @@ export default function CardStack({ deck, cards, startCardId, onCardChange }: Ca
     0,
   ]);
   const [revealedIds, setRevealedIds] = useState<Set<string>>(new Set());
+  const reduceMotion = useReducedMotion();
 
   const goNext = useCallback(() => {
     setPage(([prev]) => {
@@ -124,11 +138,11 @@ export default function CardStack({ deck, cards, startCardId, onCardChange }: Ca
             key={stack[currentIndex].id}
             className="card-wrapper"
             custom={direction}
-            variants={cardVariants}
+            variants={reduceMotion ? reducedVariants : cardVariants}
             initial="enter"
             animate="center"
             exit="exit"
-            transition={springTransition}
+            transition={reduceMotion ? reducedTransition : cardTransition}
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={0.7}
