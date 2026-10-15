@@ -71,13 +71,14 @@ export default function CardStack({ deck, cards, startCardId, onCardChange }: Ca
     });
   }, []);
 
-  const revealCard = useCallback(() => {
+  // Tapping flips the card: front → back → front.
+  const toggleReveal = useCallback(() => {
     const cardId = stack[currentIndex]?.id;
     if (cardId == null) return;
     setRevealedIds((prev) => {
-      if (prev.has(cardId)) return prev;
       const next = new Set(prev);
-      next.add(cardId);
+      if (next.has(cardId)) next.delete(cardId);
+      else next.add(cardId);
       return next;
     });
   }, [stack, currentIndex]);
@@ -88,7 +89,7 @@ export default function CardStack({ deck, cards, startCardId, onCardChange }: Ca
     setRevealedIds(new Set());
   };
 
-  useKeyboardNav(goPrev, goNext, revealCard);
+  useKeyboardNav(goPrev, goNext, toggleReveal);
 
   const currentCardId = stack[currentIndex]?.id;
   useEffect(() => {
@@ -137,7 +138,7 @@ export default function CardStack({ deck, cards, startCardId, onCardChange }: Ca
               deck={deck}
               card={stack[currentIndex]}
               revealed={revealedIds.has(stack[currentIndex].id)}
-              onReveal={revealCard}
+              onReveal={toggleReveal}
             />
           </motion.div>
         </AnimatePresence>

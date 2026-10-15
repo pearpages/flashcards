@@ -8,8 +8,8 @@ export function useKeyboardNav(
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Leave arrow keys alone while the user is typing (e.g. in the search field)
-      const target = e.target as HTMLElement | null;
-      if (target?.closest("input, textarea, select, [contenteditable='true']")) return;
+      const target = e.target;
+      if (target instanceof Element && target.closest("input, textarea, select, [contenteditable='true']")) return;
 
       if (e.key === "ArrowLeft") {
         e.preventDefault();

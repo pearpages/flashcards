@@ -104,9 +104,7 @@ export default function FlashCard({ deck, card, revealed, onReveal }: FlashCardP
         </motion.div>
       </div>
 
-      <p className={`flashcard-hint ${revealed ? "flashcard-hint--hidden" : ""}`}>
-        Tap to reveal
-      </p>
+      <p className="flashcard-hint">{revealed ? "Tap to go back" : "Tap to reveal"}</p>
     </div>
   );
 }
