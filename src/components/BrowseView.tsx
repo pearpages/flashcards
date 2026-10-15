@@ -118,7 +118,7 @@ export default function BrowseView({
       return;
     }
     const list = listRef.current;
-    const row = list?.querySelector<HTMLElement>(`[data-card-id="${activeCardId}"]`);
+    const row = list?.querySelector<HTMLElement>(`[data-card-id="${CSS.escape(activeCardId)}"]`);
     if (list && row) scrollToElement(list, row, wasVisible.current ? "nearest" : "center");
     wasVisible.current = true;
   }, [visible, activeCardId]);
@@ -126,7 +126,7 @@ export default function BrowseView({
   const jumpTo = (group: string) => {
     setActiveGroup(group);
     const list = listRef.current;
-    const section = list?.querySelector<HTMLElement>(`[data-group="${group}"]`);
+    const section = list?.querySelector<HTMLElement>(`[data-group="${CSS.escape(group)}"]`);
     if (list && section) scrollToElement(list, section, "start", true);
   };
 

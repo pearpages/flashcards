@@ -7,6 +7,8 @@
 
 /* Spacing scale for the study column: 0.75rem inside groups, 1.5–2rem between groups */
 .app-header {
+  position: relative;
+  width: 100%;
   padding: 2rem 1.25rem 1.5rem;
   text-align: center;
   display: flex;
@@ -23,14 +25,45 @@
   letter-spacing: -0.02em;
 }
 
-.app-header__deck-select {
+/* Back to the deck picker: pinned to the header's top-left so the title stays centred */
+.app-header__back {
+  position: absolute;
+  top: 1.75rem;
+  left: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.7rem 0.35rem 0.55rem;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
   font: inherit;
   font-size: 0.85rem;
-  padding: 0.3rem 0.6rem;
-  border: 1px solid #d0d0e0;
-  border-radius: 8px;
-  background: #ffffff;
+  font-weight: 500;
+  color: #55556a;
+  cursor: pointer;
+}
+
+.app-header__back:hover {
+  background: rgba(255, 255, 255, 0.8);
   color: #1a1a2e;
+}
+
+.app-header__back:focus-visible {
+  outline: 2px solid #5b5bd6;
+  outline-offset: 2px;
+}
+
+.app-header__back span[aria-hidden] {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+/* On narrow phones the arrow alone is enough */
+@media (max-width: 420px) {
+  .app-header__back-label {
+    display: none;
+  }
 }
 
 /* Study / Browse switch (mobile only; desktop shows both side by side) */

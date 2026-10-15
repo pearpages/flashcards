@@ -1,0 +1,182 @@
+.deck-picker {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 3rem 1.25rem 3rem;
+}
+
+.deck-picker__header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.deck-picker__title {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #1a1a2e;
+}
+
+.deck-picker__subtitle {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #777;
+}
+
+.deck-picker__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 960px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 380px));
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.deck-picker__empty {
+  color: #888;
+}
+
+/* A deck tile: preview fan, title, description, count */
+.deck-tile {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 1.5rem 1.5rem 1.25rem;
+  border: none;
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.08),
+    0 1px 4px rgba(0, 0, 0, 0.04);
+  font: inherit;
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.deck-tile:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 10px 32px rgba(0, 0, 0, 0.1),
+    0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.deck-tile:active {
+  transform: translateY(-1px);
+}
+
+.deck-tile:focus-visible {
+  outline: 2px solid #5b5bd6;
+  outline-offset: 3px;
+}
+
+/* Three small cards fanned out like a hand */
+.deck-tile__preview {
+  position: relative;
+  height: 112px;
+  margin-bottom: 0.75rem;
+  border-radius: 14px;
+  background: #f5f4fd;
+}
+
+.deck-tile__mini {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  width: 92px;
+  height: 80px;
+  margin-left: -46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(26, 26, 46, 0.12);
+  transition: transform 0.3s ease;
+}
+
+.deck-tile__mini img {
+  width: 82px;
+  height: 62px;
+  object-fit: contain;
+}
+
+.deck-tile__mini--0 {
+  transform: translateX(-62px) rotate(-8deg);
+}
+
+.deck-tile__mini--1 {
+  z-index: 1;
+  transform: translateY(-4px);
+}
+
+.deck-tile__mini--2 {
+  transform: translateX(62px) rotate(8deg);
+}
+
+.deck-tile:hover .deck-tile__mini--0 {
+  transform: translateX(-70px) rotate(-11deg);
+}
+
+.deck-tile:hover .deck-tile__mini--2 {
+  transform: translateX(70px) rotate(11deg);
+}
+
+.deck-tile__title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+.deck-tile__description {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #555;
+}
+
+.deck-tile__footer {
+  margin-top: auto;
+  padding-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.deck-tile__count {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #888;
+}
+
+.deck-tile__arrow {
+  font-size: 1.1rem;
+  color: #5b5bd6;
+  transition: transform 0.25s ease;
+}
+
+.deck-tile:hover .deck-tile__arrow {
+  transform: translateX(3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .deck-tile,
+  .deck-tile__mini,
+  .deck-tile__arrow {
+    transition: none;
+  }
+}

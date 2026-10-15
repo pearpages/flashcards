@@ -5,9 +5,6 @@ item, and add a dated line at the top of **Done**.
 
 ## Open
 
-- [ ] **Escape the card id in BrowseView selectors.** A crafted `#card/<id>` link can blank
-      the page — use `CSS.escape` (or ignore ids not in the deck) in `BrowseView.tsx`
-      ([security.md](security.md) Known risks).
 - [ ] **Verify motion in a real browser.** Card slide (~0.7s spring) and 3D flip timing,
       jump-bar smooth scroll and section highlight were only checked frozen or headless.
 - [ ] **Arrow buttons below the fold on phones.** After loosening the spacing they end at
@@ -29,6 +26,8 @@ item, and add a dated line at the top of **Done**.
 
 ## Done
 
+- [x] 2026-10-15: Deck picker home screen (preview tiles), back arrow, deck in the URL (`#/<deck>/…`), fresh start on each visit; legacy links still work.
+- [x] 2026-10-15: Escaped card ids in BrowseView selectors — a crafted link no longer blanks the page.
 - [x] 2026-10-15: Scaffolded project knowledge files — 14 created (incl. 5 ADRs), 4 fixed, 2 follow-ups.
 - [x] 2026-10-15: Slower, smoother card transitions (soft spring, eased fade, reduced-motion cross-fade).
 - [x] 2026-10-15: Evened out and loosened page spacing on phone and desktop.

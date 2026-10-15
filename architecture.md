@@ -9,7 +9,8 @@ file is a bug.
 ## Shape
 
 A single-page React 19 + TypeScript app built with Vite, with no backend. Entry point:
-`index.html` → `src/main.tsx` → `src/App.tsx`. It ships as static files in `dist/`. All
+`index.html` → `src/main.tsx` → `src/App.tsx`, which shows the deck picker or one deck
+depending on the URL. It ships as static files in `dist/`. All
 content (cards, filters, drawings) is bundled at build time from `src/decks/`. Animations
 use framer-motion; styling is plain CSS, one file per component.
 
@@ -20,8 +21,10 @@ use framer-motion; styling is plain CSS, one file per component.
 | `src/decks/<deck>/` | One deck: `deck.json` (title, description, facets), `cards.json`, `images/*.svg` |
 | `src/decks/index.ts` | Discovers decks and images with `import.meta.glob`; `decks`, `getCardImages()` |
 | `src/types.ts` | `Deck`, `Facet`, `Flashcard`, `FilterState` |
-| `src/App.tsx` | State: deck, filters, view (study/browse), current card; layout; Back/forward |
-| `src/route.ts` | URL hash ↔ route (`#browse`, `#card/<id>`), push/replace history |
+| `src/App.tsx` | Picker or deck, from the URL; remounts `DeckView` on each visit so it starts fresh |
+| `src/route.ts` | URL hash ↔ route (`#/<deck>`, `#/<deck>/card/<id>`, `#/<deck>/browse`, legacy `#card/<id>`), push/replace history |
+| `src/components/DeckPicker.tsx` | Home screen: one tile per deck (preview fan, title, description, count) |
+| `src/components/DeckView.tsx` | One deck: filters, view (study/browse), current card, back arrow, Back/forward within the deck |
 | `src/components/CardStack.tsx` | The study stack: order, swipe/keys, slide animation, shuffle, which cards are flipped |
 | `src/components/FlashCard.tsx` | One card: front (badges, drawings, summary) and back (description, aliases, native names), 3D flip |
 | `src/components/BrowseView.tsx` | Grouped list, search, jump bar, scroll-spy, "filtered by" chips |
@@ -36,11 +39,13 @@ flowchart LR
     deck[deck.json] ; cards[cards.json] ; imgs[images/*.svg]
   end
   data -->|import.meta.glob| loader[decks/index.ts]
-  loader --> app[App.tsx<br/>filters · view · current card]
+  loader --> app[App.tsx<br/>picker or deck]
   hash[(URL hash)] <-->|route.ts| app
-  app --> filters[DeckFilters]
-  app --> stack[CardStack] --> card[FlashCard]
-  app --> browse[BrowseView]
+  app --> picker[DeckPicker]
+  app --> view[DeckView<br/>filters · view · current card]
+  view --> filters[DeckFilters]
+  view --> stack[CardStack] --> card[FlashCard]
+  view --> browse[BrowseView]
   data -.->|pnpm validate| validator[validate-decks.mjs]
 ```
 
@@ -49,18 +54,23 @@ flowchart LR
 1. **Load:** at build time Vite inlines every `deck.json`, `cards.json` and SVG URL;
    `decks/index.ts` groups them by folder. Image variants come from the file name:
    `<id>.svg`, `<id>.mobile.svg`, `<id>.ios.svg`, `<id>.android.svg`.
-2. **Filter:** `App` keeps `FilterState` (`facet key → value | null`). Cards are first
+2. **Pick:** `App` reads the deck id from the hash. No (or an unknown) deck shows
+   `DeckPicker`; choosing a deck pushes `#/<deck>` and mounts `DeckView` with a new key,
+   so every visit starts on the first card with no filters. The back arrow pushes the
+   picker route. Legacy links (`#card/<id>`, `#browse`) open the first deck.
+3. **Filter:** `DeckView` keeps `FilterState` (`facet key → value | null`). Cards are first
    sorted into the order of the grouping facet (the first one with a filter row), so study
    order matches the browse list. `studyCards` apply every filter; `browseCards` apply all
    except the grouping facet, which becomes the list's sections instead.
-3. **Study:** `CardStack` is keyed by deck + filters + an open counter, so changing filters
+4. **Study:** `CardStack` is keyed by deck + filters + an open counter, so changing filters
    or picking a card remounts it at the right card. It reports the visible card back to
-   `App` (`onCardChange`), which highlights it in the list and replaces the URL hash.
-4. **Browse:** picking a row sets the grouping filter to the card's value, relaxes any
-   filter the card doesn't match, pushes `#card/<id>` and switches to study.
-5. **History:** `popstate` re-reads the hash; going back to a card relaxes filters the
-   same way so the card is in the stack.
-6. **Layout:** below 960px one view shows at a time (Study/Browse switch); from 960px the
+   `DeckView` (`onCardChange`), which highlights it in the list and replaces the URL hash.
+5. **Browse:** picking a row sets the grouping filter to the card's value, relaxes any
+   filter the card doesn't match, pushes `#/<deck>/card/<id>` and switches to study.
+6. **History:** `App` and `DeckView` both listen to `popstate`. `App` handles changes of
+   deck (entering or leaving one); `DeckView` handles moves within its deck, and going back
+   to a card relaxes filters the same way so the card is in the stack.
+7. **Layout:** below 960px one view shows at a time (Study/Browse switch); from 960px the
    browse list is a sticky sidebar and scrolls on its own.
 
 No state is persisted: reload starts from the URL hash with no filters.

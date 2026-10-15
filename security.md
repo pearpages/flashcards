@@ -18,8 +18,10 @@ TODO: enable private vulnerability reporting in the repository settings (tracked
 A static single-page app with no backend, accounts, cookies, storage or network calls of
 its own. Everything it shows is bundled at build time from `src/decks/`.
 
-- **URL hash** (`#browse`, `#card/<id>`): untrusted input. The id is looked up among the
-  deck's cards; unknown ids fall back to the first card.
+- **URL hash** (`#/<deck>/card/<id>`, `#/<deck>/browse`, legacy `#card/<id>`): untrusted
+  input. Deck and card ids are looked up among the bundled decks; unknown decks show the
+  picker, unknown cards fall back to the first card, and ids are escaped with
+  `CSS.escape` before reaching a selector.
 - **Search field and filters:** local only; the query filters an in-memory list.
 - **Rendering:** all card text is rendered as React text (escaped); there is no
   `dangerouslySetInnerHTML`. SVG drawings are loaded through `<img>`, so scripts inside an
@@ -42,12 +44,6 @@ its own. Everything it shows is bundled at build time from `src/decks/`.
 
 ## Known risks
 
-- **Crafted `#card/<id>` link can blank the page.** The hash id reaches
-  `querySelector(`[data-card-id="${id}"]`)` in `BrowseView.tsx` unescaped; an id with a
-  quote or bracket makes the selector invalid, the call throws inside an effect, and with
-  no error boundary React unmounts the app. Impact is limited to the visitor who opens the
-  link (no injection, no data). Fix tracked in [tasks.md](tasks.md): escape with
-  `CSS.escape`, or only use ids that exist in the deck.
 - **CI uses floating versions.** `.gitlab-ci.yml` uses `node:22-alpine` and
   `pnpm@latest`, so a deploy can pick up a new pnpm or base image unannounced. Accepted for
   now because deploys are manual and the output is static.

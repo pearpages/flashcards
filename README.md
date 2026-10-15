@@ -19,13 +19,14 @@ A mobile-first flashcard deck for learning design system components: 119 compone
 ## Features
 
 - **Browse by purpose** — every component listed in sections by purpose, with search (names, other names, summaries) and a jump bar; tap one to study it. A sidebar next to the cards on desktop, a Study/Browse switch on mobile
-- **Shareable links** — the URL follows the card you're on (`#card/sheet`) or the list (`#browse`), and the Back button works
+- **Deck picker** — the home screen lists every deck with a preview, its description and card count; a back arrow returns to it, and entering a deck starts fresh
+- **Shareable links** — the URL follows the deck and card you're on (`#/design-system/card/sheet`) or the list (`#/design-system/browse`), and the Back button works
 - **Component deck** — name, purpose, layer, atomic level, wireframe illustration and one-line purpose on the front
 - **Tap to flip** — tap/click (or arrow up/down) to show when to use it, nearest alternatives, accessibility notes and native equivalents; tap again to go back to the front
 - **Filters** — narrow the deck by purpose and/or layer (each deck declares its own filters); the atomic design level is shown as a badge
 - **Desktop + mobile** — components that change shape on small screens show both versions side by side, or desktop · iOS · Android when the platforms differ
 - **Native equivalents** — revealing a card shows its iOS (SwiftUI/UIKit) and Android (Compose Material 3) counterparts; search finds them too
-- **Multiple decks** — add a folder under `src/decks/` and it shows up in the deck picker
+- **Multiple decks** — add a folder under `src/decks/` and it shows up on the deck picker
 - **Swipe navigation** — swipe left/right to navigate between cards
 - **Keyboard navigation** — left/right arrow keys
 - **Shuffle** — randomise the current deck
@@ -34,7 +35,7 @@ A mobile-first flashcard deck for learning design system components: 119 compone
 
 ## Decks
 
-Each deck is a folder in `src/decks/` and owns all of its data. The app discovers decks automatically; when there is more than one, a deck picker appears in the header.
+Each deck is a folder in `src/decks/` and owns all of its data. The app discovers decks automatically and lists them on the home screen.
 
 ```
 src/decks/

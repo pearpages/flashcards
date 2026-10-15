@@ -6,17 +6,22 @@
 ## Context
 
 The browse view needed shareable links to a card and a working Back button. The app is a
-static site on GitLab Pages (no server rewrites) with only two routes: the list and a card.
+static site on GitLab Pages (no server rewrites) with a handful of routes: the deck picker,
+and per deck the list and a card.
 
 ## Decision
 
-- The URL hash is the route: `#browse`, `#card/<id>`, or empty for studying.
-  `src/route.ts` parses and writes it with `history.pushState` / `replaceState`.
-- Picking a card or switching views pushes a history entry; swiping replaces the hash so
-  history isn't flooded. `popstate` restores the view and the card.
+- The URL hash is the route: empty for the deck picker, `#/<deck>` to study a deck,
+  `#/<deck>/card/<id>` for a card and `#/<deck>/browse` for the list. `src/route.ts`
+  parses and writes it with `history.pushState` / `replaceState`.
+- Entering or leaving a deck, picking a card or switching views pushes a history entry;
+  swiping replaces the hash so history isn't flooded. `popstate` restores the deck, the
+  view and the card.
+- Links from before the deck picker (`#card/<id>`, `#browse`) still open the first deck.
 
 ## Consequences
 
 + No dependency, works on any static host, links survive reloads.
-− Routing logic (relaxing filters on Back, open counters) lives in `App.tsx` by hand.
+− Routing logic (relaxing filters on Back, open and entry counters) lives in `App.tsx` and
+  `DeckView.tsx` by hand.
 − The card id from the hash is untrusted input (see [security.md](../../security.md)).
