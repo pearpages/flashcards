@@ -19,6 +19,7 @@ A mobile-first flashcard deck for learning design system components: 155 compone
 - **Plain CSS** — no utility frameworks
 - **pnpm** — package manager
 - **Vitest** — unit tests
+- **@pearpages/credit** — the shared "Made by pearpages" footer
 
 ## Requirements
 

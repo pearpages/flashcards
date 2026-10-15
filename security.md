@@ -40,7 +40,8 @@ its own. Everything it shows is bundled at build time from `src/decks/`.
 
 ## Dependencies
 
-- Runtime: `react`, `react-dom`, `framer-motion`. Everything else is build-time tooling
+- Runtime: `react`, `react-dom`, `framer-motion`, and `@pearpages/credit` (the owner's
+  shared footer: one stylesheet and a small React component). Everything else is build-time tooling
   (including `vitest` for tests).
 - `pnpm-lock.yaml` is the committed lockfile; the GitHub workflow installs with
   `--frozen-lockfile`.

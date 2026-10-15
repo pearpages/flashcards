@@ -21,7 +21,7 @@ use framer-motion; styling is plain CSS, one file per component.
 | `src/decks/<deck>/` | One deck: `deck.json` (title, description, facets), `cards.json`, `images/*.svg` |
 | `src/decks/index.ts` | Discovers decks and images with `import.meta.glob`; `decks`, `getCardImages()` |
 | `src/types.ts` | `Deck`, `Facet`, `Flashcard`, `FilterState` |
-| `src/App.tsx` | Picker or deck, from the URL; remounts `DeckView` on each visit so it starts fresh |
+| `src/App.tsx` | Picker or deck, from the URL; remounts `DeckView` on each visit so it starts fresh; the "Made by pearpages" footer (`@pearpages/credit`) under either |
 | `src/route.ts` | URL hash ↔ route (`#/<deck>`, `#/<deck>/card/<id>`, `#/<deck>/browse`, legacy `#card/<id>`), push/replace history |
 | `src/components/DeckPicker.tsx` | Home screen: one tile per deck (preview fan, title, description, count) |
 | `src/components/DeckView.tsx` | One deck: filters, view (study/browse), current card, back arrow, Back/forward within the deck |
@@ -70,8 +70,10 @@ flowchart LR
 6. **History:** `App` and `DeckView` both listen to `popstate`. `App` handles changes of
    deck (entering or leaving one); `DeckView` handles moves within its deck, and going back
    to a card relaxes filters the same way so the card is in the stack.
-7. **Layout:** below 960px one view shows at a time (Study/Browse switch); from 960px the
-   browse list is a sticky sidebar and scrolls on its own.
+7. **Layout:** `#root` is a full-height column: the screen grows and the credit footer
+   sits under it (at the bottom of short pages). Below 960px one view shows at a time
+   (Study/Browse switch); from 960px the browse list is a sticky sidebar and scrolls on its
+   own, so the footer sits just below it.
 
 No state is persisted: reload starts from the URL hash with no filters.
 

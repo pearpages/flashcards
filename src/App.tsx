@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from "react";
+import "@pearpages/credit/credit.css";
+import { Credit } from "@pearpages/credit/react";
 import { decks } from "./decks";
 import { parseRoute, pushRoute, type Route } from "./route";
 import DeckPicker from "./components/DeckPicker";
@@ -41,7 +43,12 @@ function App() {
       setRoute(next);
       setEntryCount((n) => n + 1);
     };
-    return <DeckPicker decks={decks} onSelect={openDeck} />;
+    return (
+      <>
+        <DeckPicker decks={decks} onSelect={openDeck} />
+        <Credit />
+      </>
+    );
   }
 
   const goHome = () => {
@@ -50,13 +57,16 @@ function App() {
   };
 
   return (
-    <DeckView
-      key={`${deck.id}-${entryCount}`}
-      deck={deck}
-      initialView={route.view}
-      initialCardId={route.cardId}
-      onBack={goHome}
-    />
+    <>
+      <DeckView
+        key={`${deck.id}-${entryCount}`}
+        deck={deck}
+        initialView={route.view}
+        initialCardId={route.cardId}
+        onBack={goHome}
+      />
+      <Credit />
+    </>
   );
 }
 

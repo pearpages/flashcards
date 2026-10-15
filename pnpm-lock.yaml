@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@pearpages/credit':
+        specifier: ^0.2.0
+        version: 0.2.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       framer-motion:
         specifier: ^12.33.0
         version: 12.33.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -368,6 +371,17 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
+
+  '@pearpages/credit@0.2.0':
+    resolution: {integrity: sha512-IG6OI3RTDCdOBW9vHVFjslBcVfFVZSRDJ4aboCgpxiQE6Bz8NPaGzx/b3AzTep5jXp+VLsYLV4RrsnW8afb8Pg==}
+    peerDependencies:
+      react: ^19.1.1
+      react-dom: ^19.1.1
+    peerDependenciesMeta:
+      react:
+        optional: true
+      react-dom:
+        optional: true
 
   '@rolldown/pluginutils@1.0.0-rc.2':
     resolution: {integrity: sha512-izyXV/v+cHiRfozX62W9htOAvwMo4/bXKDrQ+vom1L1qRuexPock/7VZDAhnpHCLNejd3NJ6hiab+tO0D44Rgw==}
@@ -1548,6 +1562,11 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
+
+  '@pearpages/credit@0.2.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+    optionalDependencies:
+      react: 19.2.4
+      react-dom: 19.2.4(react@19.2.4)
 
   '@rolldown/pluginutils@1.0.0-rc.2': {}
 
