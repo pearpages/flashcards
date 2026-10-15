@@ -120,3 +120,7 @@ pnpm build
 # Preview production build
 pnpm preview
 ```
+
+## License
+
+[MIT](LICENSE) © 2026 pearpages
