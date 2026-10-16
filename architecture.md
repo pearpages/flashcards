@@ -72,8 +72,11 @@ flowchart LR
    to a card relaxes filters the same way so the card is in the stack.
 7. **Layout:** `#root` is a full-height column: the screen grows and the credit footer
    sits under it (at the bottom of short pages). Below 960px one view shows at a time
-   (Study/Browse switch); from 960px the browse list is a sticky sidebar and scrolls on its
-   own, so the footer sits just below it.
+   (Study/Browse switch) under a one-row header. Study is locked to one screen
+   (`#root:has(.app--view-study)` is `100dvh`, overflow hidden): the card takes the height
+   left between the filters and the buttons (up to 560px, tighter below 700px tall), and
+   `overscroll-behavior: none` stops the page bouncing while swiping. From 960px the browse
+   list is a sticky sidebar and scrolls on its own, so the footer sits just below it.
 
 No state is persisted: reload starts from the URL hash with no filters.
 

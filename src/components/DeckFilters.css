@@ -73,3 +73,18 @@
     overflow-x: visible;
   }
 }
+
+@media (max-width: 959px) {
+  .deck-filters {
+    gap: 0.45rem;
+  }
+
+  .deck-filters__chip {
+    padding: 0.35rem 0.8rem;
+    font-size: 0.8rem;
+  }
+
+  .deck-filters__count {
+    display: none;
+  }
+}

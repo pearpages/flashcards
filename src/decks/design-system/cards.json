@@ -37,7 +37,7 @@
     "id": "link",
     "title": "Link",
     "facets": {
-      "purpose": "typography",
+      "purpose": "navigation",
       "layer": "component",
       "atomic": "atom"
     },
@@ -55,7 +55,7 @@
     "id": "label",
     "title": "Label",
     "facets": {
-      "purpose": "typography",
+      "purpose": "forms",
       "layer": "component",
       "atomic": "atom"
     },
@@ -140,7 +140,7 @@
     "id": "blockquote",
     "title": "Blockquote",
     "facets": {
-      "purpose": "content",
+      "purpose": "typography",
       "layer": "component",
       "atomic": "atom"
     },
@@ -170,7 +170,7 @@
     "id": "list",
     "title": "List",
     "facets": {
-      "purpose": "typography",
+      "purpose": "content",
       "layer": "component",
       "atomic": "molecule"
     },
@@ -185,7 +185,7 @@
     "id": "prose",
     "title": "Prose",
     "facets": {
-      "purpose": "content",
+      "purpose": "typography",
       "layer": "component",
       "atomic": "organism"
     },
@@ -386,7 +386,7 @@
     "id": "card",
     "title": "Card",
     "facets": {
-      "purpose": "layout",
+      "purpose": "content",
       "layer": "component",
       "atomic": "molecule"
     },
@@ -938,7 +938,7 @@
     "title": "Picker",
     "facets": {
       "purpose": "forms",
-      "layer": "component",
+      "layer": "pattern",
       "atomic": "molecule"
     },
     "summary": "A trigger that opens a dedicated surface to choose a value.",
@@ -1379,7 +1379,7 @@
     "title": "ErrorSummary",
     "facets": {
       "purpose": "feedback",
-      "layer": "pattern",
+      "layer": "component",
       "atomic": "organism"
     },
     "summary": "Lists all form errors at the top, each linking to its field.",
@@ -1407,7 +1407,7 @@
     "id": "accordion",
     "title": "Accordion",
     "facets": {
-      "purpose": "navigation",
+      "purpose": "content",
       "layer": "component",
       "atomic": "molecule"
     },
@@ -1425,7 +1425,7 @@
     "id": "collapsible",
     "title": "Collapsible",
     "facets": {
-      "purpose": "navigation",
+      "purpose": "content",
       "layer": "component",
       "atomic": "molecule"
     },
@@ -1463,7 +1463,7 @@
     "id": "infinite-scroll",
     "title": "InfiniteScroll",
     "facets": {
-      "purpose": "data",
+      "purpose": "navigation",
       "layer": "pattern",
       "atomic": "organism"
     },
@@ -1537,7 +1537,7 @@
     "id": "menubar",
     "title": "Menubar",
     "facets": {
-      "purpose": "navigation",
+      "purpose": "actions",
       "layer": "component",
       "atomic": "organism"
     },
@@ -1966,7 +1966,7 @@
     "facets": {
       "purpose": "feedback",
       "layer": "component",
-      "atomic": "organism"
+      "atomic": "molecule"
     },
     "summary": "A full-width message at the top of the app or page.",
     "description": "For system-level news: maintenance, trial ending, offline. Persists until resolved or dismissed. Don't stack several — prioritise one.",
@@ -2036,7 +2036,7 @@
     "id": "meter",
     "title": "Meter",
     "facets": {
-      "purpose": "feedback",
+      "purpose": "data",
       "layer": "component",
       "atomic": "atom"
     },
@@ -2189,7 +2189,7 @@
     "id": "callout",
     "title": "Callout",
     "facets": {
-      "purpose": "feedback",
+      "purpose": "content",
       "layer": "component",
       "atomic": "molecule"
     },
@@ -2292,7 +2292,7 @@
     "title": "FilterBar",
     "facets": {
       "purpose": "data",
-      "layer": "component",
+      "layer": "pattern",
       "atomic": "organism"
     },
     "summary": "A row of filter controls and active filter chips above results.",
@@ -2328,7 +2328,7 @@
     "id": "list-item",
     "title": "ListItem",
     "facets": {
-      "purpose": "data",
+      "purpose": "content",
       "layer": "component",
       "atomic": "molecule"
     },
@@ -2384,7 +2384,7 @@
     "id": "timeline",
     "title": "Timeline",
     "facets": {
-      "purpose": "data",
+      "purpose": "content",
       "layer": "component",
       "atomic": "organism"
     },
@@ -2398,7 +2398,7 @@
     "id": "tag",
     "title": "Tag",
     "facets": {
-      "purpose": "data",
+      "purpose": "content",
       "layer": "component",
       "atomic": "atom"
     },
@@ -2414,7 +2414,7 @@
     "id": "avatar",
     "title": "Avatar",
     "facets": {
-      "purpose": "data",
+      "purpose": "content",
       "layer": "component",
       "atomic": "atom"
     },
@@ -2429,7 +2429,7 @@
     "id": "avatar-group",
     "title": "AvatarGroup",
     "facets": {
-      "purpose": "data",
+      "purpose": "content",
       "layer": "component",
       "atomic": "molecule"
     },
@@ -2478,7 +2478,7 @@
     "id": "carousel",
     "title": "Carousel",
     "facets": {
-      "purpose": "data",
+      "purpose": "content",
       "layer": "component",
       "atomic": "organism"
     },
@@ -2678,7 +2678,7 @@
     "facets": {
       "purpose": "utilities",
       "layer": "primitive",
-      "atomic": "template"
+      "atomic": "atom"
     },
     "summary": "Supplies design tokens and theme (light, dark, brand) to the tree.",
     "description": "Sits at the root and sets CSS variables or context so every component reads the right tokens. Respects prefers-color-scheme and avoids a flash of the wrong theme.",

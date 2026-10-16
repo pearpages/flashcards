@@ -7,8 +7,6 @@ item, and add a dated line at the top of **Done**.
 
 - [ ] **Verify motion in a real browser.** Card slide (~0.7s spring) and 3D flip timing,
       jump-bar smooth scroll and section highlight were only checked frozen or headless.
-- [ ] **Arrow buttons below the fold on phones.** After loosening the spacing they end at
-      ~830px; consider a compact phone header (title + Study/Browse on one line).
 - [ ] **Review native-platform names.** Newer Material 3 Expressive names (ButtonGroup,
       SplitButtonLayout, FloatingToolbar) and some iOS approximations (TipKit for Tour) were
       written from memory — check against current docs in `cards.json`.
@@ -29,6 +27,8 @@ item, and add a dated line at the top of **Done**.
 
 ## Done
 
+- [x] 2026-10-16: Reviewed the facets of all 155 design-system cards; recategorised 23 (e.g. Link → navigation, Label → forms, Avatar/Tag/Timeline/Carousel → content, Picker/FilterBar → pattern).
+- [x] 2026-10-16: Compact phone study screen: one-row header, tighter filters, card sized to the leftover height; everything fits one viewport and the page no longer bounces while swiping.
 - [x] 2026-10-15: Released v0.2.1.
 - [x] 2026-10-15: "Made by pearpages" footer (`@pearpages/credit`) on every screen.
 - [x] 2026-10-15: Released v0.2.0.

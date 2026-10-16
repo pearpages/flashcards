@@ -126,6 +126,56 @@
   .app--view-browse .app__study {
     display: none;
   }
+
+  /* One row: back · title · Study/Browse */
+  .app-header {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem 0.6rem;
+  }
+
+  .app-header h1 {
+    flex: 1;
+    font-size: 1.1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .app-header__back {
+    position: static;
+    flex-shrink: 0;
+  }
+
+  .app-header__view {
+    padding: 0.35rem 0.85rem;
+    font-size: 0.8rem;
+  }
+
+  /* Study fills exactly one screen (with the credit) and never scrolls or bounces:
+     the card takes the height left over, and slides are clipped at the screen edge */
+  #root:has(.app--view-study) {
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .app--view-study {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  .app--view-study .app__study {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .app--view-study .app-main {
+    min-height: 0;
+    align-items: stretch;
+    padding: 0.85rem 1.25rem 0.5rem;
+  }
 }
 
 @media (min-width: 960px) {

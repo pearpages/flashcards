@@ -10,6 +10,12 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
+/* No rubber-band bounce or pull-to-refresh when swiping cards */
+html,
+body {
+  overscroll-behavior: none;
+}
+
 /* Theme for the "Made by pearpages" footer (@pearpages/credit) */
 :root {
   --sk-ink-soft: #5c5c70;
@@ -32,4 +38,11 @@ body {
   display: flex;
   flex-direction: column;
   width: 100%;
+}
+
+/* Phones: a slimmer credit so the study screen fits one viewport */
+@media (max-width: 959px) {
+  .sk-author {
+    padding: 0.25rem 1rem 0.75rem;
+  }
 }
