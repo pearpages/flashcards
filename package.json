@@ -1,7 +1,7 @@
 {
   "name": "flashcards",
   "private": true,
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Mobile-first flashcards for learning design system components, with drawings, filters and iOS/Android equivalents.",
   "keywords": [
     "flashcards",
