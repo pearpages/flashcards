@@ -16,11 +16,12 @@ item, and add a dated line at the top of **Done**.
 - [ ] **Review the accessibility deck** (51 cards, ADR-0008 Proposed): check the content and
       the SwiftUI/Compose names in `src/decks/accessibility/cards.json` against current
       WAI-ARIA APG, WCAG 2.2 and platform docs; written from memory.
-- [ ] **Branding with two decks.** The page title, OG tags, `og.webp` and `document.title`
+- [ ] **Branding with three decks.** The page title, OG tags, `og.webp` and `document.title`
       in `DeckPicker` still say "Design System Flashcards" and "155 components" — decide
       whether the site becomes plain "Flashcards".
-- [ ] **Generalise native equivalents** before a deck whose equivalents aren't iOS/Android
-      (e.g. a system-design deck with AWS/GCP names): let `deck.json` declare its columns.
+- [ ] **Review the system-design deck** (59 cards, ADR-0009 Proposed): check the
+      descriptions and the AWS/GCP/Azure service names in
+      `src/decks/system-design/cards.json` against current provider docs; written from memory.
 
 ### Advertising readiness
 
@@ -35,6 +36,7 @@ item, and add a dated line at the top of **Done**.
 
 ## Done
 
+- [x] 2026-10-20: System Design deck: 59 cards (data, caching, messaging, scaling, reliability, consistency, networking, observability) with a drawing each and AWS/GCP/Azure equivalents. Decks now declare their own platform columns in `deck.json` (ADR-0009).
 - [x] 2026-10-20: Accessibility deck: 51 cards (10 patterns, 5 roles, 10 ARIA attributes, 11 techniques, 15 WCAG 2.2 criteria) with a drawing each, `kind`/`helps` filters and a WCAG level badge. Legacy links (`#card/<id>`) stay on the design-system deck now that it isn't first alphabetically.
 - [x] 2026-10-16: Released v0.3.0.
 - [x] 2026-10-16: Reviewed the facets of all 155 design-system cards; recategorised 23 (e.g. Link → navigation, Label → forms, Avatar/Tag/Timeline/Carousel → content, Picker/FilterBar → pattern).

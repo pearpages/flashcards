@@ -1,0 +1,607 @@
+[
+  {
+    "id": "read-replica",
+    "title": "Read Replica",
+    "facets": { "concern": "data", "kind": "building-block", "scale": "growing" },
+    "summary": "A copy of the database that serves reads, fed asynchronously from the primary.",
+    "description": "Scales reads, not writes. Replication lag means a user may not see what they just wrote: route read-your-own-writes to the primary for a few seconds. Pick it over sharding while writes still fit on one machine.",
+    "aliases": ["Replica", "Follower"],
+    "platforms": {
+      "aws": "RDS / Aurora read replicas",
+      "gcp": "Cloud SQL read replicas",
+      "azure": "Azure Database for PostgreSQL read replicas"
+    }
+  },
+  {
+    "id": "sharding",
+    "title": "Sharding",
+    "facets": { "concern": "data", "kind": "pattern", "scale": "large-scale" },
+    "summary": "Split the data across databases by a key, so each holds and writes only a part.",
+    "description": "Scales writes and storage. The shard key decides everything: pick one that spreads load evenly and keeps a request on one shard. Cross-shard joins, transactions and resharding are the price, so replicas and caching come first.",
+    "aliases": ["Horizontal partitioning", "Partitioning"],
+    "platforms": {
+      "aws": "DynamoDB partition keys",
+      "gcp": "Spanner splits",
+      "azure": "Cosmos DB partition keys"
+    }
+  },
+  {
+    "id": "consistent-hashing",
+    "title": "Consistent Hashing",
+    "facets": { "concern": "data", "kind": "pattern", "scale": "large-scale" },
+    "summary": "Maps keys onto a ring of nodes so adding a node moves only a fraction of the keys.",
+    "description": "With `hash(key) % n`, changing n moves almost every key and empties every cache. On a ring, a new node takes keys from its neighbours only. Virtual nodes smooth out uneven load. Used by Dynamo-style stores and cache clusters.",
+    "aliases": ["Hash ring", "Virtual nodes"]
+  },
+  {
+    "id": "database-index",
+    "title": "Database Index",
+    "facets": { "concern": "data", "kind": "building-block", "scale": "day-one" },
+    "summary": "A sorted lookup structure that turns a full table scan into a few page reads.",
+    "description": "B-trees serve equality and range queries; column order in a composite index matters (leftmost prefix). Every index slows writes and takes space. Read the query plan (`EXPLAIN`) before adding one, and before blaming the database.",
+    "aliases": ["B-tree", "Composite index", "EXPLAIN"]
+  },
+  {
+    "id": "denormalization",
+    "title": "Denormalisation",
+    "facets": { "concern": "data", "kind": "pattern", "scale": "growing" },
+    "summary": "Store data twice, shaped for the read, to avoid joins on a hot path.",
+    "description": "A post keeps `comment_count` and the author's name instead of joining every time. Reads get cheap; writes must update every copy, so do it in the same transaction or accept staleness. Normalise first, denormalise what you've measured.",
+    "aliases": ["Materialised view", "Read model"]
+  },
+  {
+    "id": "object-storage",
+    "title": "Object Storage",
+    "facets": { "concern": "data", "kind": "building-block", "scale": "day-one" },
+    "summary": "Cheap, durable storage for files and blobs, addressed by key over HTTP.",
+    "description": "Keep uploads, images, backups and exports here, never in the database. Let clients upload and download directly with short-lived signed URLs, and put a CDN in front for public files. Objects are replaced whole, not edited.",
+    "aliases": ["Blob storage", "Bucket", "Signed URL"],
+    "platforms": {
+      "aws": "S3",
+      "gcp": "Cloud Storage",
+      "azure": "Blob Storage"
+    }
+  },
+  {
+    "id": "connection-pool",
+    "title": "Connection Pool",
+    "facets": { "concern": "data", "kind": "building-block", "scale": "day-one" },
+    "summary": "Reuses a fixed set of database connections instead of opening one per request.",
+    "description": "Opening a connection costs a handshake and server memory; databases cap how many you can hold. Size the pool to what the database can serve, not to your request rate. Serverless functions need an external pooler or they exhaust the limit.",
+    "aliases": ["PgBouncer"],
+    "platforms": {
+      "aws": "RDS Proxy",
+      "azure": "Built-in PgBouncer (PostgreSQL flexible server)"
+    }
+  },
+  {
+    "id": "change-data-capture",
+    "title": "Change Data Capture",
+    "facets": { "concern": "data", "kind": "pattern", "scale": "growing" },
+    "summary": "Streams every committed row change from the database log to other systems.",
+    "description": "Keeps a search index, cache or warehouse in sync without dual writes from the app. It reads the write-ahead log (binlog, WAL), so it sees exactly what committed, in order. Debezium is the common open-source tool.",
+    "aliases": ["CDC", "Debezium", "Change feed"],
+    "platforms": {
+      "aws": "DynamoDB Streams / DMS",
+      "gcp": "Datastream",
+      "azure": "Cosmos DB change feed"
+    }
+  },
+  {
+    "id": "cache-aside",
+    "title": "Cache-aside",
+    "facets": { "concern": "caching", "kind": "pattern", "scale": "growing" },
+    "summary": "The app checks the cache, and on a miss reads the database and fills the cache.",
+    "description": "The default caching pattern: only requested data is cached, and a cache outage just slows things down. Stale data is the risk, so set a TTL and delete the key on write. Pick it over write-through when reads dominate.",
+    "aliases": ["Lazy loading", "Look-aside cache"],
+    "platforms": {
+      "aws": "ElastiCache",
+      "gcp": "Memorystore",
+      "azure": "Azure Cache for Redis"
+    }
+  },
+  {
+    "id": "write-through",
+    "title": "Write-through",
+    "facets": { "concern": "caching", "kind": "pattern", "scale": "growing" },
+    "summary": "Every write goes to the cache and the database together, so the cache is never stale.",
+    "description": "Reads after writes are fresh, but every write pays two round-trips and the cache fills with data nobody may read. Often combined with cache-aside for reads. Write-behind is the faster, riskier sibling.",
+    "aliases": ["Write-through cache"]
+  },
+  {
+    "id": "write-behind",
+    "title": "Write-behind",
+    "facets": { "concern": "caching", "kind": "pattern", "scale": "large-scale" },
+    "summary": "Writes land in the cache and are flushed to the database later, in batches.",
+    "description": "Absorbs write bursts (counters, view counts) at memory speed. If the cache dies before flushing, the writes are lost, so use it only for data you can afford to lose or rebuild.",
+    "aliases": ["Write-back"]
+  },
+  {
+    "id": "cache-invalidation",
+    "title": "Cache Invalidation",
+    "facets": { "concern": "caching", "kind": "principle", "scale": "growing" },
+    "summary": "Deciding when cached data stops being true: TTLs, deletes on write, or versioned keys.",
+    "description": "A TTL bounds staleness but serves old data until it expires. Deleting on write is fresher but races with concurrent reads. Versioned keys (`user:42:v7`) never need deleting. Choose per data type by how stale it may be.",
+    "aliases": ["TTL", "Cache busting"]
+  },
+  {
+    "id": "cache-stampede",
+    "title": "Cache Stampede",
+    "facets": { "concern": "caching", "kind": "principle", "scale": "large-scale" },
+    "summary": "A hot key expires and thousands of requests hit the database at once.",
+    "description": "Fixes: let one request rebuild while others wait or get the stale value (request coalescing, a lock), refresh early before expiry, and add jitter to TTLs so keys don't expire together.",
+    "aliases": ["Thundering herd", "Dog-piling", "Request coalescing"]
+  },
+  {
+    "id": "cdn",
+    "title": "CDN",
+    "facets": { "concern": "caching", "kind": "building-block", "scale": "day-one" },
+    "summary": "Edge servers near users that cache and serve static files and cacheable responses.",
+    "description": "Cuts latency and origin load, and absorbs traffic spikes and DDoS. Fingerprint asset names (`app.3f9a.js`) and cache them for a year; keep HTML short-lived. Purging is slow, so version rather than purge.",
+    "aliases": ["Content delivery network", "Edge cache"],
+    "platforms": {
+      "aws": "CloudFront",
+      "gcp": "Cloud CDN",
+      "azure": "Azure Front Door"
+    }
+  },
+  {
+    "id": "http-caching",
+    "title": "HTTP Caching",
+    "facets": { "concern": "caching", "kind": "building-block", "scale": "day-one" },
+    "summary": "Cache-Control and ETag headers let browsers and CDNs reuse responses.",
+    "description": "`Cache-Control: max-age` says how long a response is fresh; `ETag` plus `If-None-Match` revalidates with a cheap 304. `private` keeps personal data out of shared caches; `no-store` caches nothing. Free caching most APIs leave unused.",
+    "aliases": ["Cache-Control", "ETag", "304 Not Modified"]
+  },
+  {
+    "id": "message-queue",
+    "title": "Message Queue",
+    "facets": { "concern": "messaging", "kind": "building-block", "scale": "growing" },
+    "summary": "Holds tasks until a worker takes one; each message is handled by one consumer.",
+    "description": "Decouples producers from slow work (emails, image resizing) and smooths spikes. A message is deleted once acknowledged. Pick it over a stream when work is per-task and order mostly doesn't matter.",
+    "aliases": ["Work queue", "Job queue", "RabbitMQ"],
+    "platforms": {
+      "aws": "SQS",
+      "gcp": "Cloud Tasks / Pub/Sub",
+      "azure": "Service Bus queues"
+    }
+  },
+  {
+    "id": "event-stream",
+    "title": "Event Stream",
+    "facets": { "concern": "messaging", "kind": "building-block", "scale": "large-scale" },
+    "summary": "An ordered, retained log of events that many consumers read at their own pace.",
+    "description": "Unlike a queue, reading doesn't delete: each consumer group tracks its offset and can replay history. Order is kept per partition (key). Pick it for event-driven systems, analytics and CDC; it's more to run than a queue.",
+    "aliases": ["Log", "Kafka", "Topic partition"],
+    "platforms": {
+      "aws": "Kinesis Data Streams / MSK",
+      "gcp": "Managed Service for Apache Kafka",
+      "azure": "Event Hubs"
+    }
+  },
+  {
+    "id": "pub-sub",
+    "title": "Publish/Subscribe",
+    "facets": { "concern": "messaging", "kind": "pattern", "scale": "growing" },
+    "summary": "A publisher sends one event and every subscriber gets its own copy.",
+    "description": "Fan-out: 'order placed' reaches billing, email and analytics without the publisher knowing them. Each subscriber usually has its own queue, so a slow one doesn't hold up the rest. Queue = one consumer per message; pub/sub = all.",
+    "aliases": ["Pub/sub", "Fan-out", "Topic"],
+    "platforms": {
+      "aws": "SNS / EventBridge",
+      "gcp": "Pub/Sub",
+      "azure": "Event Grid / Service Bus topics"
+    }
+  },
+  {
+    "id": "dead-letter-queue",
+    "title": "Dead-letter Queue",
+    "facets": { "concern": "messaging", "kind": "pattern", "scale": "growing" },
+    "summary": "Where messages go after failing too many times, so they stop blocking the rest.",
+    "description": "A poison message that always crashes the consumer would otherwise retry forever. After N attempts it moves aside for a human or a fix-and-replay tool. Alert on its depth: a growing DLQ is a bug report.",
+    "aliases": ["DLQ", "Poison message"],
+    "platforms": {
+      "aws": "SQS dead-letter queue",
+      "gcp": "Pub/Sub dead-letter topic",
+      "azure": "Service Bus dead-letter queue"
+    }
+  },
+  {
+    "id": "transactional-outbox",
+    "title": "Transactional Outbox",
+    "facets": { "concern": "messaging", "kind": "pattern", "scale": "growing" },
+    "summary": "Write the event to an outbox table in the same transaction as the data, publish later.",
+    "description": "Saving a row and publishing a message are two systems: one can fail after the other. With an outbox both commit together, and a relay (polling or CDC) publishes the rows. Delivery becomes at-least-once, so consumers must be idempotent.",
+    "aliases": ["Outbox", "Dual write problem"]
+  },
+  {
+    "id": "idempotent-consumer",
+    "title": "Idempotent Consumer",
+    "facets": { "concern": "messaging", "kind": "pattern", "scale": "growing" },
+    "summary": "Handling the same message twice has the same effect as handling it once.",
+    "description": "Queues redeliver after timeouts and crashes, so duplicates are normal. Record processed message ids in the same transaction as the effect, or make the effect naturally repeatable (set status = paid, not balance += 10).",
+    "aliases": ["Deduplication", "Inbox pattern"]
+  },
+  {
+    "id": "delivery-guarantees",
+    "title": "Delivery Guarantees",
+    "facets": { "concern": "messaging", "kind": "principle", "scale": "growing" },
+    "summary": "At-most-once may lose messages, at-least-once may repeat them; exactly-once is costly.",
+    "description": "Most brokers give at-least-once: acknowledge after processing and expect duplicates. 'Exactly-once' in practice means at-least-once delivery plus idempotent processing, or a broker transaction within one system such as Kafka.",
+    "aliases": ["At-least-once", "At-most-once", "Exactly-once"]
+  },
+  {
+    "id": "backpressure",
+    "title": "Backpressure",
+    "facets": { "concern": "messaging", "kind": "principle", "scale": "large-scale" },
+    "summary": "A slow consumer signals upstream to slow down instead of drowning in work.",
+    "description": "Without it, buffers grow until memory runs out or latency explodes. Bound every queue and buffer, then block, drop or reject (429) when full. Pull-based consumers apply backpressure naturally; push-based ones need flow control.",
+    "aliases": ["Flow control", "Load shedding"]
+  },
+  {
+    "id": "horizontal-scaling",
+    "title": "Horizontal Scaling",
+    "facets": { "concern": "scaling", "kind": "principle", "scale": "growing" },
+    "summary": "Add more machines rather than a bigger one; needs stateless servers behind a balancer.",
+    "description": "Vertical scaling (a bigger box) is simpler and goes surprisingly far, but has a ceiling and a single point of failure. Horizontal scales almost without limit, once state lives in the database, cache or object store, not on the server.",
+    "aliases": ["Scale out", "Vertical scaling", "Scale up"]
+  },
+  {
+    "id": "stateless-service",
+    "title": "Stateless Service",
+    "facets": { "concern": "scaling", "kind": "principle", "scale": "day-one" },
+    "summary": "Any instance can serve any request because nothing lives in its memory or disk.",
+    "description": "Sessions go in a store or a signed token, uploads go to object storage, jobs go to a queue. Then instances can be added, replaced or killed at any time, which is what autoscaling and rolling deploys assume.",
+    "aliases": ["Shared-nothing", "Twelve-factor"]
+  },
+  {
+    "id": "load-balancer",
+    "title": "Load Balancer",
+    "facets": { "concern": "scaling", "kind": "building-block", "scale": "day-one" },
+    "summary": "Spreads requests across healthy instances; L4 routes connections, L7 routes requests.",
+    "description": "L4 (TCP) is fast and protocol-agnostic. L7 (HTTP) can route by path or header, terminate TLS and retry. It removes instances that fail health checks. Sticky sessions are a smell: they mean the service holds state.",
+    "aliases": ["L4 / L7", "Reverse proxy"],
+    "platforms": {
+      "aws": "Elastic Load Balancing (ALB / NLB)",
+      "gcp": "Cloud Load Balancing",
+      "azure": "Load Balancer / Application Gateway"
+    }
+  },
+  {
+    "id": "autoscaling",
+    "title": "Autoscaling",
+    "facets": { "concern": "scaling", "kind": "building-block", "scale": "growing" },
+    "summary": "Adds and removes instances automatically as load changes.",
+    "description": "Scale on a signal that leads the problem (CPU, queue depth, requests per instance), not on latency, which lags. New instances take time to boot, so keep headroom and scale out faster than you scale in.",
+    "aliases": ["Auto scaling group", "HPA"],
+    "platforms": {
+      "aws": "EC2 Auto Scaling",
+      "gcp": "Managed instance group autoscaler",
+      "azure": "Virtual Machine Scale Sets"
+    }
+  },
+  {
+    "id": "rate-limiter",
+    "title": "Rate Limiter",
+    "facets": { "concern": "scaling", "kind": "building-block", "scale": "growing" },
+    "summary": "Caps how many requests a client may make per time window; extra ones get a 429.",
+    "description": "Token bucket allows short bursts at a steady average; sliding window is stricter. Limit per user or API key, not just per IP. Return `Retry-After` so clients back off. Across instances the counters need a shared store like Redis.",
+    "aliases": ["Throttling", "Token bucket", "429"],
+    "platforms": {
+      "aws": "API Gateway throttling / WAF rate rules",
+      "gcp": "Cloud Armor rate limiting",
+      "azure": "API Management rate-limit policy"
+    }
+  },
+  {
+    "id": "api-gateway",
+    "title": "API Gateway",
+    "facets": { "concern": "scaling", "kind": "building-block", "scale": "growing" },
+    "summary": "A single entry point that handles auth, rate limits and routing before your services.",
+    "description": "Takes cross-cutting concerns out of every service. Keep business logic out of it, or it becomes a bottleneck that every team has to change. A backend-for-frontend (BFF) is a gateway shaped for one client.",
+    "aliases": ["BFF", "Edge service"],
+    "platforms": {
+      "aws": "Amazon API Gateway",
+      "gcp": "API Gateway / Apigee",
+      "azure": "API Management"
+    }
+  },
+  {
+    "id": "background-jobs",
+    "title": "Background Jobs",
+    "facets": { "concern": "scaling", "kind": "pattern", "scale": "day-one" },
+    "summary": "Respond fast, then do the slow work (email, PDF, video) in a worker.",
+    "description": "The request enqueues a job and returns 202 with a status URL; a worker processes it with retries. Users get a fast response and failures retry without them. Keep jobs small and idempotent, and show progress for long ones.",
+    "aliases": ["Async processing", "Worker", "202 Accepted"],
+    "platforms": {
+      "aws": "SQS + Lambda",
+      "gcp": "Cloud Tasks + Cloud Run",
+      "azure": "Azure Functions with queue trigger"
+    }
+  },
+  {
+    "id": "timeout",
+    "title": "Timeout",
+    "facets": { "concern": "reliability", "kind": "pattern", "scale": "day-one" },
+    "summary": "Every network call gives up after a set time instead of waiting forever.",
+    "description": "Many clients default to no timeout, so one hung dependency ties up every thread. Set connect and request timeouts from the dependency's p99, and pass a deadline down the chain so inner calls don't outlive the outer request.",
+    "aliases": ["Deadline", "Deadline propagation"]
+  },
+  {
+    "id": "retry-with-backoff",
+    "title": "Retry with Backoff",
+    "facets": { "concern": "reliability", "kind": "pattern", "scale": "day-one" },
+    "summary": "Retry transient failures after growing, randomised delays: 100ms, 200ms, 400ms…",
+    "description": "Jitter stops clients retrying in lockstep. Retry only idempotent requests and transient errors (timeouts, 503), never 4xx. Cap attempts, and retry at one layer only: three layers of three retries is 27 calls.",
+    "aliases": ["Exponential backoff", "Jitter", "Retry storm"]
+  },
+  {
+    "id": "circuit-breaker",
+    "title": "Circuit Breaker",
+    "facets": { "concern": "reliability", "kind": "pattern", "scale": "growing" },
+    "summary": "After repeated failures, stop calling a dependency for a while and fail fast.",
+    "description": "Closed: calls pass. Open: calls fail immediately (or use a fallback), giving the dependency room to recover. Half-open: a few trial calls decide whether to close again. Pair it with timeouts; retries alone make outages worse.",
+    "aliases": ["Fail fast", "Half-open"]
+  },
+  {
+    "id": "bulkhead",
+    "title": "Bulkhead",
+    "facets": { "concern": "reliability", "kind": "pattern", "scale": "large-scale" },
+    "summary": "Separate pools of threads, connections or instances, so one failure can't sink them all.",
+    "description": "If the slow reports endpoint shares a pool with checkout, reports can starve checkout. Give each dependency or tenant its own limited pool. Named after a ship's watertight compartments.",
+    "aliases": ["Isolation", "Cell-based architecture"]
+  },
+  {
+    "id": "idempotency-key",
+    "title": "Idempotency Key",
+    "facets": { "concern": "reliability", "kind": "pattern", "scale": "day-one" },
+    "summary": "A client-generated id that lets a POST be retried safely without doing it twice.",
+    "description": "The client sends `Idempotency-Key: <uuid>`; the server stores the key with the result and returns the stored result for a repeat. Essential for payments, where a timeout doesn't tell you whether the charge happened.",
+    "aliases": ["Idempotency-Key header", "Safe retries"]
+  },
+  {
+    "id": "graceful-degradation",
+    "title": "Graceful Degradation",
+    "facets": { "concern": "reliability", "kind": "principle", "scale": "growing" },
+    "summary": "When a dependency fails, serve a reduced experience instead of an error.",
+    "description": "Recommendations down: show bestsellers. Search slow: show cached results. Decide in advance which features are core and which are optional, and make the optional ones fail open, quickly, behind a timeout and a fallback.",
+    "aliases": ["Fallback", "Fail open"]
+  },
+  {
+    "id": "health-check",
+    "title": "Health Check",
+    "facets": { "concern": "reliability", "kind": "building-block", "scale": "day-one" },
+    "summary": "An endpoint the platform polls to decide whether to send traffic or restart an instance.",
+    "description": "Liveness: is the process stuck? Restart it. Readiness: can it serve now? Stop routing to it. Don't fail liveness when the database is down, or every instance restarts at once and makes the outage worse.",
+    "aliases": ["Liveness", "Readiness", "/healthz"]
+  },
+  {
+    "id": "blue-green-deployment",
+    "title": "Blue-green Deployment",
+    "facets": { "concern": "reliability", "kind": "pattern", "scale": "growing" },
+    "summary": "Run the new version beside the old, then switch all traffic at once.",
+    "description": "Rollback is flipping back. It doubles capacity during the switch, and the database must work with both versions, so schema changes go expand-then-contract. Canary is the gradual sibling.",
+    "aliases": ["Red-black deployment", "Expand and contract"],
+    "platforms": {
+      "aws": "CodeDeploy blue/green",
+      "gcp": "Cloud Deploy",
+      "azure": "App Service deployment slots"
+    }
+  },
+  {
+    "id": "canary-release",
+    "title": "Canary Release",
+    "facets": { "concern": "reliability", "kind": "pattern", "scale": "growing" },
+    "summary": "Send a small share of traffic to the new version and widen it if metrics stay healthy.",
+    "description": "Bad releases hurt 1% of users, not all of them. It needs good metrics compared side by side, and automatic rollback on error rate or latency. Pick it over blue-green when you can afford a slower rollout.",
+    "aliases": ["Progressive delivery", "Traffic splitting"],
+    "platforms": {
+      "aws": "CodeDeploy canary / Lambda alias weights",
+      "gcp": "Cloud Run traffic splitting",
+      "azure": "App Service slot traffic routing"
+    }
+  },
+  {
+    "id": "feature-flags",
+    "title": "Feature Flags",
+    "facets": { "concern": "reliability", "kind": "pattern", "scale": "day-one" },
+    "summary": "Turn code paths on and off at runtime, for some users, without a deploy.",
+    "description": "Separates deploy from release: ship dark, enable for staff, then 5%, then everyone. A kill switch is a flag for turning a feature off fast. Delete flags once rolled out, or the combinations become untestable.",
+    "aliases": ["Feature toggles", "Kill switch", "Dark launch"],
+    "platforms": {
+      "aws": "AppConfig feature flags",
+      "gcp": "Firebase Remote Config",
+      "azure": "App Configuration feature flags"
+    }
+  },
+  {
+    "id": "cap-theorem",
+    "title": "CAP Theorem",
+    "facets": { "concern": "consistency", "kind": "principle", "scale": "large-scale" },
+    "summary": "During a network partition, a distributed store must choose consistency or availability.",
+    "description": "Partitions happen, so the real choice is C or A while one lasts. PACELC adds the everyday trade-off: else (no partition) choose latency or consistency. Most systems pick per operation, not once.",
+    "aliases": ["PACELC", "CP / AP"]
+  },
+  {
+    "id": "eventual-consistency",
+    "title": "Eventual Consistency",
+    "facets": { "concern": "consistency", "kind": "principle", "scale": "growing" },
+    "summary": "Replicas may disagree for a while but converge if writes stop.",
+    "description": "The price of replicas, caches and async events. Design the UI for it: show the user their own write optimistically, and avoid reading straight back from a replica. Strong consistency is simpler to reason about but slower and less available.",
+    "aliases": ["Read-your-writes", "Strong consistency"]
+  },
+  {
+    "id": "quorum",
+    "title": "Quorum",
+    "facets": { "concern": "consistency", "kind": "principle", "scale": "large-scale" },
+    "summary": "With N replicas, writing to W and reading from R where R + W > N sees the latest write.",
+    "description": "N=3, W=2, R=2 tolerates one node down for both reads and writes. Lower W or R trade consistency for latency. Consensus protocols such as Raft also rest on majorities, which is why clusters have odd sizes.",
+    "aliases": ["R + W > N", "Majority"]
+  },
+  {
+    "id": "leader-election",
+    "title": "Leader Election",
+    "facets": { "concern": "consistency", "kind": "pattern", "scale": "large-scale" },
+    "summary": "Nodes agree on one leader to coordinate work, and pick a new one if it dies.",
+    "description": "Use a consensus system (etcd, ZooKeeper) or a lease in a database, never home-made heartbeats. A leader may not know it was replaced, so protect writes with a fencing token that increases on every election.",
+    "aliases": ["Raft", "Lease", "Fencing token"]
+  },
+  {
+    "id": "two-phase-commit",
+    "title": "Two-phase Commit",
+    "facets": { "concern": "consistency", "kind": "pattern", "scale": "large-scale" },
+    "summary": "A coordinator asks every participant to prepare, then tells them all to commit.",
+    "description": "Gives an atomic transaction across databases, but it blocks while the coordinator is down and holds locks across the network. Rare across services; a saga is the usual alternative. Spanner-like databases do it internally.",
+    "aliases": ["2PC", "XA transaction", "Distributed transaction"]
+  },
+  {
+    "id": "saga",
+    "title": "Saga",
+    "facets": { "concern": "consistency", "kind": "pattern", "scale": "large-scale" },
+    "summary": "A multi-service transaction as local steps, each with a compensating undo.",
+    "description": "Reserve stock → charge card → ship; if charging fails, release the stock. Orchestration (one coordinator) is easier to follow than choreography (services reacting to events). In-between states are visible, so design for them.",
+    "aliases": ["Compensating transaction", "Orchestration", "Choreography"],
+    "platforms": {
+      "aws": "Step Functions",
+      "gcp": "Workflows",
+      "azure": "Durable Functions"
+    }
+  },
+  {
+    "id": "optimistic-locking",
+    "title": "Optimistic Locking",
+    "facets": { "concern": "consistency", "kind": "pattern", "scale": "day-one" },
+    "summary": "Save only if the row's version is still the one you read; otherwise retry or ask.",
+    "description": "`UPDATE … SET v = v + 1 WHERE id = ? AND v = ?` and check the row count. No locks held while the user edits, so it suits web forms and low contention. Pessimistic locking (`SELECT … FOR UPDATE`) suits hot rows.",
+    "aliases": ["Version column", "Compare-and-set", "Lost update"],
+    "platforms": {
+      "aws": "DynamoDB conditional writes",
+      "gcp": "Firestore transactions",
+      "azure": "Cosmos DB ETag with If-Match"
+    }
+  },
+  {
+    "id": "cqrs",
+    "title": "CQRS",
+    "facets": { "concern": "consistency", "kind": "pattern", "scale": "large-scale" },
+    "summary": "Separate models for writes (commands) and reads (queries), each shaped for its job.",
+    "description": "Writes go through a model that enforces rules; reads come from views built for screens, often in another store and updated by events. Reads are fast and simple but lag behind writes. Overkill for most CRUD apps.",
+    "aliases": ["Command query responsibility segregation", "Read model"]
+  },
+  {
+    "id": "event-sourcing",
+    "title": "Event Sourcing",
+    "facets": { "concern": "consistency", "kind": "pattern", "scale": "large-scale" },
+    "summary": "Store every change as an immutable event; current state is a replay of them.",
+    "description": "You get a full audit trail and can rebuild any view or answer 'what was it on Tuesday?'. The costs: changing event schemas, snapshots for long histories and a learning curve. Often paired with CQRS.",
+    "aliases": ["Event store", "Snapshot"]
+  },
+  {
+    "id": "websocket",
+    "title": "WebSocket",
+    "facets": { "concern": "networking", "kind": "building-block", "scale": "growing" },
+    "summary": "A persistent two-way connection for real-time messages in both directions.",
+    "description": "For chat, collaboration and games. Connections are stateful, so scaling needs a pub/sub layer between instances and care with load balancers and deploys. If only the server talks, SSE is simpler.",
+    "aliases": ["WS", "Real-time"],
+    "platforms": {
+      "aws": "API Gateway WebSocket APIs",
+      "gcp": "Cloud Run (WebSocket support)",
+      "azure": "Azure Web PubSub"
+    }
+  },
+  {
+    "id": "server-sent-events",
+    "title": "Server-Sent Events",
+    "facets": { "concern": "networking", "kind": "building-block", "scale": "growing" },
+    "summary": "A one-way stream of events from server to browser over plain HTTP.",
+    "description": "`EventSource` reconnects automatically and resumes with `Last-Event-ID`. It works through proxies and HTTP/2, and suits notifications, feeds and streaming LLM output. Pick it over WebSocket when the client doesn't need to push.",
+    "aliases": ["SSE", "EventSource"]
+  },
+  {
+    "id": "long-polling",
+    "title": "Long Polling",
+    "facets": { "concern": "networking", "kind": "pattern", "scale": "day-one" },
+    "summary": "The server holds a request open until there's news, then the client asks again.",
+    "description": "Near real-time with plain HTTP and no special infrastructure; the fallback when SSE or WebSocket are blocked. Short polling (ask every N seconds) is simpler still and fine when a delay of seconds is acceptable.",
+    "aliases": ["Comet", "Short polling"]
+  },
+  {
+    "id": "webhooks",
+    "title": "Webhooks",
+    "facets": { "concern": "networking", "kind": "pattern", "scale": "day-one" },
+    "summary": "Your service calls the subscriber's URL when an event happens, instead of being polled.",
+    "description": "Sign each payload (HMAC) so receivers can verify it, retry with backoff, and send an event id so receivers can drop duplicates. Receivers should respond 2xx fast and do the work in a background job.",
+    "aliases": ["Callback URL", "HMAC signature"]
+  },
+  {
+    "id": "dns",
+    "title": "DNS",
+    "facets": { "concern": "networking", "kind": "building-block", "scale": "day-one" },
+    "summary": "Turns names into addresses; also a cheap tool for failover and geo-routing.",
+    "description": "Answers are cached for their TTL, so a change takes up to the TTL to spread, and some resolvers ignore it. Lower the TTL days before a migration. Latency- or geo-based records send users to the nearest region.",
+    "aliases": ["TTL", "Geo-routing", "Failover record"],
+    "platforms": {
+      "aws": "Route 53",
+      "gcp": "Cloud DNS",
+      "azure": "Azure DNS / Traffic Manager"
+    }
+  },
+  {
+    "id": "grpc",
+    "title": "gRPC",
+    "facets": { "concern": "networking", "kind": "building-block", "scale": "growing" },
+    "summary": "Typed RPC over HTTP/2 with Protocol Buffers, generated clients and streaming.",
+    "description": "Smaller payloads and a strict contract make it a good fit between internal services. Browsers need a proxy (gRPC-Web), and binary payloads are harder to debug, so public APIs usually stay REST or GraphQL.",
+    "aliases": ["Protocol Buffers", "RPC"]
+  },
+  {
+    "id": "slo",
+    "title": "SLI, SLO, SLA",
+    "facets": { "concern": "observability", "kind": "principle", "scale": "growing" },
+    "summary": "A measured indicator, the target you aim for, and the promise with penalties.",
+    "description": "SLI: % of requests under 300ms. SLO: 99.9% over 30 days. SLA: the contract, set looser than the SLO. The error budget (0.1%) decides when to ship features and when to fix reliability.",
+    "aliases": ["Error budget", "Service level objective"],
+    "platforms": {
+      "aws": "CloudWatch Application Signals SLOs",
+      "gcp": "Cloud Monitoring SLOs"
+    }
+  },
+  {
+    "id": "distributed-tracing",
+    "title": "Distributed Tracing",
+    "facets": { "concern": "observability", "kind": "building-block", "scale": "growing" },
+    "summary": "Follows one request across services as a tree of timed spans.",
+    "description": "A trace id travels in headers (W3C `traceparent`); each service records spans under it. It shows where the time went and which call failed. Use OpenTelemetry to stay vendor-neutral, and sample to keep costs sane.",
+    "aliases": ["OpenTelemetry", "Span", "traceparent"],
+    "platforms": {
+      "aws": "X-Ray",
+      "gcp": "Cloud Trace",
+      "azure": "Application Insights"
+    }
+  },
+  {
+    "id": "structured-logging",
+    "title": "Structured Logging",
+    "facets": { "concern": "observability", "kind": "pattern", "scale": "day-one" },
+    "summary": "Log events as JSON fields, not sentences, so they can be searched and aggregated.",
+    "description": "`{\"event\":\"payment_failed\",\"user\":42,\"trace_id\":…}` beats 'Payment failed for user 42'. Include the trace id to jump from a log line to its trace. Never log secrets or personal data, and use levels consistently.",
+    "aliases": ["JSON logs", "Correlation id"],
+    "platforms": {
+      "aws": "CloudWatch Logs",
+      "gcp": "Cloud Logging",
+      "azure": "Azure Monitor Logs"
+    }
+  },
+  {
+    "id": "red-metrics",
+    "title": "RED Metrics",
+    "facets": { "concern": "observability", "kind": "principle", "scale": "day-one" },
+    "summary": "For every service: request Rate, Errors and Duration (as percentiles).",
+    "description": "Three graphs that answer 'is it healthy?' for any service. Use p95/p99 latency, not averages, which hide the slow tail. USE (Utilisation, Saturation, Errors) is the matching set for resources like CPU, disks and queues.",
+    "aliases": ["USE method", "Golden signals", "p99"],
+    "platforms": {
+      "aws": "CloudWatch metrics",
+      "gcp": "Cloud Monitoring",
+      "azure": "Azure Monitor metrics"
+    }
+  }
+]

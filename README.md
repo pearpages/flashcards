@@ -10,6 +10,8 @@ A mobile-first flashcard deck for learning design system components: 155 compone
 
 A second deck, **Accessibility**, covers 51 ARIA patterns, roles and attributes, techniques and WCAG 2.2 criteria, filtered by kind and by who they help most (screen reader, keyboard, low vision, motor, cognitive, hearing, vestibular), with the WCAG level as a badge and the SwiftUI and Compose equivalents.
 
+A third deck, **System Design**, has 59 building blocks, patterns and principles of backend systems (caching, messaging, consistency, reliability…), each with the AWS, Google Cloud and Azure service where one exists.
+
 **Try it: [flashcards.pearpages.com](https://flashcards.pearpages.com)** — works on phones and desktop, no sign-up.
 
 <img src="./docs/static/demo.png" alt="Two phone screens: the Sheet card in study mode with desktop and mobile drawings, and the browse list grouped by purpose" width="500" />
@@ -37,7 +39,7 @@ A second deck, **Accessibility**, covers 51 ARIA patterns, roles and attributes,
 - **Tap to flip** — tap/click (or arrow up/down) to show when to use it, nearest alternatives, accessibility notes and native equivalents; tap again to go back to the front
 - **Filters** — narrow the deck by purpose and/or layer (each deck declares its own filters); the atomic design level is shown as a badge
 - **Desktop + mobile** — components that change shape on small screens show both versions side by side, or desktop · iOS · Android when the platforms differ
-- **Native equivalents** — revealing a card shows its iOS (SwiftUI/UIKit) and Android (Compose Material 3) counterparts; search finds them too
+- **Platform equivalents** — revealing a card shows its counterparts on the platforms its deck declares: iOS (SwiftUI/UIKit) and Android (Compose Material 3) for the UI decks, AWS, GCP and Azure for system design; search finds them too
 - **Multiple decks** — add a folder under `src/decks/` and it shows up on the deck picker
 - **Swipe navigation** — swipe left/right to navigate between cards
 - **Keyboard navigation** — left/right arrow keys
@@ -53,7 +55,8 @@ Each deck is a folder in `src/decks/` and owns all of its data. The app discover
 src/decks/
   accessibility/       # same layout as design-system
   design-system/
-    deck.json          # title, description and the filters (facets) this deck offers
+    deck.json          # title, description, the filters (facets) and the platform columns
+  system-design/       # same layout, with AWS / GCP / Azure as its platforms
     cards.json         # the cards
     images/<id>.svg    # one illustration per card (optional)
 ```
@@ -82,7 +85,7 @@ Add an entry to `src/decks/<deck>/cards.json`:
 | `summary`     | Yes      | One line, shown on the front (≤ 90 chars)                            |
 | `description` | Yes      | Revealed on tap (≤ 280 chars to fit the card)                        |
 | `aliases`     | No       | Other names for the same thing                                       |
-| `platforms`   | No       | Native equivalents: `ios` (SwiftUI/UIKit), `android` (Compose M3), ≤ 60 chars each |
+| `platforms`   | No       | Equivalents keyed by the deck's declared platforms (e.g. `ios`, `android`, or `aws`, `gcp`, `azure`), ≤ 60 chars each |
 
 Optionally add `images/<id>.svg` (160×120). Cards without one show a `?` placeholder.
 
@@ -104,6 +107,8 @@ Create `src/decks/<deck-id>/` with a `deck.json` (its `id` must match the folder
   "facets": [{ "key": "module", "label": "Module", "values": ["box model", "flexbox", "grid"] }]
 }
 ```
+
+A deck whose cards list equivalents declares the columns, in display order, in `deck.json`: `"platforms": [{ "key": "aws", "label": "AWS" }, …]`. A card key that isn't declared fails `pnpm validate`.
 
 Add `"filter": false` to a facet to show it as a badge on each card without a filter row (the design-system deck does this for `atomic`).
 

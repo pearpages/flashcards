@@ -15,6 +15,22 @@ describe("decks", () => {
     for (const card of deck!.cards) expect(getCardImages(deck!.id, card.id).desktop).toBeTruthy();
   });
 
+  it("discovers the system-design deck with its cloud platforms", () => {
+    const deck = decks.find((d) => d.id === "system-design");
+    expect(deck).toBeDefined();
+    expect(deck!.platforms?.map((p) => p.key)).toEqual(["aws", "gcp", "azure"]);
+    for (const card of deck!.cards) expect(getCardImages(deck!.id, card.id).desktop).toBeTruthy();
+  });
+
+  it("only uses platforms its deck declares", () => {
+    for (const deck of decks) {
+      const declared = (deck.platforms ?? []).map((p) => p.key);
+      for (const card of deck.cards) {
+        for (const key of Object.keys(card.platforms ?? {})) expect(declared).toContain(key);
+      }
+    }
+  });
+
   it("gives every card a unique id", () => {
     for (const deck of decks) {
       const ids = deck.cards.map((c) => c.id);

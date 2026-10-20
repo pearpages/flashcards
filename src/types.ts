@@ -6,6 +6,12 @@ export interface Facet {
   filter?: boolean;
 }
 
+/** A column of equivalents on the card back, e.g. { key: "ios", label: "iOS" }. */
+export interface Platform {
+  key: string;
+  label: string;
+}
+
 export interface Flashcard {
   id: string;
   title: string;
@@ -13,8 +19,8 @@ export interface Flashcard {
   summary: string;
   description: string;
   aliases?: string[];
-  /** Native equivalents, e.g. { ios: "Toggle", android: "Switch" }. */
-  platforms?: { ios?: string; android?: string };
+  /** Equivalents keyed by the deck's platforms, e.g. { ios: "Toggle", android: "Switch" }. */
+  platforms?: Record<string, string>;
 }
 
 export interface Deck {
@@ -22,6 +28,8 @@ export interface Deck {
   title: string;
   description: string;
   facets: Facet[];
+  /** The platforms whose equivalents cards may list, in display order. */
+  platforms?: Platform[];
   cards: Flashcard[];
 }
 

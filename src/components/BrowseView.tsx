@@ -54,8 +54,7 @@ function matches(card: Flashcard, query: string) {
     card.title,
     card.summary,
     ...(card.aliases ?? []),
-    card.platforms?.ios ?? "",
-    card.platforms?.android ?? "",
+    ...Object.values(card.platforms ?? {}),
   ]
     .join(" ")
     .toLowerCase();

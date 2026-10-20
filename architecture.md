@@ -18,15 +18,15 @@ use framer-motion; styling is plain CSS, one file per component.
 
 | Path | Owns |
 |---|---|
-| `src/decks/<deck>/` | One deck: `deck.json` (title, description, facets), `cards.json`, `images/*.svg` |
+| `src/decks/<deck>/` | One deck: `deck.json` (title, description, facets, platform columns), `cards.json`, `images/*.svg` |
 | `src/decks/index.ts` | Discovers decks and images with `import.meta.glob`; `decks`, `getCardImages()` |
-| `src/types.ts` | `Deck`, `Facet`, `Flashcard`, `FilterState` |
+| `src/types.ts` | `Deck`, `Facet`, `Platform`, `Flashcard`, `FilterState` |
 | `src/App.tsx` | Picker or deck, from the URL; remounts `DeckView` on each visit so it starts fresh; the "Made by pearpages" footer (`@pearpages/credit`) under either |
 | `src/route.ts` | URL hash ↔ route (`#/<deck>`, `#/<deck>/card/<id>`, `#/<deck>/browse`, legacy `#card/<id>`), push/replace history |
 | `src/components/DeckPicker.tsx` | Home screen: one tile per deck (preview fan, title, description, count) |
 | `src/components/DeckView.tsx` | One deck: filters, view (study/browse), current card, back arrow, Back/forward within the deck |
 | `src/components/CardStack.tsx` | The study stack: order, swipe/keys, slide animation, shuffle, which cards are flipped |
-| `src/components/FlashCard.tsx` | One card: front (badges, drawings, summary) and back (description, aliases, native names), 3D flip |
+| `src/components/FlashCard.tsx` | One card: front (badges, drawings, summary) and back (description, aliases, one row per platform the deck declares), 3D flip |
 | `src/components/BrowseView.tsx` | Grouped list, search, jump bar, scroll-spy, "filtered by" chips |
 | `src/components/DeckFilters.tsx` | One chip row per filterable facet, card count |
 | `src/components/Tag.tsx` | Facet value badge (colour by value) |

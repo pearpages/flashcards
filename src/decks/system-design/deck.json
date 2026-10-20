@@ -1,0 +1,45 @@
+{
+  "id": "system-design",
+  "title": "System Design",
+  "description": "Building blocks, patterns and principles of backend systems: what each one solves, when to pick it over its siblings, and the AWS, Google Cloud and Azure service for it.",
+  "platforms": [
+    { "key": "aws", "label": "AWS" },
+    { "key": "gcp", "label": "GCP" },
+    { "key": "azure", "label": "Azure" }
+  ],
+  "facets": [
+    {
+      "key": "concern",
+      "label": "Concern",
+      "values": [
+        "data",
+        "caching",
+        "messaging",
+        "scaling",
+        "reliability",
+        "consistency",
+        "networking",
+        "observability"
+      ]
+    },
+    {
+      "key": "kind",
+      "label": "Kind",
+      "values": [
+        "building-block",
+        "pattern",
+        "principle"
+      ]
+    },
+    {
+      "key": "scale",
+      "label": "Needed from",
+      "filter": false,
+      "values": [
+        "day-one",
+        "growing",
+        "large-scale"
+      ]
+    }
+  ]
+}

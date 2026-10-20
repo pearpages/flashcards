@@ -33,7 +33,7 @@ function imageVariants(images: CardImages): ImageVariant[] {
 
 export default function FlashCard({ deck, card, revealed, onReveal }: FlashCardProps) {
   const variants = imageVariants(getCardImages(deck.id, card.id));
-  const { ios, android } = card.platforms ?? {};
+  const platforms = (deck.platforms ?? []).filter(({ key }) => card.platforms?.[key]);
   const reduceMotion = useReducedMotion();
 
   return (
@@ -91,20 +91,14 @@ export default function FlashCard({ deck, card, revealed, onReveal }: FlashCardP
             {card.aliases && card.aliases.length > 0 && (
               <p className="flashcard-back__aliases">Also known as: {card.aliases.join(", ")}</p>
             )}
-            {(ios || android) && (
+            {platforms.length > 0 && (
               <dl className="flashcard-platforms">
-                {ios && (
-                  <div className="flashcard-platforms__row">
-                    <dt>iOS</dt>
-                    <dd>{ios}</dd>
+                {platforms.map(({ key, label }) => (
+                  <div key={key} className="flashcard-platforms__row">
+                    <dt>{label}</dt>
+                    <dd>{card.platforms?.[key]}</dd>
                   </div>
-                )}
-                {android && (
-                  <div className="flashcard-platforms__row">
-                    <dt>Android</dt>
-                    <dd>{android}</dd>
-                  </div>
-                )}
+                ))}
               </dl>
             )}
           </div>

@@ -53,6 +53,20 @@ for (const folder of deckFolders) {
     }
   }
 
+  const platformKeys = [];
+  if (deck.platforms !== undefined) {
+    if (!Array.isArray(deck.platforms)) errors.push(`${where("deck.json")}: platforms must be an array`);
+    else {
+      for (const platform of deck.platforms) {
+        if (!isNonEmptyString(platform?.key) || !isNonEmptyString(platform?.label)) {
+          errors.push(`${where("deck.json")}: each platform needs a key and a label`);
+        } else if (platformKeys.includes(platform.key)) {
+          errors.push(`${where("deck.json")}: duplicate platform "${platform.key}"`);
+        } else platformKeys.push(platform.key);
+      }
+    }
+  }
+
   if (!Array.isArray(cards)) {
     errors.push(`${where("cards.json")}: must be an array of cards`);
     continue;
@@ -79,7 +93,7 @@ for (const folder of deckFolders) {
     }
     if (card.platforms !== undefined) {
       for (const [key, value] of Object.entries(card.platforms)) {
-        if (!["ios", "android"].includes(key)) errors.push(`${at}: platforms.${key} is not ios or android`);
+        if (!platformKeys.includes(key)) errors.push(`${at}: platforms.${key} is not declared in deck.json platforms`);
         else if (!isNonEmptyString(value)) errors.push(`${at}: platforms.${key} must be a non-empty string`);
         else if (value.length > MAX_PLATFORM) errors.push(`${at}: platforms.${key} is ${value.length} chars (max ${MAX_PLATFORM})`);
       }
@@ -132,7 +146,7 @@ for (const folder of deckFolders) {
   const withPlatforms = cards.filter((card) => card.platforms).length;
   console.log(
     `✓ ${folder}: ${cards.length} cards, ${deck.facets.length} facets; images: ${variants.mobile.size} mobile, ` +
-      `${variants.ios.size} iOS/Android pairs; ${withPlatforms} with native names`,
+      `${variants.ios.size} iOS/Android pairs; ${withPlatforms} with platform equivalents`,
   );
 }
 

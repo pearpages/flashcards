@@ -19,6 +19,7 @@ accepted.
 | [0006](docs/adr/0006-deploy-to-github-pages-on-version-tags.md) | Deploy to GitHub Pages on `v*` tags at flashcards.pearpages.com | Proposed | 2026-10-15 |
 | [0007](docs/adr/0007-vitest-for-unit-tests.md) | Vitest for unit tests, CI on push and pull requests | Proposed | 2026-10-15 |
 | [0008](docs/adr/0008-accessibility-deck-facets.md) | Accessibility deck: kind and who-it-helps filters, WCAG level as a badge | Proposed | 2026-10-20 |
+| [0009](docs/adr/0009-decks-declare-their-platforms.md) | Decks declare their own platform columns (`platforms` in `deck.json`) | Proposed | 2026-10-20 |
 
 ## Format
 
