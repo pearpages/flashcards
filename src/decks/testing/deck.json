@@ -1,0 +1,49 @@
+{
+  "id": "testing",
+  "title": "Testing",
+  "description": "Strategy, test doubles, unit to end-to-end, APIs, non-functional checks, CI and keeping a suite healthy: what each practice catches, when to pick it over its siblings, and the Vitest/Playwright and pytest way to do it.",
+  "platforms": [
+    { "key": "javascript", "label": "JavaScript" },
+    { "key": "python", "label": "Python" }
+  ],
+  "facets": [
+    {
+      "key": "area",
+      "label": "Area",
+      "values": [
+        "strategy",
+        "unit",
+        "doubles",
+        "integration",
+        "api",
+        "ui",
+        "e2e",
+        "non-functional",
+        "ci",
+        "maintenance"
+      ]
+    },
+    {
+      "key": "kind",
+      "label": "Kind",
+      "values": [
+        "concept",
+        "practice",
+        "technique",
+        "anti-pattern"
+      ]
+    },
+    {
+      "key": "level",
+      "label": "Test level",
+      "filter": false,
+      "values": [
+        "static",
+        "unit",
+        "integration",
+        "e2e",
+        "any"
+      ]
+    }
+  ]
+}

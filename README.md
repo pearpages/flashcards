@@ -6,7 +6,7 @@
 [![Release](https://img.shields.io/github/v/release/pearpages/flashcards)](https://github.com/pearpages/flashcards/releases)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-A mobile-first flashcard app with six decks: design systems, CSS, accessibility, web performance, web security and system design. Every card has a wireframe drawing, and each deck brings its own filters and badges.
+A mobile-first flashcard app with seven decks: design systems, CSS, accessibility, web performance, web security, system design and testing. Every card has a wireframe drawing, and each deck brings its own filters and badges.
 
 The first deck, **Design System**, has 155 components, each tagged three ways: its purpose (forms, navigation, overlays…), its layer (primitive, component, pattern) and its atomic design level (atom, molecule, organism, template). Each card has wireframe drawings and, for most, the iOS and Android equivalents.
 
@@ -19,6 +19,8 @@ A fourth deck, **Web Security**, has 100 attacks, defences and mechanisms (injec
 A fifth deck, **Web Performance**, has 100 metrics, mechanisms, techniques and anti-patterns (measurement, network, server, caching, loading, assets, JavaScript, rendering), each tagged with the Core Web Vital or other metric it mainly improves.
 
 A sixth deck, **CSS**, has 100 cards from the cascade and selectors through flexbox, grid, positioning, responsive design, typography, colour and motion to architecture, each with its Baseline status and, for layout, the SwiftUI and Compose equivalent.
+
+A seventh deck, **Testing**, has 100 cards on strategy, test doubles, unit to end-to-end, APIs, non-functional checks, CI and suite maintenance, each with its test level and, where an API maps exactly, the JavaScript (Vitest, Testing Library, Playwright) and Python (pytest) way to do it.
 
 **Try it: [flashcards.pearpages.com](https://flashcards.pearpages.com)** — works on phones and desktop, no sign-up.
 
@@ -68,6 +70,7 @@ src/decks/
   web-security/        # same layout, no platform columns
   web-performance/     # same layout, no platform columns
   css/                 # same layout, with SwiftUI / Compose as its platforms
+  testing/             # same layout, with JavaScript / Python as its platforms
     cards.json         # the cards
     images/<id>.svg    # one illustration per card (optional)
 ```
@@ -96,7 +99,7 @@ Add an entry to `src/decks/<deck>/cards.json`:
 | `summary`     | Yes      | One line, shown on the front (≤ 90 chars)                            |
 | `description` | Yes      | Revealed on tap (≤ 280 chars to fit the card)                        |
 | `aliases`     | No       | Other names for the same thing                                       |
-| `platforms`   | No       | Equivalents keyed by the deck's declared platforms (e.g. `ios`, `android`; `aws`, `gcp`, `azure`; or `swiftui`, `compose`), ≤ 60 chars each |
+| `platforms`   | No       | Equivalents keyed by the deck's declared platforms (e.g. `ios`, `android`; `aws`, `gcp`, `azure`; or `swiftui`, `compose`; `javascript`, `python`), ≤ 60 chars each |
 
 Optionally add `images/<id>.svg` (160×120). Cards without one show a `?` placeholder.
 

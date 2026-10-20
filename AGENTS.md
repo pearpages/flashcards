@@ -1,10 +1,10 @@
 # Flashcards
 
-A mobile-first flashcard app with six decks (design system, CSS, accessibility, web
-performance, web security, system design). Each deck is a data folder in `src/decks/`
-with its own filters, badges, drawings and, where it declares them, platform equivalents
-(iOS/Android, SwiftUI/Compose, AWS/GCP/Azure); all decks share one browse view and
-study stack. It is a static React + Vite site; the source is public on GitHub, and
+A mobile-first flashcard app with seven decks (design system, CSS, accessibility, web
+performance, web security, system design, testing). Each deck is a data folder in
+`src/decks/` with its own filters, badges, drawings and, where it declares them, platform
+equivalents (iOS/Android, SwiftUI/Compose, AWS/GCP/Azure, JavaScript/Python); all decks
+share one browse view and study stack. It is a static React + Vite site; the source is public on GitHub, and
 pushing a `v*` tag publishes it to GitHub Pages at flashcards.pearpages.com.
 
 ## Project documents — read before working

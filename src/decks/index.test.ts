@@ -43,6 +43,13 @@ describe("decks", () => {
     for (const card of deck!.cards) expect(getCardImages(deck!.id, card.id).desktop).toBeTruthy();
   });
 
+  it("discovers the testing deck with a drawing for every card", () => {
+    const deck = decks.find((d) => d.id === "testing");
+    expect(deck).toBeDefined();
+    expect(deck!.cards.length).toBeGreaterThanOrEqual(100);
+    for (const card of deck!.cards) expect(getCardImages(deck!.id, card.id).desktop).toBeTruthy();
+  });
+
   it("only uses platforms its deck declares", () => {
     for (const deck of decks) {
       const declared = (deck.platforms ?? []).map((p) => p.key);

@@ -1,0 +1,1678 @@
+[
+  {
+    "id": "testing-pyramid",
+    "title": "Testing Pyramid",
+    "facets": {
+      "area": "strategy",
+      "kind": "concept",
+      "level": "any"
+    },
+    "summary": "Many fast unit tests, fewer integration tests, a handful of slow end-to-end tests.",
+    "description": "Cost and flakiness rise as you go up, so most checks live at the bottom. It suits logic-heavy code. Its risk is a base of unit tests that mock everything and still miss broken wiring; the trophy shifts weight to integration tests.",
+    "aliases": [
+      "Test pyramid",
+      "Mike Cohn"
+    ]
+  },
+  {
+    "id": "testing-trophy",
+    "title": "Testing Trophy",
+    "facets": {
+      "area": "strategy",
+      "kind": "concept",
+      "level": "any"
+    },
+    "summary": "Static checks at the base, a few unit tests, most weight on integration, a few e2e.",
+    "description": "Kent C. Dodds' shape for UI-heavy apps: types and lint catch typos for free, and integration tests that render real components with real modules give the most confidence per test. Pick it over the pyramid when bugs live in how pieces fit together.",
+    "aliases": [
+      "Kent C. Dodds"
+    ]
+  },
+  {
+    "id": "behaviour-not-implementation",
+    "title": "Test Behaviour, Not Implementation",
+    "facets": {
+      "area": "strategy",
+      "kind": "practice",
+      "level": "any"
+    },
+    "summary": "Assert what users and callers can observe, not private methods or internal state.",
+    "description": "A test that checks the output survives a refactor; one that checks which helper was called breaks while the code still works. If renaming a private function fails a test, the test is coupled to the implementation. Test through the public API.",
+    "aliases": [
+      "Black-box testing",
+      "Refactor-proof tests"
+    ]
+  },
+  {
+    "id": "arrange-act-assert",
+    "title": "Arrange–Act–Assert",
+    "facets": {
+      "area": "strategy",
+      "kind": "practice",
+      "level": "any"
+    },
+    "summary": "Structure each test in three blocks: set up, do the one thing, check the result.",
+    "description": "Separate the blocks with a blank line so readers see at a glance what is under test. One Act per test: a second action usually means a second test. Long Arrange blocks are a hint to extract a builder or fixture.",
+    "aliases": [
+      "AAA",
+      "Setup, exercise, verify"
+    ]
+  },
+  {
+    "id": "given-when-then",
+    "title": "Given–When–Then",
+    "facets": {
+      "area": "strategy",
+      "kind": "practice",
+      "level": "any"
+    },
+    "summary": "Describe a test as a scenario: given a state, when something happens, then expect this.",
+    "description": "The BDD phrasing of Arrange–Act–Assert, readable by non-developers. Use it in test names (`given an expired card, when paying, then it is declined`) or in Gherkin files. Gherkin adds a layer to maintain, so only reach for it when others read the specs.",
+    "aliases": [
+      "BDD",
+      "Gherkin",
+      "Cucumber"
+    ]
+  },
+  {
+    "id": "tdd",
+    "title": "Test-Driven Development",
+    "facets": {
+      "area": "strategy",
+      "kind": "practice",
+      "level": "any"
+    },
+    "summary": "Write a failing test, make it pass with the simplest code, then refactor. Repeat.",
+    "description": "Red–green–refactor keeps steps small and gives every line a reason to exist. The test is the first user of the API, so awkward designs show early. It shines on logic with clear inputs and outputs; for exploratory UI work, spike first and test after.",
+    "aliases": [
+      "Red-green-refactor",
+      "Test-first"
+    ]
+  },
+  {
+    "id": "test-after",
+    "title": "Test-After",
+    "facets": {
+      "area": "strategy",
+      "kind": "practice",
+      "level": "any"
+    },
+    "summary": "Write the code first, then add tests that pin down its behaviour.",
+    "description": "Fine when the design is still unknown. The risks: tests that only confirm what the code happens to do, and skipped tests when time runs out. Check that each new test fails if you break the code on purpose; one that can't fail proves nothing.",
+    "aliases": [
+      "Test-last"
+    ]
+  },
+  {
+    "id": "regression-test",
+    "title": "Regression Test",
+    "facets": {
+      "area": "strategy",
+      "kind": "practice",
+      "level": "any"
+    },
+    "summary": "Turn every bug into a test that fails first, then fix the bug.",
+    "description": "Reproducing the bug in a test proves you understood it, proves the fix works, and stops it coming back. Write it at the lowest level that can reproduce it. Name it after the behaviour, not the ticket number alone.",
+    "aliases": [
+      "Bug reproduction test"
+    ]
+  },
+  {
+    "id": "what-not-to-test",
+    "title": "What Not to Test",
+    "facets": {
+      "area": "strategy",
+      "kind": "practice",
+      "level": "any"
+    },
+    "summary": "Skip framework code, trivial getters, generated code and third-party libraries.",
+    "description": "Testing that React renders a div or that an ORM saves a row tests someone else's work. Focus on your decisions: branches, calculations, edge cases, integration points. Write a few tests that the library is configured correctly, not that it works.",
+    "aliases": [
+      "Test scope"
+    ]
+  },
+  {
+    "id": "test-naming",
+    "title": "Test Naming",
+    "facets": {
+      "area": "strategy",
+      "kind": "practice",
+      "level": "any"
+    },
+    "summary": "A test's name states the behaviour and the expected result, so a failure explains itself.",
+    "description": "`returns 0 for an empty cart` beats `test1` or `testCalculate`. A failing run should read like a list of broken behaviours. Group with `describe` blocks by unit or scenario; avoid repeating the function name in every test.",
+    "aliases": [
+      "Test descriptions"
+    ]
+  },
+  {
+    "id": "one-concept-per-test",
+    "title": "One Concept per Test",
+    "facets": {
+      "area": "strategy",
+      "kind": "practice",
+      "level": "any"
+    },
+    "summary": "Each test checks one behaviour, so a failure points at exactly one thing.",
+    "description": "Several assertions are fine when they describe the same outcome (status and body of one response). Testing two behaviours in one test hides the second failure behind the first and makes the name vague. Split it or parameterise it.",
+    "aliases": [
+      "Single assertion rule"
+    ]
+  },
+  {
+    "id": "confidence-vs-cost",
+    "title": "Confidence vs Cost",
+    "facets": {
+      "area": "strategy",
+      "kind": "concept",
+      "level": "any"
+    },
+    "summary": "Every test buys confidence and costs runtime, flakiness and maintenance.",
+    "description": "An e2e test covers a whole journey but is slow and brittle; a unit test is cheap but sees little. Choose the cheapest test that would catch the bug you fear. Delete tests that cost more than they protect.",
+    "aliases": [
+      "Test ROI"
+    ]
+  },
+  {
+    "id": "exploratory-testing",
+    "title": "Exploratory Testing",
+    "facets": {
+      "area": "strategy",
+      "kind": "practice",
+      "level": "e2e"
+    },
+    "summary": "A person explores the product with a goal and a time box, looking for what scripts miss.",
+    "description": "Scripted tests check what you expected; exploring finds what you didn't (odd inputs, slow networks, confusing flows). Use a charter ('explore checkout with expired cards for 30 minutes') and turn each bug found into an automated test.",
+    "aliases": [
+      "Session-based testing",
+      "Charter"
+    ]
+  },
+  {
+    "id": "unit-test",
+    "title": "Unit Test",
+    "facets": {
+      "area": "unit",
+      "kind": "concept",
+      "level": "unit"
+    },
+    "summary": "A fast test of one unit of behaviour, isolated from slow or shared dependencies.",
+    "description": "The unit is a behaviour, not necessarily one class or function. Unit tests run in milliseconds, so they cover edge cases cheaply. 'Isolated' means from the network, disk and other tests, not from every collaborator.",
+    "aliases": [
+      "Solitary vs sociable tests"
+    ],
+    "platforms": {
+      "javascript": "test('…', () => { … }) in Vitest",
+      "python": "def test_…(): with pytest"
+    }
+  },
+  {
+    "id": "pure-functions",
+    "title": "Pure Functions",
+    "facets": {
+      "area": "unit",
+      "kind": "technique",
+      "level": "unit"
+    },
+    "summary": "Code with no side effects is the easiest to test: same input, same output.",
+    "description": "Move calculations and decisions into pure functions and keep I/O at the edges ('functional core, imperative shell'). Pure code needs no mocks, fixtures or cleanup: call it and compare the result.",
+    "aliases": [
+      "Functional core, imperative shell"
+    ]
+  },
+  {
+    "id": "assertions",
+    "title": "Assertions",
+    "facets": {
+      "area": "unit",
+      "kind": "technique",
+      "level": "unit"
+    },
+    "summary": "Checks that fail the test with a useful message when the result is wrong.",
+    "description": "Prefer specific matchers (`toEqual`, `toContain`, `toHaveLength`) over `toBe(true)`, so the failure shows the actual value. `toEqual` compares structure; `toBe` compares identity. Assert on the meaningful parts, not every field.",
+    "aliases": [
+      "Matchers",
+      "expect"
+    ],
+    "platforms": {
+      "javascript": "expect(actual).toEqual(expected)",
+      "python": "assert actual == expected"
+    }
+  },
+  {
+    "id": "parameterized-tests",
+    "title": "Parameterised Tests",
+    "facets": {
+      "area": "unit",
+      "kind": "technique",
+      "level": "unit"
+    },
+    "summary": "Run the same test body over a table of inputs and expected outputs.",
+    "description": "One table covers boundaries (0, 1, max, empty, negative) without copy-pasted tests, and each row reports separately. Keep the table readable; if rows need different setup, they are different tests.",
+    "aliases": [
+      "Table-driven tests",
+      "Data-driven tests"
+    ],
+    "platforms": {
+      "javascript": "test.each(cases)('%s', …)",
+      "python": "@pytest.mark.parametrize(...)"
+    }
+  },
+  {
+    "id": "testing-errors",
+    "title": "Testing Errors",
+    "facets": {
+      "area": "unit",
+      "kind": "technique",
+      "level": "unit"
+    },
+    "summary": "Assert that bad input throws the right error, not just that something throws.",
+    "description": "Check the error type or message, or a test can pass on an unrelated crash. Test validation, missing data and permission failures as carefully as the happy path: that's where bugs live.",
+    "aliases": [
+      "Exception testing"
+    ],
+    "platforms": {
+      "javascript": "expect(() => fn()).toThrow(TypeError)",
+      "python": "with pytest.raises(ValueError):"
+    }
+  },
+  {
+    "id": "testing-async",
+    "title": "Testing Async Code",
+    "facets": {
+      "area": "unit",
+      "kind": "technique",
+      "level": "unit"
+    },
+    "summary": "Await the promise in the test, or the test finishes before the code under test does.",
+    "description": "A missing `await` makes a test pass while the assertion never runs. Use `await expect(p).resolves` / `.rejects` for promises. Avoid real delays: control time with fake timers and mock slow I/O.",
+    "aliases": [
+      "Promises in tests"
+    ],
+    "platforms": {
+      "javascript": "await expect(promise).rejects.toThrow()",
+      "python": "@pytest.mark.asyncio (pytest-asyncio)"
+    }
+  },
+  {
+    "id": "fake-timers",
+    "title": "Fake Timers",
+    "facets": {
+      "area": "unit",
+      "kind": "technique",
+      "level": "unit"
+    },
+    "summary": "Replace the clock so tests can jump through timeouts and dates instantly.",
+    "description": "Debounces, retries, expiry and 'today' logic become fast and deterministic. Advance time explicitly (`vi.advanceTimersByTime(500)`), and restore real timers after each test. Fixing the date avoids tests that fail at midnight or on 29 February.",
+    "aliases": [
+      "Mock clock",
+      "Time freezing"
+    ],
+    "platforms": {
+      "javascript": "vi.useFakeTimers()",
+      "python": "freezegun or time-machine"
+    }
+  },
+  {
+    "id": "test-isolation",
+    "title": "Test Isolation",
+    "facets": {
+      "area": "unit",
+      "kind": "practice",
+      "level": "any"
+    },
+    "summary": "Every test sets up its own state and leaves nothing behind for the next one.",
+    "description": "Tests that pass alone but fail together (or in a different order) share state: a module variable, a database row, a mocked global. Reset in `beforeEach`/fixtures, restore mocks, and run in random order to flush out hidden coupling.",
+    "aliases": [
+      "Order-independent tests"
+    ],
+    "platforms": {
+      "javascript": "afterEach(() => vi.restoreAllMocks())",
+      "python": "function-scoped @pytest.fixture"
+    }
+  },
+  {
+    "id": "static-analysis",
+    "title": "Static Analysis",
+    "facets": {
+      "area": "unit",
+      "kind": "practice",
+      "level": "static"
+    },
+    "summary": "Type checkers and linters catch whole classes of bugs before any test runs.",
+    "description": "The base of the testing trophy: typos, wrong argument types, unused variables and unhandled promises fail in the editor. Strict TypeScript or mypy/pyright removes tests that only check types; tests still check behaviour.",
+    "aliases": [
+      "Type checking",
+      "Linting"
+    ],
+    "platforms": {
+      "javascript": "tsc --noEmit, ESLint",
+      "python": "mypy or pyright, Ruff"
+    }
+  },
+  {
+    "id": "test-double",
+    "title": "Test Double",
+    "facets": {
+      "area": "doubles",
+      "kind": "concept",
+      "level": "unit"
+    },
+    "summary": "Any object that stands in for a real dependency in a test, like a stunt double.",
+    "description": "Gerard Meszaros' umbrella term covers five kinds: dummy, stub, spy, mock and fake. Use one when the real thing is slow, non-deterministic, costly or not built yet. 'Mock' is often used loosely for all five, which blurs the differences.",
+    "aliases": [
+      "Meszaros",
+      "xUnit Test Patterns"
+    ]
+  },
+  {
+    "id": "dummy",
+    "title": "Dummy",
+    "facets": {
+      "area": "doubles",
+      "kind": "concept",
+      "level": "unit"
+    },
+    "summary": "A placeholder passed only to fill a parameter; the test never uses it.",
+    "description": "If the code under test calls it, it's not a dummy any more. `null` or an empty object is often enough. Needing many dummies to build an object is a design smell: the constructor asks for too much.",
+    "aliases": [
+      "Placeholder argument"
+    ]
+  },
+  {
+    "id": "stub",
+    "title": "Stub",
+    "facets": {
+      "area": "doubles",
+      "kind": "concept",
+      "level": "unit"
+    },
+    "summary": "Returns canned answers to calls, so the test controls the inputs the code receives.",
+    "description": "A stub feeds data in (a fixed exchange rate, a 'user not found'); the test then asserts on the result. It doesn't verify how it was called; that's a spy or mock. Pick a stub when you care about outputs, not interactions.",
+    "aliases": [
+      "Canned response"
+    ],
+    "platforms": {
+      "javascript": "vi.fn().mockReturnValue(x)",
+      "python": "Mock(return_value=x)"
+    }
+  },
+  {
+    "id": "spy",
+    "title": "Spy",
+    "facets": {
+      "area": "doubles",
+      "kind": "concept",
+      "level": "unit"
+    },
+    "summary": "Records how it was called, so the test can check calls after the fact.",
+    "description": "Often wraps the real function. Assert after acting: `expect(send).toHaveBeenCalledWith(...)`. Unlike a mock, it has no expectations set in advance; unlike a stub, its point is what went out, not what came back.",
+    "aliases": [
+      "Call recorder"
+    ],
+    "platforms": {
+      "javascript": "vi.spyOn(obj, 'method')",
+      "python": "mocker.spy(obj, 'method') (pytest-mock)"
+    }
+  },
+  {
+    "id": "mock",
+    "title": "Mock",
+    "facets": {
+      "area": "doubles",
+      "kind": "concept",
+      "level": "unit"
+    },
+    "summary": "Pre-programmed with expected calls; the test fails if those calls don't happen.",
+    "description": "In the strict sense, a mock verifies an interaction (an email was sent once, with this address). Use it for side effects you can't observe otherwise. Verifying every call couples the test to the implementation; prefer asserting results.",
+    "aliases": [
+      "Mock object",
+      "Interaction testing"
+    ],
+    "platforms": {
+      "javascript": "vi.fn() + toHaveBeenCalledWith",
+      "python": "Mock().assert_called_once_with(...)"
+    }
+  },
+  {
+    "id": "fake",
+    "title": "Fake",
+    "facets": {
+      "area": "doubles",
+      "kind": "concept",
+      "level": "unit"
+    },
+    "summary": "A working but simplified implementation, like an in-memory repository.",
+    "description": "A fake has real behaviour (store, then read back), so tests stay focused on outcomes and don't script calls. Pick it over mocks for a dependency used in many tests. It must behave like the real thing: run a shared test suite against both.",
+    "aliases": [
+      "In-memory implementation"
+    ]
+  },
+  {
+    "id": "mock-at-the-boundary",
+    "title": "Mock at the Boundary",
+    "facets": {
+      "area": "doubles",
+      "kind": "practice",
+      "level": "unit"
+    },
+    "summary": "Replace only what crosses your system's edge: network, clock, email, payments.",
+    "description": "Inside the boundary, use real collaborators so tests survive refactors. At the edge, wrap third-party APIs in your own small interface and double that, rather than mocking the vendor SDK's methods directly ('don't mock what you don't own').",
+    "aliases": [
+      "Don't mock what you don't own",
+      "Ports and adapters"
+    ]
+  },
+  {
+    "id": "over-mocking",
+    "title": "Over-mocking",
+    "facets": {
+      "area": "doubles",
+      "kind": "anti-pattern",
+      "level": "unit"
+    },
+    "summary": "So many collaborators replaced that the test only checks the mocks talk to each other.",
+    "description": "Signs: tests break on every refactor, tests pass while production fails, and setup is longer than the test. Use real objects for in-process code, fakes for stateful dependencies and mocks only for side effects at the boundary.",
+    "aliases": [
+      "Mockist overreach",
+      "Test-induced damage"
+    ]
+  },
+  {
+    "id": "dependency-injection",
+    "title": "Dependency Injection",
+    "facets": {
+      "area": "doubles",
+      "kind": "technique",
+      "level": "unit"
+    },
+    "summary": "Pass dependencies in (as arguments or constructor params) so tests can hand in doubles.",
+    "description": "Code that creates its own HTTP client or reads the clock directly can only be tested with module patching. `createOrder({ now, payments })` lets a test pass a fixed clock and a fake gateway. No framework needed: function parameters are enough.",
+    "aliases": [
+      "DI",
+      "Inversion of control"
+    ]
+  },
+  {
+    "id": "module-mocking",
+    "title": "Module Mocking",
+    "facets": {
+      "area": "doubles",
+      "kind": "technique",
+      "level": "unit"
+    },
+    "summary": "Replace a whole imported module for a test when you can't inject the dependency.",
+    "description": "Useful for legacy code and third-party modules. It is global and hoisted, so it's easy to leak between tests and hard to read. Prefer dependency injection in your own code, and restore patches after each test.",
+    "aliases": [
+      "Monkeypatching",
+      "jest.mock"
+    ],
+    "platforms": {
+      "javascript": "vi.mock('./payments')",
+      "python": "monkeypatch.setattr(mod, 'fn', fake)"
+    }
+  },
+  {
+    "id": "integration-test",
+    "title": "Integration Test",
+    "facets": {
+      "area": "integration",
+      "kind": "concept",
+      "level": "integration"
+    },
+    "summary": "Tests several real parts together: your code with its database, framework or modules.",
+    "description": "It catches wiring bugs unit tests can't: wrong SQL, misconfigured routes, serialisation. Run it against real infrastructure in a container where you can, and stub only external third parties. Slower than unit tests, so test paths, not every edge case.",
+    "aliases": [
+      "Sociable test"
+    ]
+  },
+  {
+    "id": "fixtures",
+    "title": "Fixtures",
+    "facets": {
+      "area": "integration",
+      "kind": "technique",
+      "level": "any"
+    },
+    "summary": "Reusable setup that gives each test the state and objects it needs.",
+    "description": "A fixture creates a database, a logged-in client or a sample order, and tears it down after. Keep them small and composable, and declare what a test needs explicitly; a giant shared fixture hides what each test depends on.",
+    "aliases": [
+      "Test setup",
+      "Setup and teardown"
+    ],
+    "platforms": {
+      "javascript": "beforeEach / Playwright test.extend",
+      "python": "@pytest.fixture"
+    }
+  },
+  {
+    "id": "testcontainers",
+    "title": "Testcontainers",
+    "facets": {
+      "area": "integration",
+      "kind": "technique",
+      "level": "integration"
+    },
+    "summary": "Start a real database or broker in a throwaway Docker container for each test run.",
+    "description": "Tests hit the same Postgres, Redis or Kafka version as production, so SQL dialect and constraint bugs show up. Start the container once per suite and reset data between tests, because container startup takes seconds.",
+    "aliases": [
+      "Docker in tests"
+    ],
+    "platforms": {
+      "javascript": "@testcontainers/postgresql",
+      "python": "testcontainers (testcontainers-python)"
+    }
+  },
+  {
+    "id": "transaction-rollback",
+    "title": "Transaction Rollback",
+    "facets": {
+      "area": "integration",
+      "kind": "technique",
+      "level": "integration"
+    },
+    "summary": "Run each test in a database transaction and roll it back, so no data survives.",
+    "description": "Fast cleanup without truncating tables. It breaks when the code under test commits, opens its own connection or runs async jobs, which then can't see the data. Fall back to truncating tables or a fresh schema for those tests.",
+    "aliases": [
+      "Rollback per test"
+    ]
+  },
+  {
+    "id": "in-memory-database",
+    "title": "In-memory Database Stand-in",
+    "facets": {
+      "area": "integration",
+      "kind": "anti-pattern",
+      "level": "integration"
+    },
+    "summary": "Testing against SQLite or H2 when production runs Postgres or MySQL.",
+    "description": "Fast, but dialects differ: JSON columns, constraints, locking, case sensitivity and date functions behave differently, so tests pass and production fails. Use the real engine in a container; keep in-memory fakes for unit tests of your own repositories.",
+    "aliases": [
+      "SQLite stand-in",
+      "H2"
+    ]
+  },
+  {
+    "id": "network-mocking",
+    "title": "Network Mocking",
+    "facets": {
+      "area": "integration",
+      "kind": "technique",
+      "level": "integration"
+    },
+    "summary": "Intercept HTTP requests at the network layer and return canned responses.",
+    "description": "Your code keeps its real HTTP client, so tests exercise serialisation, headers and error handling. Mock third parties, not your own backend in its own tests. Fail on unhandled requests so a forgotten mock doesn't hit the real API.",
+    "aliases": [
+      "HTTP mocking",
+      "MSW"
+    ],
+    "platforms": {
+      "javascript": "MSW: http.get(url, () => HttpResponse.json(…))",
+      "python": "responses (requests) or respx (httpx)"
+    }
+  },
+  {
+    "id": "testing-side-effects",
+    "title": "Testing Side Effects",
+    "facets": {
+      "area": "integration",
+      "kind": "technique",
+      "level": "integration"
+    },
+    "summary": "Check emails, queued jobs and events by capturing them, not by sending them.",
+    "description": "Swap the email sender or queue for a capturing fake, act, then assert on what was captured (one email, to this address). Assert on the observable result where possible, like a row written, rather than on a mocked call.",
+    "aliases": [
+      "Outbox in tests",
+      "Captured messages"
+    ]
+  },
+  {
+    "id": "migration-tests",
+    "title": "Migration Tests",
+    "facets": {
+      "area": "integration",
+      "kind": "practice",
+      "level": "integration"
+    },
+    "summary": "Run schema migrations against a copy of real-shaped data before they reach production.",
+    "description": "Apply every migration from empty, and the new ones on a snapshot with production-like volume, to catch locks, timeouts and NOT NULL failures. Test the rollback too, and that old and new code both work during an expand-contract change.",
+    "aliases": [
+      "Schema migration testing"
+    ]
+  },
+  {
+    "id": "api-test",
+    "title": "API Test",
+    "facets": {
+      "area": "api",
+      "kind": "concept",
+      "level": "integration"
+    },
+    "summary": "Call the HTTP API as a client would and check status, headers and body.",
+    "description": "Faster and more stable than driving a browser, and closer to reality than calling handlers directly. Run against the app in-process or a test server, with a real database. Cover status codes and response shapes, not just the 200.",
+    "aliases": [
+      "HTTP tests",
+      "Endpoint tests"
+    ],
+    "platforms": {
+      "javascript": "supertest or Playwright request",
+      "python": "FastAPI TestClient or httpx"
+    }
+  },
+  {
+    "id": "consumer-driven-contracts",
+    "title": "Consumer-Driven Contracts",
+    "facets": {
+      "area": "api",
+      "kind": "practice",
+      "level": "integration"
+    },
+    "summary": "Each consumer records what it needs from an API; the provider's CI checks it still holds.",
+    "description": "Catches breaking changes between services without a shared end-to-end environment. The consumer's tests produce a contract (Pact file), and the provider replays it against its real code. Pick it over e2e tests for service-to-service compatibility.",
+    "aliases": [
+      "Pact",
+      "Contract testing"
+    ],
+    "platforms": {
+      "javascript": "Pact JS (@pact-foundation/pact)",
+      "python": "pact-python"
+    }
+  },
+  {
+    "id": "schema-validation",
+    "title": "Schema Validation",
+    "facets": {
+      "area": "api",
+      "kind": "technique",
+      "level": "integration"
+    },
+    "summary": "Check responses against the published OpenAPI or JSON Schema, not just a few fields.",
+    "description": "One assertion catches renamed fields, wrong types and missing required properties, and keeps the docs honest. Validate requests too. It checks shape, not meaning, so keep a few assertions on actual values.",
+    "aliases": [
+      "OpenAPI validation",
+      "JSON Schema"
+    ]
+  },
+  {
+    "id": "approval-tests",
+    "title": "Approval Tests",
+    "facets": {
+      "area": "api",
+      "kind": "technique",
+      "level": "any"
+    },
+    "summary": "Compare output to a stored, human-approved file; a diff fails the test until re-approved.",
+    "description": "Good for large outputs: reports, generated code, API responses, legacy code you're about to refactor. The risk is rubber-stamping: review every diff before approving, and scrub timestamps and ids so files stay stable.",
+    "aliases": [
+      "Golden master",
+      "Snapshot testing",
+      "Characterisation test"
+    ],
+    "platforms": {
+      "javascript": "expect(x).toMatchSnapshot()",
+      "python": "syrupy or approvaltests"
+    }
+  },
+  {
+    "id": "error-path-testing",
+    "title": "Error Path Testing",
+    "facets": {
+      "area": "api",
+      "kind": "practice",
+      "level": "integration"
+    },
+    "summary": "Test the failures: bad input, missing auth, not found, conflicts and upstream errors.",
+    "description": "Most production incidents start on a path nobody tested. Check that each error returns the right status (400, 401, 403, 404, 409, 503), a safe message with no stack trace, and leaves no half-written data behind.",
+    "aliases": [
+      "Negative testing",
+      "Unhappy paths"
+    ]
+  },
+  {
+    "id": "authentication-in-tests",
+    "title": "Authentication in Tests",
+    "facets": {
+      "area": "api",
+      "kind": "technique",
+      "level": "integration"
+    },
+    "summary": "Create test users and tokens directly instead of clicking through the login form.",
+    "description": "Seed a user and mint a session or token through a test helper, so each test starts logged in quickly. Keep one real login test for the flow itself. Test permissions explicitly: the same request as another user must return 403.",
+    "aliases": [
+      "Test users",
+      "Auth helpers"
+    ],
+    "platforms": {
+      "javascript": "Playwright storageState",
+      "python": "client fixture with a seeded token"
+    }
+  },
+  {
+    "id": "backward-compatibility",
+    "title": "Backward Compatibility Tests",
+    "facets": {
+      "area": "api",
+      "kind": "practice",
+      "level": "integration"
+    },
+    "summary": "Check that old clients still work after an API change.",
+    "description": "Keep recorded requests from the previous version (or consumer contracts) and replay them against the new build. Adding optional fields is safe; renaming, removing or tightening validation breaks clients. Mobile apps stay on old versions for months.",
+    "aliases": [
+      "Breaking change detection"
+    ]
+  },
+  {
+    "id": "webhook-testing",
+    "title": "Webhook Testing",
+    "facets": {
+      "area": "api",
+      "kind": "technique",
+      "level": "integration"
+    },
+    "summary": "Test both sides: that you send signed webhooks and that you safely receive them.",
+    "description": "As sender, capture the outgoing request and check payload, signature and retries. As receiver, post signed fixtures to your endpoint and check that a bad signature is rejected and a duplicate event is ignored.",
+    "aliases": [
+      "Callback testing"
+    ]
+  },
+  {
+    "id": "component-test",
+    "title": "Component Test",
+    "facets": {
+      "area": "ui",
+      "kind": "practice",
+      "level": "integration"
+    },
+    "summary": "Render one component with its real children and check what the user sees and can do.",
+    "description": "Sits between unit and end-to-end: fast, but it exercises real rendering, events and state. Mock the network, not child components. Assert on visible output and accessible roles, never on internal state or the props passed down.",
+    "aliases": [
+      "Integration test (UI)"
+    ],
+    "platforms": {
+      "javascript": "render(<Cart />) with @testing-library/react"
+    }
+  },
+  {
+    "id": "query-priority",
+    "title": "Query Priority",
+    "facets": {
+      "area": "ui",
+      "kind": "concept",
+      "level": "integration"
+    },
+    "summary": "Testing Library's order for finding elements: the way users and assistive tech would.",
+    "description": "Prefer `getByRole`, then `getByLabelText`, `getByPlaceholderText`, `getByText` and `getByDisplayValue`; then `getByAltText` and `getByTitle`; `getByTestId` last. The higher the query, the more the test also checks accessibility.",
+    "aliases": [
+      "Testing Library queries"
+    ]
+  },
+  {
+    "id": "get-by-role",
+    "title": "getByRole",
+    "facets": {
+      "area": "ui",
+      "kind": "technique",
+      "level": "integration"
+    },
+    "summary": "Find an element by its ARIA role and accessible name, as a screen reader would.",
+    "description": "`getByRole('button', { name: 'Save' })` fails if the button has no name or is a clickable div, so the test catches accessibility bugs for free. It's slower than other queries on very large DOMs; that's rarely worth trading away.",
+    "aliases": [
+      "ByRole"
+    ],
+    "platforms": {
+      "javascript": "screen.getByRole('button', { name: 'Save' })",
+      "python": "page.get_by_role(\"button\", name=\"Save\")"
+    }
+  },
+  {
+    "id": "user-event",
+    "title": "user-event",
+    "facets": {
+      "area": "ui",
+      "kind": "technique",
+      "level": "integration"
+    },
+    "summary": "Simulate real interactions (hover, focus, keys, click) instead of one dispatched event.",
+    "description": "`fireEvent.click` dispatches a single event; `userEvent.click` runs the sequence a browser would, including pointer and focus events, and skips disabled elements. Call `userEvent.setup()` and await each action; use `fireEvent` only for events it doesn't cover.",
+    "aliases": [
+      "userEvent",
+      "fireEvent"
+    ],
+    "platforms": {
+      "javascript": "const user = userEvent.setup(); await user.click(el)"
+    }
+  },
+  {
+    "id": "async-queries",
+    "title": "Async Queries",
+    "facets": {
+      "area": "ui",
+      "kind": "technique",
+      "level": "integration"
+    },
+    "summary": "Wait for UI that appears later with findBy and waitFor instead of sleeping.",
+    "description": "`await screen.findByText('Saved')` retries until it appears or times out; `waitFor` retries an assertion. Use `queryBy` to assert something is absent. Don't put side effects inside `waitFor`, and don't add fixed delays.",
+    "aliases": [
+      "findBy",
+      "waitFor",
+      "queryBy"
+    ],
+    "platforms": {
+      "javascript": "await screen.findByRole('alert')"
+    }
+  },
+  {
+    "id": "test-ids",
+    "title": "Test IDs",
+    "facets": {
+      "area": "ui",
+      "kind": "technique",
+      "level": "integration"
+    },
+    "summary": "data-testid attributes: a stable hook when nothing user-facing identifies an element.",
+    "description": "A last resort: users can't see them, so a test that only uses test ids won't notice a missing label or role. Fine for a canvas, a chart or repeated containers. Give them meaningful names (`cart-summary`) and prefer roles and labels everywhere else.",
+    "aliases": [
+      "data-testid"
+    ],
+    "platforms": {
+      "javascript": "screen.getByTestId('cart-summary')",
+      "python": "page.get_by_test_id(\"cart-summary\")"
+    }
+  },
+  {
+    "id": "snapshot-tests",
+    "title": "Snapshot Tests",
+    "facets": {
+      "area": "ui",
+      "kind": "technique",
+      "level": "unit"
+    },
+    "summary": "Save serialised output once, then fail whenever it changes.",
+    "description": "Cheap to write and good for small, stable outputs such as a config or an error message. Large component snapshots get re-approved without being read, so they catch change, not bugs. Prefer explicit assertions; for how it looks, use visual regression.",
+    "aliases": [
+      "toMatchSnapshot",
+      "Inline snapshot"
+    ],
+    "platforms": {
+      "javascript": "expect(result).toMatchInlineSnapshot()",
+      "python": "assert result == snapshot (syrupy)"
+    }
+  },
+  {
+    "id": "storybook-interaction-tests",
+    "title": "Storybook Interaction Tests",
+    "facets": {
+      "area": "ui",
+      "kind": "technique",
+      "level": "integration"
+    },
+    "summary": "Give a story a play function that clicks and types, and run it as a browser test.",
+    "description": "Every story becomes a test case: the `play` function interacts with the rendered component using Testing Library-style APIs, and Storybook's test runner or Vitest integration runs it in CI. Pick it when your components already live in Storybook.",
+    "aliases": [
+      "play function",
+      "Component stories as tests"
+    ]
+  },
+  {
+    "id": "testing-hooks",
+    "title": "Testing Hooks",
+    "facets": {
+      "area": "ui",
+      "kind": "technique",
+      "level": "unit"
+    },
+    "summary": "Test custom hooks through the component that uses them, or with renderHook.",
+    "description": "Hooks only run inside React. `renderHook(() => useCounter())` gives you `result.current`; wrap updates in `act`. Test a hook used by one component through that component; use `renderHook` for hooks shared across the app.",
+    "aliases": [
+      "renderHook"
+    ],
+    "platforms": {
+      "javascript": "const { result } = renderHook(() => useCounter())"
+    }
+  },
+  {
+    "id": "render-with-providers",
+    "title": "Render with Providers",
+    "facets": {
+      "area": "ui",
+      "kind": "technique",
+      "level": "integration"
+    },
+    "summary": "A custom render that wraps components in the router, theme, store and query client.",
+    "description": "Most components need context to render. One `renderWithProviders(ui, options)` helper in your test utils keeps tests short and lets each set its own route or state. Create a fresh store and query client per test so nothing leaks.",
+    "aliases": [
+      "Custom render",
+      "Test wrapper"
+    ],
+    "platforms": {
+      "javascript": "render(ui, { wrapper: AppProviders })"
+    }
+  },
+  {
+    "id": "jsdom-vs-browser",
+    "title": "jsdom vs Real Browser",
+    "facets": {
+      "area": "ui",
+      "kind": "concept",
+      "level": "integration"
+    },
+    "summary": "A simulated DOM in Node is fast; a real browser catches layout, CSS and missing APIs.",
+    "description": "jsdom and happy-dom have no layout, so sizes, scrolling, `IntersectionObserver` and CSS-driven visibility are faked or missing. Keep most component tests there for speed, and run the ones that depend on layout in a real browser (Vitest browser mode, Playwright).",
+    "aliases": [
+      "happy-dom",
+      "Vitest browser mode"
+    ],
+    "platforms": {
+      "javascript": "environment: 'jsdom' or browser: { enabled: true }"
+    }
+  },
+  {
+    "id": "act-warnings",
+    "title": "act() Warnings",
+    "facets": {
+      "area": "ui",
+      "kind": "concept",
+      "level": "integration"
+    },
+    "summary": "React's warning that state changed outside act(): usually a missing await in the test.",
+    "description": "Something async (a fetch, a timer) updated the component after the test stopped looking. Testing Library already wraps its helpers in `act`; the fix is usually to `await` a `findBy` query for the final UI. Silencing the warning hides real races.",
+    "aliases": [
+      "not wrapped in act(...)"
+    ]
+  },
+  {
+    "id": "e2e-test",
+    "title": "End-to-end Test",
+    "facets": {
+      "area": "e2e",
+      "kind": "practice",
+      "level": "e2e"
+    },
+    "summary": "Drive the real app in a real browser through a whole user journey.",
+    "description": "Highest confidence and highest cost: slow, and a failure can come from anywhere. Keep a small set for the journeys that make money or break badly (sign up, checkout), and push detail down to component and API tests.",
+    "aliases": [
+      "E2E",
+      "UI test"
+    ],
+    "platforms": {
+      "javascript": "test('checkout', async ({ page }) => { … })",
+      "python": "def test_checkout(page: Page): …"
+    }
+  },
+  {
+    "id": "page-objects",
+    "title": "Page Objects",
+    "facets": {
+      "area": "e2e",
+      "kind": "technique",
+      "level": "e2e"
+    },
+    "summary": "Wrap a page's locators and actions in a class so tests read as user steps.",
+    "description": "`await checkout.payWith(card)` instead of five selectors in every test. When the UI changes, you fix one class. Keep assertions in the tests, not in page objects, and compose small component objects rather than deep inheritance.",
+    "aliases": [
+      "Page object model",
+      "POM"
+    ]
+  },
+  {
+    "id": "auto-waiting",
+    "title": "Auto-waiting",
+    "facets": {
+      "area": "e2e",
+      "kind": "concept",
+      "level": "e2e"
+    },
+    "summary": "Modern runners wait until elements are ready and retry assertions before failing.",
+    "description": "Before acting, Playwright checks an element is visible, stable, enabled and receives events, and web-first assertions like `toBeVisible()` retry until a timeout. Assert on what the user waits for, and you rarely need explicit waits.",
+    "aliases": [
+      "Actionability",
+      "Web-first assertions"
+    ],
+    "platforms": {
+      "javascript": "await expect(page.getByText('Saved')).toBeVisible()",
+      "python": "expect(page.get_by_text(\"Saved\")).to_be_visible()"
+    }
+  },
+  {
+    "id": "fixed-sleeps",
+    "title": "Fixed Sleeps",
+    "facets": {
+      "area": "e2e",
+      "kind": "anti-pattern",
+      "level": "e2e"
+    },
+    "summary": "Waiting a set time is too slow when the app is fast and too short when it's slow.",
+    "description": "Every `waitForTimeout(2000)` adds two seconds to every run and still flakes on a busy CI machine. Wait for a condition instead: an element, a network response (`waitForResponse`) or a URL. If nothing observable changes, the app needs a signal.",
+    "aliases": [
+      "sleep()",
+      "waitForTimeout",
+      "Hard-coded wait"
+    ]
+  },
+  {
+    "id": "user-facing-locators",
+    "title": "User-facing Locators",
+    "facets": {
+      "area": "e2e",
+      "kind": "technique",
+      "level": "e2e"
+    },
+    "summary": "Find elements by role, label and text, not by CSS classes or XPath.",
+    "description": "`page.getByRole('link', { name: 'Pricing' })` survives refactors that break `.nav > li:nth-child(3) a`, and fails when accessibility breaks. Chain and filter locators to narrow down; fall back to test ids for things with no user-facing name.",
+    "aliases": [
+      "Locators",
+      "Resilient selectors"
+    ],
+    "platforms": {
+      "javascript": "page.getByRole('link', { name: 'Pricing' })",
+      "python": "page.get_by_role(\"link\", name=\"Pricing\")"
+    }
+  },
+  {
+    "id": "storage-state",
+    "title": "Saved Login State",
+    "facets": {
+      "area": "e2e",
+      "kind": "technique",
+      "level": "e2e"
+    },
+    "summary": "Log in once in a setup step, save cookies and storage, and start each test signed in.",
+    "description": "Logging in through the UI in every test is slow and flaky. A setup project signs in and writes `storageState` to a file that other tests load. Keep one state per role, keep the files out of git, and still keep one test of the real login form.",
+    "aliases": [
+      "storageState",
+      "Auth setup"
+    ],
+    "platforms": {
+      "javascript": "use: { storageState: 'playwright/.auth/user.json' }",
+      "python": "browser.new_context(storage_state=\"user.json\")"
+    }
+  },
+  {
+    "id": "test-sharding-e2e",
+    "title": "Parallel E2E Tests",
+    "facets": {
+      "area": "e2e",
+      "kind": "technique",
+      "level": "e2e"
+    },
+    "summary": "Run e2e tests side by side in workers, each in its own isolated browser context.",
+    "description": "Playwright gives every test a fresh context, so tests can run in parallel on one machine (`workers`) and across machines (`--shard`). That only works when tests share no data: create users and records per test instead of relying on order.",
+    "aliases": [
+      "Workers",
+      "fullyParallel"
+    ],
+    "platforms": {
+      "javascript": "fullyParallel: true, workers: 4",
+      "python": "pytest -n 4 (pytest-xdist)"
+    }
+  },
+  {
+    "id": "trace-viewer",
+    "title": "Trace Viewer",
+    "facets": {
+      "area": "e2e",
+      "kind": "technique",
+      "level": "e2e"
+    },
+    "summary": "A recorded timeline of actions, DOM snapshots, network and console for a failed run.",
+    "description": "Set `trace: 'on-first-retry'` so CI keeps traces only for failures, then open one locally and step through the page before and after each action. Much faster than re-running with logs. Traces can contain tokens and personal data: treat them as secrets.",
+    "aliases": [
+      "Playwright trace"
+    ],
+    "platforms": {
+      "javascript": "npx playwright show-trace trace.zip",
+      "python": "playwright show-trace trace.zip"
+    }
+  },
+  {
+    "id": "cross-browser",
+    "title": "Cross-browser Testing",
+    "facets": {
+      "area": "e2e",
+      "kind": "practice",
+      "level": "e2e"
+    },
+    "summary": "Run the same e2e suite in Chromium, Firefox and WebKit to catch engine differences.",
+    "description": "Most bugs are engine-agnostic, so if time is tight run every browser on main and only Chromium on each pull request. Playwright's WebKit approximates Safari but isn't Safari; test real iPhones for anything that matters on iOS.",
+    "aliases": [
+      "Browser matrix"
+    ],
+    "platforms": {
+      "javascript": "projects: chromium, firefox and webkit",
+      "python": "pytest --browser webkit --browser firefox"
+    }
+  },
+  {
+    "id": "smoke-tests",
+    "title": "Smoke Tests",
+    "facets": {
+      "area": "e2e",
+      "kind": "practice",
+      "level": "e2e"
+    },
+    "summary": "A handful of fast checks that the deployed app is up and its key pages work.",
+    "description": "Run them right after every deploy: the home page loads, login works, the API answers. If they fail, roll back before users notice. Keep them to a few minutes and read-only, or use test accounts, so they can run against production safely.",
+    "aliases": [
+      "Post-deploy checks",
+      "Sanity tests"
+    ]
+  },
+  {
+    "id": "critical-paths",
+    "title": "Critical User Paths",
+    "facets": {
+      "area": "e2e",
+      "kind": "practice",
+      "level": "e2e"
+    },
+    "summary": "Choose e2e coverage by risk: the few journeys that must never break.",
+    "description": "List the flows that lose money or trust when broken (sign up, pay, reset password), test each end to end with realistic data, and stop there. Everything else gets cheaper tests. Revisit the list when the product changes.",
+    "aliases": [
+      "Happy paths",
+      "Risk-based testing"
+    ]
+  },
+  {
+    "id": "preview-environments",
+    "title": "Preview Environments",
+    "facets": {
+      "area": "e2e",
+      "kind": "practice",
+      "level": "e2e"
+    },
+    "summary": "Deploy each pull request to its own temporary URL and run e2e tests against it.",
+    "description": "Tests hit the real build, config and CDN before merge, and reviewers can click through the change. It needs seeded test data and automatic teardown. A shared staging server gets overwritten by other branches and drifts from what's in the PR.",
+    "aliases": [
+      "Ephemeral environments",
+      "Review apps"
+    ]
+  },
+  {
+    "id": "automated-accessibility-checks",
+    "title": "Automated Accessibility Checks",
+    "facets": {
+      "area": "non-functional",
+      "kind": "practice",
+      "level": "integration"
+    },
+    "summary": "Run axe on rendered pages to catch missing names, low contrast and broken ARIA.",
+    "description": "Cheap to add to component or e2e tests, and good at catching regressions. Automated rules find only part of the issues (often quoted as about a third): they can't judge whether alt text makes sense or focus order is logical. A pass is a floor.",
+    "aliases": [
+      "axe-core",
+      "jest-axe"
+    ],
+    "platforms": {
+      "javascript": "new AxeBuilder({ page }).analyze() (@axe-core/playwright)",
+      "python": "axe-playwright-python"
+    }
+  },
+  {
+    "id": "manual-accessibility-testing",
+    "title": "Manual Accessibility Testing",
+    "facets": {
+      "area": "non-functional",
+      "kind": "practice",
+      "level": "e2e"
+    },
+    "summary": "Use the app with a keyboard, a screen reader and zoom, the way disabled people do.",
+    "description": "Tab through every flow, try VoiceOver, NVDA or TalkBack on the key journeys, and zoom to 200–400%. It finds what tools can't: confusing announcements, focus traps, unusable custom widgets. Do it every release, and include disabled people in research.",
+    "aliases": [
+      "Screen reader testing",
+      "Keyboard testing"
+    ]
+  },
+  {
+    "id": "visual-regression",
+    "title": "Visual Regression",
+    "facets": {
+      "area": "non-functional",
+      "kind": "technique",
+      "level": "e2e"
+    },
+    "summary": "Screenshot pages or components and diff them against approved images.",
+    "description": "Catches CSS and layout bugs no assertion would. Pin the browser, fonts and viewport (run in one container) or diffs flake, mask dynamic content like dates, and review every diff before approving. Pick it over DOM snapshots when the look is what matters.",
+    "aliases": [
+      "Screenshot testing",
+      "Pixel diff"
+    ],
+    "platforms": {
+      "javascript": "await expect(page).toHaveScreenshot()"
+    }
+  },
+  {
+    "id": "load-testing",
+    "title": "Load Testing",
+    "facets": {
+      "area": "non-functional",
+      "kind": "practice",
+      "level": "e2e"
+    },
+    "summary": "Simulate expected traffic and check that latency and errors stay within targets.",
+    "description": "Script realistic user journeys, ramp up to the expected peak, and watch p95/p99 latency and error rate, not averages. Run against a production-like environment, and never against shared infrastructure without warning. Do it before launches and big changes.",
+    "aliases": [
+      "Performance testing"
+    ],
+    "platforms": {
+      "javascript": "k6 (scripts written in JavaScript)",
+      "python": "Locust"
+    }
+  },
+  {
+    "id": "soak-and-spike-tests",
+    "title": "Stress, Soak and Spike Tests",
+    "facets": {
+      "area": "non-functional",
+      "kind": "concept",
+      "level": "e2e"
+    },
+    "summary": "Beyond load tests: the breaking point, slow leaks, and the reaction to sudden bursts.",
+    "description": "Stress pushes past the expected peak to see how it fails. Soak holds normal load for hours to surface memory leaks and exhausted pools. Spike jumps traffic within seconds to test autoscaling and queues. Pick by the failure you fear.",
+    "aliases": [
+      "Stress test",
+      "Endurance test",
+      "Spike test"
+    ]
+  },
+  {
+    "id": "lighthouse-ci",
+    "title": "Lighthouse CI",
+    "facets": {
+      "area": "non-functional",
+      "kind": "practice",
+      "level": "e2e"
+    },
+    "summary": "Run Lighthouse on every pull request and fail the build when budgets are exceeded.",
+    "description": "Assert on metrics and sizes (LCP, total JavaScript) rather than the overall score. Lab results vary between runs, so run several times and use the median. It catches regressions; real-user data (RUM, CrUX) tells you how fast the site actually is.",
+    "aliases": [
+      "LHCI",
+      "Performance budgets"
+    ],
+    "platforms": {
+      "javascript": "lhci autorun (@lhci/cli)"
+    }
+  },
+  {
+    "id": "sast-dast",
+    "title": "SAST vs DAST",
+    "facets": {
+      "area": "non-functional",
+      "kind": "concept",
+      "level": "static"
+    },
+    "summary": "Scan the source for risky patterns, or probe the running app from outside.",
+    "description": "SAST (CodeQL, Semgrep) runs on every pull request and points at the line, but reports false positives and misses runtime config. DAST (OWASP ZAP) attacks a deployed app and finds real, exploitable issues, but late and without a line number. Use both.",
+    "aliases": [
+      "Static analysis",
+      "Dynamic analysis",
+      "CodeQL",
+      "OWASP ZAP"
+    ],
+    "platforms": {
+      "javascript": "Semgrep / eslint-plugin-security",
+      "python": "Semgrep / Bandit"
+    }
+  },
+  {
+    "id": "fuzzing",
+    "title": "Fuzzing",
+    "facets": {
+      "area": "non-functional",
+      "kind": "technique",
+      "level": "unit"
+    },
+    "summary": "Feed huge numbers of random or mutated inputs to find crashes and hangs.",
+    "description": "Coverage-guided fuzzers keep inputs that reach new code, so they find parser bugs, unhandled exceptions and security holes nobody thought to test. Best for code that parses untrusted input: file formats, protocols, URL and date parsers. Keep crashing inputs as tests.",
+    "aliases": [
+      "Fuzz testing"
+    ],
+    "platforms": {
+      "javascript": "Jazzer.js",
+      "python": "Atheris"
+    }
+  },
+  {
+    "id": "property-based-testing",
+    "title": "Property-based Testing",
+    "facets": {
+      "area": "non-functional",
+      "kind": "technique",
+      "level": "unit"
+    },
+    "summary": "State a rule that holds for every input and let the tool generate cases to break it.",
+    "description": "`decode(encode(x)) == x` for any string; sorting twice equals sorting once; totals never go negative. The library tries hundreds of inputs and shrinks a failure to the smallest example. Great for pure logic and parsers; keep example tests for specific business cases.",
+    "aliases": [
+      "Generative testing",
+      "QuickCheck"
+    ],
+    "platforms": {
+      "javascript": "fc.assert(fc.property(fc.string(), (s) => …))",
+      "python": "@given(st.text()) (Hypothesis)"
+    }
+  },
+  {
+    "id": "mutation-testing",
+    "title": "Mutation Testing",
+    "facets": {
+      "area": "non-functional",
+      "kind": "technique",
+      "level": "unit"
+    },
+    "summary": "Change the code in small ways and check the tests fail: a test of the tests.",
+    "description": "The tool flips `>` to `>=`, removes calls and swaps `true` for `false`; every mutant that survives is behaviour no test checks. Far more honest than coverage, but slow, so run it on critical modules or changed files rather than everything.",
+    "aliases": [
+      "Mutants"
+    ],
+    "platforms": {
+      "javascript": "Stryker",
+      "python": "mutmut"
+    }
+  },
+  {
+    "id": "tests-in-ci",
+    "title": "Tests in CI",
+    "facets": {
+      "area": "ci",
+      "kind": "practice",
+      "level": "any"
+    },
+    "summary": "Every push and pull request runs the checks on a clean machine before merge.",
+    "description": "The same commands developers run locally, in a fresh environment, so 'works on my machine' can't merge. Making them required checks on the main branch keeps them non-optional. Cache dependencies to stay fast, but never cache test results.",
+    "aliases": [
+      "Continuous integration",
+      "Required checks"
+    ]
+  },
+  {
+    "id": "fail-fast",
+    "title": "Fail Fast",
+    "facets": {
+      "area": "ci",
+      "kind": "practice",
+      "level": "any"
+    },
+    "summary": "Order CI so the cheapest checks run first and a failure skips the expensive ones.",
+    "description": "Lint and type-check take seconds, then unit tests, then integration, then e2e: developers see common failures in a minute, not after a 20-minute run. Locally, stopping at the first failure saves time; in CI, run a stage fully to see every failure.",
+    "aliases": [
+      "Pipeline ordering",
+      "--bail"
+    ],
+    "platforms": {
+      "javascript": "vitest run --bail=1",
+      "python": "pytest -x"
+    }
+  },
+  {
+    "id": "test-sharding",
+    "title": "Test Sharding",
+    "facets": {
+      "area": "ci",
+      "kind": "technique",
+      "level": "any"
+    },
+    "summary": "Split one suite across several CI machines so it finishes in a fraction of the time.",
+    "description": "Each machine runs one slice (`--shard=2/4`) and the reports merge. Balance slices by duration, not file count, and keep tests independent, since any slice can run any subset. Use parallel workers on one machine first; shard when one machine isn't enough.",
+    "aliases": [
+      "Splitting",
+      "CI matrix"
+    ],
+    "platforms": {
+      "javascript": "vitest run --shard=2/4",
+      "python": "pytest --splits 4 --group 2 (pytest-split)"
+    }
+  },
+  {
+    "id": "test-impact-analysis",
+    "title": "Test Impact Analysis",
+    "facets": {
+      "area": "ci",
+      "kind": "technique",
+      "level": "any"
+    },
+    "summary": "Run only the tests affected by the files a change touches.",
+    "description": "Tools map files to tests through imports or coverage: `vitest --changed` runs tests related to changed files, and monorepo tools run affected packages only. Great for pull-request feedback; still run the full suite on main, because the map misses config and data.",
+    "aliases": [
+      "Affected tests",
+      "Selective testing"
+    ],
+    "platforms": {
+      "javascript": "vitest --changed origin/main",
+      "python": "pytest-testmon"
+    }
+  },
+  {
+    "id": "quality-gates",
+    "title": "Quality Gates",
+    "facets": {
+      "area": "ci",
+      "kind": "practice",
+      "level": "any"
+    },
+    "summary": "The rules a change must pass to merge: green checks, a review, no new critical issues.",
+    "description": "Make each gate objective and fast: required status checks, at least one approving review, no new high-severity findings, size budgets. Every gate should block something you would really refuse to ship, or people learn to click 'override'.",
+    "aliases": [
+      "Branch protection",
+      "Merge checks"
+    ]
+  },
+  {
+    "id": "pre-commit-hooks",
+    "title": "Pre-commit Hooks",
+    "facets": {
+      "area": "ci",
+      "kind": "practice",
+      "level": "static"
+    },
+    "summary": "Run formatters and fast linters on staged files before each commit is created.",
+    "description": "They catch typos and formatting in a second, before CI does. Keep hooks fast and limited to staged files, or people skip them with `--no-verify`. They're a convenience, not a gate: CI still runs every check.",
+    "aliases": [
+      "Git hooks",
+      "lint-staged"
+    ],
+    "platforms": {
+      "javascript": "husky + lint-staged",
+      "python": "pre-commit (.pre-commit-config.yaml)"
+    }
+  },
+  {
+    "id": "code-coverage",
+    "title": "Code Coverage",
+    "facets": {
+      "area": "ci",
+      "kind": "concept",
+      "level": "any"
+    },
+    "summary": "Which lines and branches the tests ran: it shows what's untested, not what's tested well.",
+    "description": "Low coverage reliably points at untested code; high coverage proves little, because a test can run a line without checking anything. Prefer branch coverage, look at coverage of changed files in review, and use mutation testing to judge test strength.",
+    "aliases": [
+      "Line coverage",
+      "Branch coverage"
+    ],
+    "platforms": {
+      "javascript": "vitest run --coverage",
+      "python": "pytest --cov (pytest-cov)"
+    }
+  },
+  {
+    "id": "coverage-as-target",
+    "title": "Coverage as a Target",
+    "facets": {
+      "area": "ci",
+      "kind": "anti-pattern",
+      "level": "any"
+    },
+    "summary": "Mandating a coverage percentage gets tests written to hit lines, not to catch bugs.",
+    "description": "Goodhart's law: teams chasing 90% write assertion-free tests, test getters and keep dead code to avoid a drop. Use coverage as a signal, such as no drop on changed files, and judge tests by the bugs they would catch.",
+    "aliases": [
+      "Coverage quota",
+      "Goodhart's law"
+    ]
+  },
+  {
+    "id": "flaky-tests",
+    "title": "Flaky Tests",
+    "facets": {
+      "area": "maintenance",
+      "kind": "concept",
+      "level": "any"
+    },
+    "summary": "Tests that pass and fail on the same code: they teach everyone to ignore red builds.",
+    "description": "Usual causes: timing and fixed sleeps, state shared between tests, test order, the real network or clock, and randomness. Reproduce by running the test many times or in random order, fix the cause, and track the flake rate per test to spot new ones.",
+    "aliases": [
+      "Non-deterministic tests"
+    ],
+    "platforms": {
+      "javascript": "playwright test --repeat-each=20",
+      "python": "pytest-repeat / pytest-randomly"
+    }
+  },
+  {
+    "id": "flaky-quarantine",
+    "title": "Quarantine Flaky Tests",
+    "facets": {
+      "area": "maintenance",
+      "kind": "practice",
+      "level": "any"
+    },
+    "summary": "Move a known-flaky test out of the blocking suite, with an owner and a deadline.",
+    "description": "Retries hide flakes, and a quarantine nobody follows up loses the test. Tag it, keep it running but non-blocking, open a ticket with an owner, and fix or delete it within days. Retries are fine for detecting flakes, not for passing builds silently.",
+    "aliases": [
+      "Retries",
+      "Test quarantine"
+    ],
+    "platforms": {
+      "javascript": "retries: 2 (Playwright marks the test flaky)",
+      "python": "pytest --reruns 2 (pytest-rerunfailures)"
+    }
+  },
+  {
+    "id": "test-data-builders",
+    "title": "Test Data Builders",
+    "facets": {
+      "area": "maintenance",
+      "kind": "technique",
+      "level": "any"
+    },
+    "summary": "Build test objects with sensible defaults and override only what the test cares about.",
+    "description": "`buildUser({ role: 'admin' })` or `aUser().withRole('admin').build()` makes the relevant detail stand out and survives new required fields. Pick builders over a shared fixtures file, which grows into data nobody dares change.",
+    "aliases": [
+      "Factories",
+      "Builder pattern"
+    ],
+    "platforms": {
+      "javascript": "buildUser(overrides) factory (e.g. fishery)",
+      "python": "factory_boy"
+    }
+  },
+  {
+    "id": "object-mother",
+    "title": "Object Mother",
+    "facets": {
+      "area": "maintenance",
+      "kind": "technique",
+      "level": "any"
+    },
+    "summary": "A class of named, ready-made test objects: Users.admin(), Orders.paid().",
+    "description": "Readable for common cases, but every new variation adds a method, and tests depend on details hidden inside the mother. Builders scale better; a good mix is a few mother methods that return builders you can still adjust.",
+    "aliases": [
+      "Fixture factory"
+    ]
+  },
+  {
+    "id": "shared-mutable-state",
+    "title": "Shared Mutable State",
+    "facets": {
+      "area": "maintenance",
+      "kind": "anti-pattern",
+      "level": "any"
+    },
+    "summary": "Tests that read and write the same objects, rows or globals depend on running order.",
+    "description": "One test changes a module-level object or a seeded row, and another passes only after it. Create data per test, restore mocks and globals in `afterEach`, use transactions or fresh databases, and run tests in random order to expose the coupling.",
+    "aliases": [
+      "Test interdependence",
+      "Order-dependent tests"
+    ],
+    "platforms": {
+      "javascript": "afterEach(() => { vi.restoreAllMocks() })",
+      "python": "function-scoped fixtures"
+    }
+  },
+  {
+    "id": "brittle-tests",
+    "title": "Brittle Tests",
+    "facets": {
+      "area": "maintenance",
+      "kind": "anti-pattern",
+      "level": "any"
+    },
+    "summary": "Tests that break on harmless refactors because they check how, not what.",
+    "description": "Asserting on private methods, call order, CSS classes or exact mock calls turns the suite red on every refactor without a bug. Test through the public API and visible behaviour, so tests fail only when a user would notice.",
+    "aliases": [
+      "Fragile tests",
+      "Implementation-detail tests"
+    ]
+  },
+  {
+    "id": "slow-test-suite",
+    "title": "Slow Test Suite",
+    "facets": {
+      "area": "maintenance",
+      "kind": "concept",
+      "level": "any"
+    },
+    "summary": "When the suite takes too long, people stop running it and CI becomes the only feedback.",
+    "description": "Profile first: a few tests usually take most of the time. Then move e2e detail into component tests, share expensive setup per file, remove real sleeps and network calls, parallelise, and shard. Track suite time like any other metric.",
+    "aliases": [
+      "Test runtime"
+    ],
+    "platforms": {
+      "python": "pytest --durations=10"
+    }
+  },
+  {
+    "id": "damp-not-dry",
+    "title": "DAMP, Not DRY",
+    "facets": {
+      "area": "maintenance",
+      "kind": "practice",
+      "level": "any"
+    },
+    "summary": "In tests, prefer descriptive, repeated setup over clever helpers that hide the point.",
+    "description": "DAMP means Descriptive And Meaningful Phrases. Some repetition is fine if each test reads top to bottom on its own. Extract helpers that name a concept (`signInAs(admin)`), not ones that hide what's tested behind loops and shared variables.",
+    "aliases": [
+      "Descriptive and meaningful phrases"
+    ]
+  },
+  {
+    "id": "deleting-tests",
+    "title": "Deleting Tests",
+    "facets": {
+      "area": "maintenance",
+      "kind": "practice",
+      "level": "any"
+    },
+    "summary": "Remove tests that duplicate others, test dead code or have never caught anything.",
+    "description": "Every test costs runtime and upkeep. Delete tests for removed features, near-duplicates already covered at a lower level, and permanently flaky tests nobody will fix, after checking what they covered. A sharp suite beats one people are afraid to touch.",
+    "aliases": [
+      "Pruning the suite"
+    ]
+  },
+  {
+    "id": "hidden-dependencies",
+    "title": "Hidden Dependencies",
+    "facets": {
+      "area": "maintenance",
+      "kind": "anti-pattern",
+      "level": "any"
+    },
+    "summary": "Tests that rely on the real clock, network, time zone or environment pass only sometimes.",
+    "description": "A test using `new Date()` fails at midnight or in another time zone; one calling a real API fails offline. Control them: fake timers and a fixed system time, a pinned `TZ`, mocked network, explicit environment variables.",
+    "aliases": [
+      "Time-dependent tests",
+      "Environment coupling"
+    ],
+    "platforms": {
+      "javascript": "vi.useFakeTimers(); vi.setSystemTime(date)",
+      "python": "freezegun / time-machine"
+    }
+  }
+]

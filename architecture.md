@@ -101,5 +101,5 @@ No state is persisted: reload starts from the URL hash with no filters.
 - **Bundle:** `vite.config.ts` never inlines SVGs (`assetsInlineLimit`), so drawings are
   separate files the browser fetches when an `<img>` shows them; browse thumbnails use
   `loading="lazy"` ([ADR-0012](docs/adr/0012-card-drawings-as-separate-files.md)). The JS
-  is ~730 kB (~230 kB gzipped) with six decks: React, Framer Motion and the card text,
+  is ~790 kB (~250 kB gzipped) with seven decks: React, Framer Motion and the card text,
   so Vite still warns about chunk size.

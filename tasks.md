@@ -10,8 +10,8 @@ item, and add a dated line at the top of **Done**.
 - [ ] **Review native-platform names.** Newer Material 3 Expressive names (ButtonGroup,
       SplitButtonLayout, FloatingToolbar) and some iOS approximations (TipKit for Tour) were
       written from memory — check against current docs in `cards.json`.
-- [ ] **Split card text per deck** if the bundle grows again: the JS is ~730 kB (~230 kB
-      gzipped) after ADR-0012, about a third of it card text for all six decks. Loading a
+- [ ] **Split card text per deck** if the bundle grows again: the JS is ~790 kB (~250 kB
+      gzipped) after ADR-0012, about a third of it card text for all seven decks. Loading a
       deck's cards on entry needs async loading in `decks/index.ts`, `App` and `DeckView`.
 - [ ] **Review Proposed ADRs 0006–0007** (GitHub Pages on `v*` tags; Vitest and CI).
 - [ ] **Review the accessibility deck** (100 cards, ADR-0008 Proposed): check the content and
@@ -32,6 +32,12 @@ item, and add a dated line at the top of **Done**.
       input exclusion, TCP initial window (~14 kB), passive-by-default listeners in Safari,
       Speculation Rules support, stale-while-revalidate in browsers, the `improves` badge
       on judgement-call cards (core-web-vitals, p75, head-of-line-blocking, http3).
+- [ ] **Review the testing deck** (100 cards, ADR-0014 Proposed): check tool APIs against
+      current Vitest, Testing Library, Playwright and pytest docs; written from memory.
+      Least sure: `pytest-split` flags, `pytest-testmon`, `vitest --changed`, the
+      `environment`/`browser` config shape, Playwright Python `storage_state` and browser
+      flags, MSW v2 syntax, Atheris / Jazzer.js / fishery, the "about a third" figure
+      for automated accessibility checks.
 - [ ] **Review the css deck** (100 cards, ADR-0013 Proposed): check Baseline statuses
       against web-features / MDN (they move every month) and the SwiftUI/Compose names.
       Verified 2026-10-20: `@scope` and same-document view transitions newly available,
@@ -61,6 +67,7 @@ item, and add a dated line at the top of **Done**.
 
 ## Done
 
+- [x] 2026-10-20: Testing deck: 100 cards (strategy, unit, doubles, integration, APIs, UI, e2e, non-functional, CI, maintenance) with a drawing each, a test-level badge and JavaScript/Python equivalents (ADR-0014).
 - [x] 2026-10-20: Rebranded to plain "Flashcards": page title, meta and Open Graph/Twitter tags, a new `og.webp` ("Learn the web, one card at a time", six decks), `document.title` on the picker, package.json, README and the knowledge files.
 - [x] 2026-10-20: CSS deck: 100 cards (cascade, selectors, box model, flexbox, grid, positioning, responsive, typography, colour, motion, architecture) with a drawing each, a Baseline status badge and SwiftUI/Compose equivalents for layout (ADR-0013).
 - [x] 2026-10-20: Bundle size: card drawings are separate hashed files instead of inlined data URIs, browse thumbnails lazy-load; JS 1.8 MB → 670 kB (337 → 210 kB gzipped) (ADR-0012).
