@@ -1,0 +1,50 @@
+{
+  "id": "css",
+  "title": "CSS",
+  "description": "The cascade, selectors, layout, responsive design, typography, colour, motion and architecture: what each feature does, when to pick it over its siblings, whether it's Baseline yet, and the SwiftUI and Compose equivalent.",
+  "platforms": [
+    { "key": "swiftui", "label": "SwiftUI" },
+    { "key": "compose", "label": "Compose" }
+  ],
+  "facets": [
+    {
+      "key": "area",
+      "label": "Area",
+      "values": [
+        "cascade",
+        "selectors",
+        "box-model",
+        "flexbox",
+        "grid",
+        "positioning",
+        "responsive",
+        "typography",
+        "colour",
+        "motion",
+        "architecture"
+      ]
+    },
+    {
+      "key": "kind",
+      "label": "Kind",
+      "values": [
+        "concept",
+        "property",
+        "selector",
+        "function",
+        "at-rule",
+        "pattern"
+      ]
+    },
+    {
+      "key": "baseline",
+      "label": "Baseline",
+      "filter": false,
+      "values": [
+        "baseline-widely",
+        "baseline-newly",
+        "limited"
+      ]
+    }
+  ]
+}

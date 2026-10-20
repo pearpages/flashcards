@@ -111,3 +111,18 @@
   background: #f3e8fc;
   color: #7a3cc4;
 }
+
+.tag--baseline-widely {
+  background: #e6f4ea;
+  color: #1e7a3c;
+}
+
+.tag--baseline-newly {
+  background: #e8eefc;
+  color: #2f5bc4;
+}
+
+.tag--limited {
+  background: #fdf0e1;
+  color: #a85d10;
+}

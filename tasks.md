@@ -10,8 +10,8 @@ item, and add a dated line at the top of **Done**.
 - [ ] **Review native-platform names.** Newer Material 3 Expressive names (ButtonGroup,
       SplitButtonLayout, FloatingToolbar) and some iOS approximations (TipKit for Tour) were
       written from memory — check against current docs in `cards.json`.
-- [ ] **Split card text per deck** if the bundle grows again: the JS is ~670 kB (~210 kB
-      gzipped) after ADR-0012, about a third of it card text for all five decks. Loading a
+- [ ] **Split card text per deck** if the bundle grows again: the JS is ~730 kB (~230 kB
+      gzipped) after ADR-0012, about a third of it card text for all six decks. Loading a
       deck's cards on entry needs async loading in `decks/index.ts`, `App` and `DeckView`.
 - [ ] **Review Proposed ADRs 0006–0007** (GitHub Pages on `v*` tags; Vitest and CI).
 - [ ] **Review the accessibility deck** (100 cards, ADR-0008 Proposed): check the content and
@@ -32,7 +32,15 @@ item, and add a dated line at the top of **Done**.
       input exclusion, TCP initial window (~14 kB), passive-by-default listeners in Safari,
       Speculation Rules support, stale-while-revalidate in browsers, the `improves` badge
       on judgement-call cards (core-web-vitals, p75, head-of-line-blocking, http3).
-- [ ] **Branding with five decks.** The page title, OG tags, `og.webp` and `document.title`
+- [ ] **Review the css deck** (100 cards, ADR-0013 Proposed): check Baseline statuses
+      against web-features / MDN (they move every month) and the SwiftUI/Compose names.
+      Verified 2026-10-20: `@scope` and same-document view transitions newly available,
+      anchor positioning newly available (Firefox 147), scroll-driven animations limited.
+      Least sure: popover/top layer (newly → widely around now), `forced-colors` in Safari,
+      `hyphens` prefixes, unprefixed `line-clamp`; `.keyframeAnimator()`,
+      `SharedTransitionLayout`, `ViewThatFits` / `BoxWithConstraints` as container-query
+      equivalents, `Modifier.weight()` for `fr`.
+- [ ] **Branding with six decks.** The page title, OG tags, `og.webp` and `document.title`
       in `DeckPicker` still say "Design System Flashcards" and "155 components" — decide
       whether the site becomes plain "Flashcards".
 - [ ] **Review the system-design deck** (104 cards, ADR-0009 Proposed): check the
@@ -56,6 +64,7 @@ item, and add a dated line at the top of **Done**.
 
 ## Done
 
+- [x] 2026-10-20: CSS deck: 100 cards (cascade, selectors, box model, flexbox, grid, positioning, responsive, typography, colour, motion, architecture) with a drawing each, a Baseline status badge and SwiftUI/Compose equivalents for layout (ADR-0013).
 - [x] 2026-10-20: Bundle size: card drawings are separate hashed files instead of inlined data URIs, browse thumbnails lazy-load; JS 1.8 MB → 670 kB (337 → 210 kB gzipped) (ADR-0012).
 - [x] 2026-10-20: Web Performance deck: 100 cards (metrics, measurement, network, server, caching, loading, assets, JavaScript, rendering) with a drawing each, anti-patterns as their own kind, and the metric each card improves as a badge (ADR-0011).
 - [x] 2026-10-20: Web Security deck: 100 cards (attacks, defences and mechanisms across injection, browser, auth, sessions, transport, data, supply chain and infrastructure) with a drawing each and an OWASP Top 10 (2025) badge (ADR-0010).

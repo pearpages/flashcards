@@ -1,0 +1,1651 @@
+[
+  {
+    "id": "cascade",
+    "title": "The Cascade",
+    "facets": {
+      "area": "cascade",
+      "kind": "concept",
+      "baseline": "baseline-widely"
+    },
+    "summary": "How the browser picks one value when several rules set the same property.",
+    "description": "It compares, in order: origin and `!important`, inline styles, cascade layers, specificity, then source order (last wins). Most 'why isn't my style applying' bugs are a rule losing earlier in that list than you thought.",
+    "aliases": [
+      "Cascade order",
+      "Origin"
+    ]
+  },
+  {
+    "id": "specificity",
+    "title": "Specificity",
+    "facets": {
+      "area": "cascade",
+      "kind": "concept",
+      "baseline": "baseline-widely"
+    },
+    "summary": "A score (ids, classes, elements) that decides which selector wins when layers tie.",
+    "description": "Counted as (ids, classes/attributes/pseudo-classes, elements): `#nav a` (1,0,1) beats `.menu .link` (0,2,0). Keep it low and flat with single classes; raising it to win a fight starts an arms race. `:where()` adds zero.",
+    "aliases": [
+      "Selector weight",
+      "(a, b, c)"
+    ]
+  },
+  {
+    "id": "inheritance",
+    "title": "Inheritance",
+    "facets": {
+      "area": "cascade",
+      "kind": "concept",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Some properties pass their value down to children when nothing else sets them.",
+    "description": "Text properties inherit (`color`, `font`, `line-height`); box properties don't (`margin`, `border`, `background`). Set type on `body` and let it flow down. Custom properties inherit too, which is what makes theming work.",
+    "aliases": [
+      "Inherited properties"
+    ]
+  },
+  {
+    "id": "cascade-layers",
+    "title": "Cascade Layers",
+    "facets": {
+      "area": "cascade",
+      "kind": "at-rule",
+      "baseline": "baseline-widely"
+    },
+    "summary": "`@layer` groups styles so a later layer always wins, whatever the specificity.",
+    "description": "Declare the order once: `@layer reset, base, components, utilities;`. A one-class rule in `utilities` beats an id selector in `base`. Unlayered styles beat all layers. Put third-party CSS in a low layer to override it without `!important`.",
+    "aliases": [
+      "@layer",
+      "revert-layer"
+    ]
+  },
+  {
+    "id": "important",
+    "title": "!important",
+    "facets": {
+      "area": "cascade",
+      "kind": "concept",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Promotes a declaration above normal ones; a last resort, not a tool.",
+    "description": "It jumps the cascade, and only another `!important` can beat it. In layers it reverses: an important declaration in an earlier layer beats a later one. Fine for utility classes meant to always win or to override inline styles; otherwise fix the specificity.",
+    "aliases": [
+      "Important flag"
+    ]
+  },
+  {
+    "id": "global-keywords",
+    "title": "Global Keywords",
+    "facets": {
+      "area": "cascade",
+      "kind": "concept",
+      "baseline": "baseline-widely"
+    },
+    "summary": "`inherit`, `initial`, `unset`, `revert` and `revert-layer` work on any property.",
+    "description": "`initial` is the spec default (`display: initial` is `inline`, not `block`). `revert` goes back to the browser's own style, usually what you want. `unset` inherits if the property inherits, else `initial`. `all: revert` resets an element.",
+    "aliases": [
+      "inherit",
+      "initial",
+      "unset",
+      "revert"
+    ]
+  },
+  {
+    "id": "scope",
+    "title": "@scope",
+    "facets": {
+      "area": "cascade",
+      "kind": "at-rule",
+      "baseline": "baseline-newly"
+    },
+    "summary": "Limits styles to a subtree, with an optional lower bound where they stop.",
+    "description": "`@scope (.card) to (.card-content) { img { … } }` styles images in a card but not inside its content slot. When two scopes match, the closer root wins (scoping proximity). An alternative to BEM-style long class names.",
+    "aliases": [
+      "Scoped styles",
+      "Donut scope"
+    ]
+  },
+  {
+    "id": "custom-properties",
+    "title": "Custom Properties",
+    "facets": {
+      "area": "cascade",
+      "kind": "concept",
+      "baseline": "baseline-widely"
+    },
+    "summary": "`--name` values that cascade and inherit, read with `var()` and changeable at runtime.",
+    "description": "Set `--brand: #5b5bd6` on `:root`, override it on a section or with a media query, and every `var(--brand)` follows. Unlike Sass variables they live in the browser. `var(--x, fallback)` covers an unset value.",
+    "aliases": [
+      "CSS variables",
+      "var()"
+    ]
+  },
+  {
+    "id": "property-at-rule",
+    "title": "@property",
+    "facets": {
+      "area": "cascade",
+      "kind": "at-rule",
+      "baseline": "baseline-newly"
+    },
+    "summary": "Registers a custom property with a type, an initial value and whether it inherits.",
+    "description": "`@property --angle { syntax: '<angle>'; inherits: false; initial-value: 0deg; }`. Typed properties can be animated (a gradient angle), and an invalid value falls back to the initial one instead of breaking the declaration.",
+    "aliases": [
+      "Registered custom property",
+      "CSS.registerProperty"
+    ]
+  },
+  {
+    "id": "combinators",
+    "title": "Combinators",
+    "facets": {
+      "area": "selectors",
+      "kind": "selector",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Descendant (space), child (`>`), next sibling (`+`) and subsequent sibling (`~`).",
+    "description": "`.list > li` matches direct children only; `.list li` matches any depth. `h2 + p` styles the paragraph right after a heading; `h2 ~ p` every later sibling. Long descendant chains couple CSS to markup, so keep them short.",
+    "aliases": [
+      "Child selector",
+      "Sibling selector"
+    ]
+  },
+  {
+    "id": "attribute-selectors",
+    "title": "Attribute Selectors",
+    "facets": {
+      "area": "selectors",
+      "kind": "selector",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Match by attribute presence or value: `[disabled]`, `[href^=\"https\"]`, `[lang|=en]`.",
+    "description": "`^=` starts with, `$=` ends with, `*=` contains, `~=` whole word in a list; add ` i` for case-insensitive. Styling `[aria-expanded=\"true\"]` keeps the visual state tied to the accessible one, so they can't drift apart.",
+    "aliases": [
+      "[attr]"
+    ]
+  },
+  {
+    "id": "pseudo-classes",
+    "title": "Pseudo-classes",
+    "facets": {
+      "area": "selectors",
+      "kind": "selector",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Match an element by state or position: `:hover`, `:checked`, `:first-child`, `:empty`.",
+    "description": "They add class-level specificity and select real elements in a given state. Order link states as `:link`, `:visited`, `:hover`, `:active` so later ones win. Pair `:hover` with a focus style: touch and keyboard users never hover.",
+    "aliases": [
+      ":hover",
+      ":checked"
+    ]
+  },
+  {
+    "id": "pseudo-elements",
+    "title": "Pseudo-elements",
+    "facets": {
+      "area": "selectors",
+      "kind": "selector",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Style a part of an element, or add a box: `::before`, `::after`, `::placeholder`.",
+    "description": "Double colon for pseudo-elements, single for pseudo-classes. `::before`/`::after` need `content` to render and are decorative: screen readers may read their text, so don't put meaning there. `::marker` and `::selection` style list bullets and highlights.",
+    "aliases": [
+      "::before",
+      "::after",
+      "::marker"
+    ]
+  },
+  {
+    "id": "nth-child",
+    "title": ":nth-child()",
+    "facets": {
+      "area": "selectors",
+      "kind": "selector",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Select by position with a formula: `odd`, `3n`, `-n+3` (the first three).",
+    "description": "`:nth-child(2n of .visible)` counts only matching siblings, handy for zebra rows in filtered tables. `:nth-of-type` counts by element type instead. Prefer `gap` or the owl selector `* + *` over position hacks for spacing.",
+    "aliases": [
+      ":nth-of-type",
+      "An+B"
+    ]
+  },
+  {
+    "id": "is-where",
+    "title": ":is() and :where()",
+    "facets": {
+      "area": "selectors",
+      "kind": "selector",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Group selectors in one list; `:is()` takes the highest specificity, `:where()` zero.",
+    "description": "`:is(h1, h2, h3) a` replaces three selectors. Use `:where()` for resets and library defaults so any one class can override them. An invalid item doesn't kill the whole list, unlike a plain comma list.",
+    "aliases": [
+      "Forgiving selector list",
+      ":matches"
+    ]
+  },
+  {
+    "id": "not-selector",
+    "title": ":not()",
+    "facets": {
+      "area": "selectors",
+      "kind": "selector",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Matches elements that don't match a list: `li:not(:last-child)`.",
+    "description": "It accepts complex selectors and lists, `:not(.a, .b)`, and its specificity is that of the most specific argument. `:not(:last-child)` adds separators between items; `gap` is often simpler. Don't use it to exclude what a better class would name.",
+    "aliases": [
+      "Negation pseudo-class"
+    ]
+  },
+  {
+    "id": "has-selector",
+    "title": ":has()",
+    "facets": {
+      "area": "selectors",
+      "kind": "selector",
+      "baseline": "baseline-widely"
+    },
+    "summary": "The 'parent selector': style an element based on what it contains or what follows it.",
+    "description": "`.card:has(img)` styles cards with images; `label:has(+ input:invalid)` reacts to the next field; `body:has(dialog[open])` locks scroll. It replaces lots of state classes set by JavaScript. Keep the inner selector simple on large pages.",
+    "aliases": [
+      "Parent selector",
+      "Relational pseudo-class"
+    ]
+  },
+  {
+    "id": "focus-pseudo-classes",
+    "title": ":focus-visible and :focus-within",
+    "facets": {
+      "area": "selectors",
+      "kind": "selector",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Show focus rings to keyboard users, and style a container while focus is inside it.",
+    "description": "`:focus` matches any focus, mouse clicks included; `:focus-visible` matches when the browser decides a ring helps (keyboard, text inputs). Style rings there. `:focus-within` highlights a whole form row or menu while focus is inside it.",
+    "aliases": [
+      ":focus",
+      "Focus ring"
+    ]
+  },
+  {
+    "id": "form-state-pseudo-classes",
+    "title": "Form State Pseudo-classes",
+    "facets": {
+      "area": "selectors",
+      "kind": "selector",
+      "baseline": "baseline-widely"
+    },
+    "summary": "`:checked`, `:disabled`, `:required`, `:user-invalid` style form state without JavaScript.",
+    "description": "`:invalid` matches before the user has typed, so required fields look wrong on load. `:user-invalid` waits until they have interacted: use it for error styles. `:placeholder-shown` and `:autofill` cover other in-between states.",
+    "aliases": [
+      ":user-invalid",
+      ":invalid",
+      ":checked"
+    ]
+  },
+  {
+    "id": "shadow-dom-styling",
+    "title": "Shadow DOM Styling",
+    "facets": {
+      "area": "selectors",
+      "kind": "selector",
+      "baseline": "baseline-widely"
+    },
+    "summary": "`:host`, `::slotted()` and `::part()` cross the boundary a web component draws.",
+    "description": "Page styles don't reach inside a shadow root. The component styles itself with `:host` and its light-DOM children with `::slotted()`; it exposes `part=\"label\"` so the page can style `my-el::part(label)`. Inherited properties and custom properties still pass through.",
+    "aliases": [
+      ":host",
+      "::part",
+      "::slotted"
+    ]
+  },
+  {
+    "id": "box-model",
+    "title": "Box Model",
+    "facets": {
+      "area": "box-model",
+      "kind": "concept",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Every element is a box: content, padding, border and margin, from the inside out.",
+    "description": "Padding is inside the border and takes the background; margin is outside and transparent. Browser DevTools draws all four layers. Margins can collapse between blocks; padding and borders never do.",
+    "aliases": [
+      "Content box",
+      "Padding",
+      "Margin"
+    ],
+    "platforms": {
+      "swiftui": ".padding()",
+      "compose": "Modifier.padding()"
+    }
+  },
+  {
+    "id": "box-sizing",
+    "title": "box-sizing",
+    "facets": {
+      "area": "box-model",
+      "kind": "property",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Whether `width` sets the content alone or includes padding and border.",
+    "description": "The default `content-box` makes a `width: 100%` element with padding overflow its parent. `border-box` includes padding and border in the width, so sizes mean what they say. Most resets set `*, *::before, *::after { box-sizing: border-box; }`.",
+    "aliases": [
+      "border-box",
+      "content-box"
+    ]
+  },
+  {
+    "id": "display",
+    "title": "display",
+    "facets": {
+      "area": "box-model",
+      "kind": "property",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Sets how a box sits among its siblings (block, inline) and how it lays out its children.",
+    "description": "`block` takes a full line; `inline` flows in text and ignores width and height; `inline-block` flows but sizes. `flex` and `grid` change the children's layout. `flow-root` contains floats and stops margin collapse without the `overflow` hack.",
+    "aliases": [
+      "block",
+      "inline",
+      "inline-block",
+      "flow-root"
+    ]
+  },
+  {
+    "id": "display-contents",
+    "title": "display: contents",
+    "facets": {
+      "area": "box-model",
+      "kind": "property",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Removes an element's own box so its children act as children of its parent.",
+    "description": "Useful to let a wrapper's children join a parent grid. Older browsers dropped the element's role from the accessibility tree (a `<ul>` stopped being a list, a `<button>` lost its role), so test with a screen reader and never use it on buttons. Subgrid is often the cleaner fix.",
+    "aliases": [
+      "contents"
+    ]
+  },
+  {
+    "id": "margin-collapse",
+    "title": "Margin Collapse",
+    "facets": {
+      "area": "box-model",
+      "kind": "concept",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Touching vertical margins of block boxes merge into one: the larger wins, not the sum.",
+    "description": "A 24px bottom margin above a 16px top margin gives 24px of space. A child's top margin can also escape through a parent with no border or padding. Flex and grid items never collapse; `display: flow-root` or `gap` avoid the surprise.",
+    "aliases": [
+      "Collapsing margins"
+    ]
+  },
+  {
+    "id": "logical-properties",
+    "title": "Logical Properties",
+    "facets": {
+      "area": "box-model",
+      "kind": "property",
+      "baseline": "baseline-widely"
+    },
+    "summary": "`margin-inline`, `padding-block`, `inset-inline-start`: directions that follow the text.",
+    "description": "`inline` runs along a line of text, `block` across lines; `start` is left in English and right in Arabic. Using them makes right-to-left and vertical writing modes work without overrides. `inline-size` and `block-size` replace width and height.",
+    "aliases": [
+      "margin-inline",
+      "padding-block",
+      "inline-size"
+    ]
+  },
+  {
+    "id": "overflow",
+    "title": "overflow",
+    "facets": {
+      "area": "box-model",
+      "kind": "property",
+      "baseline": "baseline-widely"
+    },
+    "summary": "What happens to content bigger than its box: shown, clipped, or scrollable.",
+    "description": "`auto` adds scrollbars only when needed; `hidden` clips but still lets scripts scroll; `clip` clips and creates no scroll container, so `position: sticky` inside keeps working. Any value but `visible` or `clip` makes a scroll container.",
+    "aliases": [
+      "overflow: clip",
+      "Scroll container"
+    ],
+    "platforms": {
+      "swiftui": ".clipped()",
+      "compose": "Modifier.clipToBounds()"
+    }
+  },
+  {
+    "id": "aspect-ratio",
+    "title": "aspect-ratio",
+    "facets": {
+      "area": "box-model",
+      "kind": "property",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Gives a box a preferred width-to-height ratio, like `16 / 9`, without padding hacks.",
+    "description": "Set a width and the height follows. It reserves space before media loads, which avoids layout shift. Content taller than the ratio still grows the box unless you add `overflow` or `min-height: 0`. `<img width height>` attributes set it automatically.",
+    "aliases": [
+      "16 / 9",
+      "Padding hack"
+    ],
+    "platforms": {
+      "swiftui": ".aspectRatio(16/9, contentMode: .fit)",
+      "compose": "Modifier.aspectRatio(16f / 9f)"
+    }
+  },
+  {
+    "id": "outline-vs-border",
+    "title": "outline vs border",
+    "facets": {
+      "area": "box-model",
+      "kind": "property",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Both draw a line round a box; outline takes no space and doesn't move the layout.",
+    "description": "A border is part of the box model, so adding one on hover or focus nudges everything. An outline is drawn over the layout and `outline-offset` pushes it out, which makes it the right tool for focus rings. Forced-colours mode keeps outlines but drops box-shadows.",
+    "aliases": [
+      "outline-offset"
+    ],
+    "platforms": {
+      "swiftui": ".overlay { RoundedRectangle(…).stroke() }",
+      "compose": "Modifier.border()"
+    }
+  },
+  {
+    "id": "flexbox",
+    "title": "Flexbox",
+    "facets": {
+      "area": "flexbox",
+      "kind": "concept",
+      "baseline": "baseline-widely"
+    },
+    "summary": "One-dimensional layout: lays children out in a row or column and shares the space.",
+    "description": "`display: flex` puts children in a row; `flex-direction: column` stacks them. Items shrink to fit by default. Pick it for toolbars, nav bars and anything content-sized in one direction; pick grid when rows and columns must line up.",
+    "aliases": [
+      "display: flex",
+      "Flex container"
+    ],
+    "platforms": {
+      "swiftui": "HStack / VStack",
+      "compose": "Row / Column"
+    }
+  },
+  {
+    "id": "flex-shorthand",
+    "title": "flex",
+    "facets": {
+      "area": "flexbox",
+      "kind": "property",
+      "baseline": "baseline-widely"
+    },
+    "summary": "`flex: grow shrink basis` decides how an item takes or gives up space.",
+    "description": "`flex: 1` (1 1 0%) makes items share space equally whatever their content; `flex: auto` (1 1 auto) shares what's left after content; `flex: none` keeps the item at its natural size. Prefer the shorthand over setting the three longhands separately.",
+    "aliases": [
+      "flex-grow",
+      "flex-shrink",
+      "flex-basis"
+    ],
+    "platforms": {
+      "swiftui": ".frame(maxWidth: .infinity)",
+      "compose": "Modifier.weight(1f)"
+    }
+  },
+  {
+    "id": "justify-vs-align",
+    "title": "justify-content vs align-items",
+    "facets": {
+      "area": "flexbox",
+      "kind": "property",
+      "baseline": "baseline-widely"
+    },
+    "summary": "`justify-*` works along the main axis (the row), `align-*` across it.",
+    "description": "In a row, `justify-content: space-between` spreads items left to right and `align-items: center` centres them vertically; in a column the axes swap. `align-self` overrides one item. `align-items` defaults to `stretch`, so items fill the line's height.",
+    "aliases": [
+      "Main axis",
+      "Cross axis"
+    ],
+    "platforms": {
+      "swiftui": "HStack(alignment: .center)",
+      "compose": "horizontalArrangement + verticalAlignment"
+    }
+  },
+  {
+    "id": "flex-wrap",
+    "title": "flex-wrap",
+    "facets": {
+      "area": "flexbox",
+      "kind": "property",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Lets flex items flow onto new lines instead of shrinking or overflowing.",
+    "description": "`flex-wrap: wrap` with `flex: 1 1 12rem` gives a responsive row without media queries. Each line is laid out on its own, so items in the last line don't align with the columns above: that's when grid with `auto-fill` is the better tool.",
+    "aliases": [
+      "Wrapping flex line"
+    ],
+    "platforms": {
+      "compose": "FlowRow"
+    }
+  },
+  {
+    "id": "gap",
+    "title": "gap",
+    "facets": {
+      "area": "flexbox",
+      "kind": "property",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Space between flex or grid items, never on the outer edges.",
+    "description": "`gap: 1rem` replaces margins on children and the `:last-child` resets that came with them. `row-gap` and `column-gap` set each axis. It works in flex, grid and multi-column layouts. Items still get no gap from their container's padding.",
+    "aliases": [
+      "row-gap",
+      "column-gap",
+      "grid-gap"
+    ],
+    "platforms": {
+      "swiftui": "HStack(spacing: 8)",
+      "compose": "Arrangement.spacedBy(8.dp)"
+    }
+  },
+  {
+    "id": "flex-min-width",
+    "title": "min-width: 0 in Flexbox",
+    "facets": {
+      "area": "flexbox",
+      "kind": "concept",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Flex items won't shrink below their content's size unless you set `min-width: 0`.",
+    "description": "Their default `min-width: auto` stops a long URL or a `<pre>` from shrinking, so it overflows the row. `min-width: 0` (or `overflow: hidden`) lets the item shrink and its text wrap or truncate. Grid items have the same default.",
+    "aliases": [
+      "min-width: auto",
+      "Flex item overflow"
+    ]
+  },
+  {
+    "id": "margin-auto",
+    "title": "margin: auto in Flexbox",
+    "facets": {
+      "area": "flexbox",
+      "kind": "concept",
+      "baseline": "baseline-widely"
+    },
+    "summary": "An auto margin on a flex item takes all the free space on that side.",
+    "description": "`margin-inline-start: auto` on the last nav item pushes it to the far right while the others stay left, with no extra wrapper. `margin: auto` on a single item centres it both ways. Auto margins win over `justify-content`.",
+    "aliases": [
+      "Push item to the end"
+    ],
+    "platforms": {
+      "swiftui": "Spacer()",
+      "compose": "Spacer(Modifier.weight(1f))"
+    }
+  },
+  {
+    "id": "order",
+    "title": "order",
+    "facets": {
+      "area": "flexbox",
+      "kind": "property",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Changes the visual order of flex and grid items without moving them in the DOM.",
+    "description": "Screen readers and the Tab key still follow the DOM, so a reordered layout can make focus jump around (WCAG 2.4.3 and 1.3.2). Use it only for purely visual tweaks; if the reading order should change, change the markup.",
+    "aliases": [
+      "Visual reordering"
+    ]
+  },
+  {
+    "id": "grid",
+    "title": "CSS Grid",
+    "facets": {
+      "area": "grid",
+      "kind": "concept",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Two-dimensional layout: define rows and columns, then place items into the cells.",
+    "description": "`display: grid` with `grid-template-columns` lays items in columns that line up across rows. Pick it for page layouts, card grids and forms with aligned labels; flexbox for a single row of content-sized items.",
+    "aliases": [
+      "display: grid"
+    ],
+    "platforms": {
+      "swiftui": "Grid",
+      "compose": "LazyVerticalGrid"
+    }
+  },
+  {
+    "id": "grid-template-columns",
+    "title": "grid-template-columns",
+    "facets": {
+      "area": "grid",
+      "kind": "property",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Defines the column tracks: their number and sizes, like `200px 1fr 1fr`.",
+    "description": "Mix units freely: `minmax(12rem, 1fr)` grows but never shrinks below 12rem; `repeat(3, 1fr)` saves typing; `auto` sizes to content. `grid-template-rows` does the same for rows, though rows are often left implicit.",
+    "aliases": [
+      "Grid tracks",
+      "repeat()"
+    ],
+    "platforms": {
+      "swiftui": "Grid { GridRow { … } }",
+      "compose": "GridCells.Fixed(3)"
+    }
+  },
+  {
+    "id": "fr-unit",
+    "title": "fr Unit",
+    "facets": {
+      "area": "grid",
+      "kind": "concept",
+      "baseline": "baseline-widely"
+    },
+    "summary": "A fraction of the free space left in the grid after fixed-size tracks.",
+    "description": "`1fr 2fr` gives the second column twice the leftover space. `1fr` has an automatic minimum of its content, so a long word can widen it: use `minmax(0, 1fr)` for truly equal columns. Works only in grid track sizes.",
+    "aliases": [
+      "Flexible length",
+      "minmax(0, 1fr)"
+    ],
+    "platforms": {
+      "swiftui": "GridItem(.flexible())",
+      "compose": "Modifier.weight()"
+    }
+  },
+  {
+    "id": "auto-fit-minmax",
+    "title": "auto-fit and auto-fill",
+    "facets": {
+      "area": "grid",
+      "kind": "function",
+      "baseline": "baseline-widely"
+    },
+    "summary": "`repeat(auto-fill, minmax(12rem, 1fr))`: as many columns as fit, no media queries.",
+    "description": "Both create as many tracks as fit. With few items, `auto-fit` collapses empty tracks so items stretch across the row, while `auto-fill` keeps empty tracks so items keep their size. Use `min(12rem, 100%)` inside so one column still fits a narrow screen.",
+    "aliases": [
+      "repeat()",
+      "RAM pattern"
+    ],
+    "platforms": {
+      "swiftui": "GridItem(.adaptive(minimum: 160))",
+      "compose": "GridCells.Adaptive(160.dp)"
+    }
+  },
+  {
+    "id": "grid-areas",
+    "title": "grid-template-areas",
+    "facets": {
+      "area": "grid",
+      "kind": "property",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Draw the layout as named areas in ASCII, then place items by name.",
+    "description": "`\"header header\" \"nav main\" \"footer footer\"` with `grid-area: main` on the element. Redefine the areas in a media query to rearrange the page. A `.` leaves a cell empty. Each area must be a rectangle.",
+    "aliases": [
+      "grid-area",
+      "Named areas"
+    ]
+  },
+  {
+    "id": "grid-placement",
+    "title": "Grid Line Placement",
+    "facets": {
+      "area": "grid",
+      "kind": "property",
+      "baseline": "baseline-widely"
+    },
+    "summary": "`grid-column: 1 / -1` or `span 2`: place an item by line numbers or spans.",
+    "description": "Lines are numbered from 1 and from -1 at the end, so `1 / -1` spans the full width. `span 2` takes two tracks from wherever the item lands. Named lines (`[content-start]`) make full-bleed layouts readable.",
+    "aliases": [
+      "grid-column",
+      "grid-row",
+      "span"
+    ]
+  },
+  {
+    "id": "implicit-grid",
+    "title": "Implicit Grid",
+    "facets": {
+      "area": "grid",
+      "kind": "concept",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Tracks the browser adds for items you didn't place, sized by `grid-auto-rows`.",
+    "description": "Define the columns and let rows be created as needed: `grid-auto-rows: minmax(8rem, auto)`. `grid-auto-flow: dense` backfills holes left by spanning items, but reorders them visually, which can confuse keyboard users.",
+    "aliases": [
+      "grid-auto-rows",
+      "grid-auto-flow"
+    ]
+  },
+  {
+    "id": "subgrid",
+    "title": "Subgrid",
+    "facets": {
+      "area": "grid",
+      "kind": "concept",
+      "baseline": "baseline-widely"
+    },
+    "summary": "A nested grid that uses its parent's tracks, so content lines up across cards.",
+    "description": "`grid-template-rows: subgrid` on each card with `grid-row: span 3` aligns titles, text and buttons across a row of cards of different lengths. Before subgrid this needed fixed heights or JavaScript.",
+    "aliases": [
+      "grid-template-rows: subgrid"
+    ]
+  },
+  {
+    "id": "place-items",
+    "title": "place-items",
+    "facets": {
+      "area": "grid",
+      "kind": "property",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Shorthand for `align-items` and `justify-items`; `place-items: center` centres in a cell.",
+    "description": "`display: grid; place-items: center` is the shortest way to centre one child both ways. `place-content` moves the whole grid within its container instead, and `place-self` one item. `justify-items` has no effect in flexbox.",
+    "aliases": [
+      "Centering",
+      "place-content",
+      "place-self"
+    ],
+    "platforms": {
+      "swiftui": "ZStack(alignment: .center)",
+      "compose": "Box(contentAlignment = Alignment.Center)"
+    }
+  },
+  {
+    "id": "grid-vs-flexbox",
+    "title": "Grid vs Flexbox",
+    "facets": {
+      "area": "grid",
+      "kind": "pattern",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Grid lays out from the container's tracks; flexbox from the items' content.",
+    "description": "Use grid when items must line up in rows and columns or the layout comes first (pages, card grids, forms). Use flexbox when content sizes come first in one direction (toolbars, tags, button rows). They nest happily: a grid of cards, flex inside each.",
+    "aliases": [
+      "Layout choice"
+    ]
+  },
+  {
+    "id": "multi-column",
+    "title": "Multi-column Layout",
+    "facets": {
+      "area": "grid",
+      "kind": "property",
+      "baseline": "baseline-widely"
+    },
+    "summary": "`columns: 3` flows content top-to-bottom across columns, like a newspaper.",
+    "description": "Good for lists of short items and long text on wide screens; `column-width: 16rem` adds columns as space allows. Content reads down then across, so it suits independent items, not cards a user scans left to right. `break-inside: avoid` keeps items whole.",
+    "aliases": [
+      "columns",
+      "column-count",
+      "break-inside"
+    ]
+  },
+  {
+    "id": "position",
+    "title": "position",
+    "facets": {
+      "area": "positioning",
+      "kind": "property",
+      "baseline": "baseline-widely"
+    },
+    "summary": "How a box is placed and what it's offset from: static, relative, absolute, fixed, sticky.",
+    "description": "`relative` nudges a box but keeps its space; `absolute` takes it out of flow and places it against the nearest positioned ancestor; `fixed` uses the viewport. Reach for grid or flex first; use absolute for overlays like badges on a card.",
+    "aliases": [
+      "absolute",
+      "relative",
+      "fixed"
+    ],
+    "platforms": {
+      "swiftui": "ZStack / .overlay()",
+      "compose": "Box with Modifier.align()"
+    }
+  },
+  {
+    "id": "sticky-position",
+    "title": "position: sticky",
+    "facets": {
+      "area": "positioning",
+      "kind": "property",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Scrolls normally until it reaches an offset, then sticks inside its parent.",
+    "description": "Needs a `top` (or other inset) to stick at, and only sticks within its parent's box. It silently fails when an ancestor has `overflow: hidden` or `auto`, because that ancestor becomes the scroll container. Good for table headers and section titles.",
+    "aliases": [
+      "Sticky header"
+    ],
+    "platforms": {
+      "swiftui": "LazyVStack(pinnedViews: .sectionHeaders)",
+      "compose": "stickyHeader { } in LazyColumn"
+    }
+  },
+  {
+    "id": "containing-block",
+    "title": "Containing block",
+    "facets": {
+      "area": "positioning",
+      "kind": "concept",
+      "baseline": "baseline-widely"
+    },
+    "summary": "The box that percentages and offsets resolve against.",
+    "description": "Usually the parent's content box. An absolute box uses the nearest ancestor that isn't `static`. A `transform`, `filter` or `contain` on an ancestor also creates one, which is why `position: fixed` inside a transformed element stops following the viewport.",
+    "aliases": [
+      "Positioned ancestor"
+    ]
+  },
+  {
+    "id": "stacking-context",
+    "title": "Stacking context",
+    "facets": {
+      "area": "positioning",
+      "kind": "concept",
+      "baseline": "baseline-widely"
+    },
+    "summary": "A group whose children are layered together; z-index only competes inside it.",
+    "description": "Created by `z-index` on a positioned box, `opacity` below 1, `transform`, `filter`, `isolation: isolate` and more. A child with `z-index: 9999` can't rise above a sibling of its parent's context. Use `isolation: isolate` to start one on purpose.",
+    "aliases": [
+      "isolation",
+      "Layering"
+    ]
+  },
+  {
+    "id": "z-index",
+    "title": "z-index",
+    "facets": {
+      "area": "positioning",
+      "kind": "property",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Orders overlapping boxes front to back, within their stacking context.",
+    "description": "Works on positioned boxes and on flex and grid items. Keep a small scale of named layers (`--z-dropdown`, `--z-modal`) instead of escalating numbers. If a higher number doesn't win, look for a stacking context, not a bigger number.",
+    "aliases": [
+      "Stack order"
+    ],
+    "platforms": {
+      "swiftui": ".zIndex()",
+      "compose": "Modifier.zIndex()"
+    }
+  },
+  {
+    "id": "inset",
+    "title": "inset",
+    "facets": {
+      "area": "positioning",
+      "kind": "property",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Shorthand for top, right, bottom and left in one declaration.",
+    "description": "`inset: 0` stretches an absolute box over its containing block, the classic overlay. It takes one to four values like `margin`. `inset-block` and `inset-inline` are the logical versions that follow the writing direction.",
+    "aliases": [
+      "top / right / bottom / left",
+      "inset-inline"
+    ]
+  },
+  {
+    "id": "top-layer",
+    "title": "Top layer",
+    "facets": {
+      "area": "positioning",
+      "kind": "concept",
+      "baseline": "baseline-newly"
+    },
+    "summary": "A layer above the whole page for modal dialogs and popovers, beyond any z-index.",
+    "description": "`<dialog>` opened with `showModal()` and elements with the `popover` attribute render here, so no ancestor's `overflow` or stacking context can clip or cover them. Style the backdrop with `::backdrop`. Prefer these over hand-built overlays fighting z-index.",
+    "aliases": [
+      "popover",
+      "::backdrop",
+      "dialog"
+    ]
+  },
+  {
+    "id": "anchor-positioning",
+    "title": "Anchor positioning",
+    "facets": {
+      "area": "positioning",
+      "kind": "property",
+      "baseline": "baseline-newly"
+    },
+    "summary": "Tether a positioned box to another element, such as a tooltip to its button, in CSS.",
+    "description": "Name the anchor with `anchor-name: --btn`, then place the box with `position-anchor` and `position-area` or the `anchor()` function. `position-try` flips it when it would overflow. Baseline since Firefox 147 (2026); test newer parts like `anchor-size()` before relying on them.",
+    "aliases": [
+      "anchor-name",
+      "position-area",
+      "anchor()"
+    ]
+  },
+  {
+    "id": "mobile-first",
+    "title": "Mobile first",
+    "facets": {
+      "area": "responsive",
+      "kind": "pattern",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Write base styles for small screens, then add `min-width` queries as space grows.",
+    "description": "The narrow layout is usually the simplest, so larger screens only add rules instead of undoing them. Queries go up with `min-width`; mixing in `max-width` overrides is where conflicts start. Pick breakpoints where the content breaks, not at device sizes.",
+    "aliases": [
+      "Progressive enhancement",
+      "Breakpoints"
+    ]
+  },
+  {
+    "id": "media-queries",
+    "title": "@media",
+    "facets": {
+      "area": "responsive",
+      "kind": "at-rule",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Apply styles when the viewport or device matches a condition, like a minimum width.",
+    "description": "`@media (width >= 720px)` uses the newer range syntax; `(min-width: 720px)` is the classic form. It answers questions about the viewport, so a component reused in a sidebar can't adapt with it. Use container queries for that.",
+    "aliases": [
+      "Media query",
+      "Breakpoint"
+    ]
+  },
+  {
+    "id": "media-features",
+    "title": "User preference queries",
+    "facets": {
+      "area": "responsive",
+      "kind": "at-rule",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Media features that ask about the user and device, not just the screen size.",
+    "description": "`prefers-color-scheme` for dark mode, `prefers-reduced-motion` to tone down animation, `hover` and `pointer` to tell touch from mouse, `prefers-contrast` for higher contrast. They respect settings people chose on purpose, so honour them by default.",
+    "aliases": [
+      "prefers-color-scheme",
+      "prefers-reduced-motion",
+      "pointer: coarse"
+    ]
+  },
+  {
+    "id": "container-queries",
+    "title": "@container",
+    "facets": {
+      "area": "responsive",
+      "kind": "at-rule",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Style a component by the size of its container rather than the viewport.",
+    "description": "Mark the parent with `container-type: inline-size`, then use `@container (width > 400px)`. The same card can be a row in a wide column and a stack in a sidebar. Use media queries for page layout and container queries for components.",
+    "aliases": [
+      "container-type",
+      "Container query"
+    ],
+    "platforms": {
+      "swiftui": "ViewThatFits",
+      "compose": "BoxWithConstraints"
+    }
+  },
+  {
+    "id": "container-units",
+    "title": "Container units",
+    "facets": {
+      "area": "responsive",
+      "kind": "property",
+      "baseline": "baseline-widely"
+    },
+    "summary": "cqi, cqb, cqw and cqh: lengths as a percentage of the query container's size.",
+    "description": "`1cqi` is 1% of the container's inline size. Handy for type or padding that scales with a component: `font-size: clamp(1rem, 4cqi, 2rem)`. Without a container ancestor they fall back to the small viewport units, so set `container-type` on purpose.",
+    "aliases": [
+      "cqi",
+      "cqw"
+    ]
+  },
+  {
+    "id": "viewport-units",
+    "title": "Viewport units",
+    "facets": {
+      "area": "responsive",
+      "kind": "property",
+      "baseline": "baseline-widely"
+    },
+    "summary": "vh and vw, plus dvh, svh and lvh, which handle mobile browser toolbars.",
+    "description": "On phones `100vh` is the tallest viewport, so content hides under the toolbar. `svh` is the small viewport (toolbars shown), `lvh` the large one and `dvh` follows the toolbar as it moves. Use `100dvh` for full-screen app shells, `svh` for heroes.",
+    "aliases": [
+      "dvh",
+      "svh",
+      "lvh",
+      "100vh"
+    ]
+  },
+  {
+    "id": "relative-units",
+    "title": "rem, em and px",
+    "facets": {
+      "area": "responsive",
+      "kind": "concept",
+      "baseline": "baseline-widely"
+    },
+    "summary": "rem scales with the root font size, em with the element's own, px is fixed.",
+    "description": "Use `rem` for type and spacing so text follows the user's browser font size. Use `em` when a size should track its own text, like a button's padding or an icon beside a label. Keep `px` for hairlines and borders. Don't set the root font size in px.",
+    "aliases": [
+      "rem",
+      "em",
+      "Font scaling"
+    ],
+    "platforms": {
+      "swiftui": "Dynamic Type text styles (.body)",
+      "compose": "sp units for text"
+    }
+  },
+  {
+    "id": "clamp",
+    "title": "clamp()",
+    "facets": {
+      "area": "responsive",
+      "kind": "function",
+      "baseline": "baseline-widely"
+    },
+    "summary": "A value that grows with its middle term but never goes below a minimum or above a max.",
+    "description": "`clamp(1rem, 2.5vw, 2rem)` reads as min, preferred, max. It replaces stacks of breakpoints for fluid sizes. Keep a `rem` part in the middle term (`1rem + 1vw`) so zooming still enlarges text, which pure `vw` values don't.",
+    "aliases": [
+      "Fluid sizing"
+    ]
+  },
+  {
+    "id": "min-max",
+    "title": "min() and max()",
+    "facets": {
+      "area": "responsive",
+      "kind": "function",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Pick the smallest or largest of several values, computed at layout time.",
+    "description": "`width: min(100%, 60rem)` means 'full width, but never more than 60rem' in one line, no media query. `max()` sets a floor: `padding: max(1rem, 4vw)`. They can mix units, which `calc()` alone can't decide between.",
+    "aliases": [
+      "min()",
+      "max()"
+    ]
+  },
+  {
+    "id": "intrinsic-sizing",
+    "title": "Intrinsic sizing",
+    "facets": {
+      "area": "responsive",
+      "kind": "concept",
+      "baseline": "baseline-widely"
+    },
+    "summary": "min-content, max-content and fit-content size a box by what's inside it.",
+    "description": "`min-content` is the narrowest the content can get (the longest word); `max-content` is as wide as it wants with no wrapping; `fit-content` is max-content capped by the space available. Useful for buttons, tags and grid tracks that should hug their text.",
+    "aliases": [
+      "min-content",
+      "max-content",
+      "fit-content"
+    ],
+    "platforms": {
+      "swiftui": ".fixedSize()",
+      "compose": "Modifier.width(IntrinsicSize.Max)"
+    }
+  },
+  {
+    "id": "print-styles",
+    "title": "Print styles",
+    "facets": {
+      "area": "responsive",
+      "kind": "at-rule",
+      "baseline": "baseline-widely"
+    },
+    "summary": "@media print and @page tidy a page for paper or PDF.",
+    "description": "Hide navigation and buttons, switch to dark text on white, show link URLs with `a::after { content: ' (' attr(href) ')' }`, and keep figures together with `break-inside: avoid`. `@page` sets margins and size. Receipts and articles get printed more than you think.",
+    "aliases": [
+      "@media print",
+      "@page",
+      "break-inside"
+    ]
+  },
+  {
+    "id": "line-height",
+    "title": "line-height",
+    "facets": {
+      "area": "typography",
+      "kind": "property",
+      "baseline": "baseline-widely"
+    },
+    "summary": "The height of each line box; set it unitless so it scales with the font size.",
+    "description": "A unitless value (`1.5`) is multiplied by each element's own font size; `1.5em` or `24px` is computed once and inherited as a fixed length, so larger headings get cramped. Body text reads well around 1.4–1.6, headings tighter.",
+    "aliases": [
+      "Leading",
+      "Line spacing"
+    ],
+    "platforms": {
+      "swiftui": ".lineSpacing()",
+      "compose": "TextStyle(lineHeight = …)"
+    }
+  },
+  {
+    "id": "measure",
+    "title": "Measure",
+    "facets": {
+      "area": "typography",
+      "kind": "concept",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Line length: cap paragraphs around 45–75 characters with a ch-based max width.",
+    "description": "Long lines make the eye lose its place when jumping back to the start. `max-inline-size: 65ch` keeps prose comfortable at any font size, since `ch` is the width of the zero glyph. Apply it to text blocks, not to the whole layout.",
+    "aliases": [
+      "Line length",
+      "ch unit",
+      "max-inline-size"
+    ]
+  },
+  {
+    "id": "fluid-type",
+    "title": "Fluid type",
+    "facets": {
+      "area": "typography",
+      "kind": "pattern",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Font sizes that scale smoothly between a minimum and maximum instead of jumping.",
+    "description": "`font-size: clamp(1.75rem, 1.2rem + 2vw, 3rem)` grows headings with the viewport. Keep a `rem` term so browser zoom still works (WCAG 1.4.4), and use container units (`cqi`) when the size should follow a component rather than the window.",
+    "aliases": [
+      "Fluid typography",
+      "Responsive type"
+    ]
+  },
+  {
+    "id": "text-wrap",
+    "title": "text-wrap",
+    "facets": {
+      "area": "typography",
+      "kind": "property",
+      "baseline": "baseline-newly"
+    },
+    "summary": "balance evens out heading lines; pretty avoids a lonely last word in paragraphs.",
+    "description": "`text-wrap: balance` makes a two-line heading break near the middle; it's limited to a few lines for speed. `pretty` improves the end of paragraphs and costs a little more. `balance` is Baseline; `pretty` isn't everywhere yet, which only means normal wrapping.",
+    "aliases": [
+      "balance",
+      "pretty",
+      "Orphans"
+    ]
+  },
+  {
+    "id": "text-overflow",
+    "title": "text-overflow",
+    "facets": {
+      "area": "typography",
+      "kind": "property",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Shows an ellipsis when one line of text doesn't fit its box.",
+    "description": "Needs three declarations together: `white-space: nowrap; overflow: hidden; text-overflow: ellipsis`. It only truncates a single line; use line clamping for several. Make sure the full text is reachable, for example in a title or on the detail page.",
+    "aliases": [
+      "Ellipsis",
+      "Truncate"
+    ],
+    "platforms": {
+      "swiftui": ".lineLimit(1) + .truncationMode(.tail)",
+      "compose": "maxLines = 1, TextOverflow.Ellipsis"
+    }
+  },
+  {
+    "id": "line-clamp",
+    "title": "Line clamp",
+    "facets": {
+      "area": "typography",
+      "kind": "property",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Cut text to a set number of lines and end it with an ellipsis.",
+    "description": "The working form is still prefixed: `display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden`. All engines support it. The unprefixed `line-clamp` property is specified but not yet supported everywhere.",
+    "aliases": [
+      "-webkit-line-clamp",
+      "Multi-line ellipsis"
+    ],
+    "platforms": {
+      "swiftui": ".lineLimit(3)",
+      "compose": "maxLines = 3, TextOverflow.Ellipsis"
+    }
+  },
+  {
+    "id": "hyphens",
+    "title": "hyphens",
+    "facets": {
+      "area": "typography",
+      "kind": "property",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Let the browser hyphenate long words at line ends, using the page language.",
+    "description": "`hyphens: auto` only works when `lang` is set, because hyphenation rules depend on the language. Useful in narrow columns and for languages with long compounds like German. For URLs and code, `overflow-wrap: anywhere` is the better tool.",
+    "aliases": [
+      "hyphens: auto",
+      "overflow-wrap"
+    ]
+  },
+  {
+    "id": "font-variant-numeric",
+    "title": "font-variant-numeric",
+    "facets": {
+      "area": "typography",
+      "kind": "property",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Switch digits to tabular, lining, old-style or slashed-zero forms if the font has them.",
+    "description": "`tabular-nums` gives every digit the same width, so prices in a table and a ticking timer line up and don't jitter. `oldstyle-nums` blends into running text. It needs the font to include those glyphs; most UI fonts do.",
+    "aliases": [
+      "tabular-nums",
+      "Tabular figures"
+    ],
+    "platforms": {
+      "swiftui": ".monospacedDigit()",
+      "compose": "fontFeatureSettings = \"tnum\""
+    }
+  },
+  {
+    "id": "color-spaces",
+    "title": "Colour spaces",
+    "facets": {
+      "area": "colour",
+      "kind": "function",
+      "baseline": "baseline-widely"
+    },
+    "summary": "oklch(), lab() and display-p3 go beyond sRGB and are easier to adjust by eye.",
+    "description": "In `oklch(70% 0.15 250)` lightness, chroma and hue are separate, and equal lightness looks equally light across hues, unlike HSL. That makes palettes and dark themes predictable. Wide-gamut screens show the extra colours; others get the nearest sRGB.",
+    "aliases": [
+      "oklch",
+      "lab",
+      "display-p3",
+      "Wide gamut"
+    ]
+  },
+  {
+    "id": "color-mix",
+    "title": "color-mix()",
+    "facets": {
+      "area": "colour",
+      "kind": "function",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Blend two colours in a chosen colour space, such as a tint for a hover state.",
+    "description": "`color-mix(in oklch, var(--brand) 80%, white)` makes a tint from one token, no preprocessor needed. The colour space changes the result: mixing in `oklch` avoids the grey middle that sRGB gives. Mix with `transparent` for a see-through version.",
+    "aliases": [
+      "Tints",
+      "Shades"
+    ]
+  },
+  {
+    "id": "relative-colors",
+    "title": "Relative colour syntax",
+    "facets": {
+      "area": "colour",
+      "kind": "function",
+      "baseline": "baseline-newly"
+    },
+    "summary": "Derive a colour from another by editing its channels: from var(--brand) l c h.",
+    "description": "`oklch(from var(--brand) calc(l - 0.1) c h)` darkens a token; `rgb(from var(--brand) r g b / 50%)` adds transparency. It's more precise than `color-mix()` when you want to change one channel. Newer than color-mix, so check older browsers you support.",
+    "aliases": [
+      "from keyword",
+      "Channel keywords"
+    ]
+  },
+  {
+    "id": "light-dark",
+    "title": "light-dark()",
+    "facets": {
+      "area": "colour",
+      "kind": "function",
+      "baseline": "baseline-newly"
+    },
+    "summary": "Pick one of two colours depending on whether the element uses a light or dark scheme.",
+    "description": "`color: light-dark(#222, #eee)` keeps both themes in one declaration. It only works with `color-scheme: light dark` set, and it follows that property, not the media query directly, so a page can force one theme by changing `color-scheme`.",
+    "aliases": [
+      "Dark mode"
+    ],
+    "platforms": {
+      "swiftui": "@Environment(\\.colorScheme)",
+      "compose": "isSystemInDarkTheme()"
+    }
+  },
+  {
+    "id": "color-scheme",
+    "title": "color-scheme",
+    "facets": {
+      "area": "colour",
+      "kind": "property",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Tells the browser which themes a page supports, so its own UI matches.",
+    "description": "`:root { color-scheme: light dark }` makes form controls, scrollbars and the default canvas follow the user's theme, avoiding a white flash in dark mode. Add the `<meta name=color-scheme>` tag too so it applies before CSS loads.",
+    "aliases": [
+      "Dark mode",
+      "meta color-scheme"
+    ],
+    "platforms": {
+      "swiftui": ".preferredColorScheme()",
+      "compose": "MaterialTheme(colorScheme = …)"
+    }
+  },
+  {
+    "id": "currentcolor",
+    "title": "currentColor",
+    "facets": {
+      "area": "colour",
+      "kind": "concept",
+      "baseline": "baseline-widely"
+    },
+    "summary": "A keyword that means 'the element's text colour', for borders, icons and fills.",
+    "description": "Set `fill: currentColor` on inline SVG icons and they follow the text colour in every state, theme and forced-colours mode. Borders and outlines default to it already. One `color` change then restyles the whole component.",
+    "aliases": [
+      "currentcolor",
+      "SVG icons"
+    ]
+  },
+  {
+    "id": "opacity-vs-alpha",
+    "title": "opacity vs alpha colour",
+    "facets": {
+      "area": "colour",
+      "kind": "concept",
+      "baseline": "baseline-widely"
+    },
+    "summary": "opacity fades the whole element and its children; an alpha colour fades only one paint.",
+    "description": "`opacity: 0.5` makes text, borders and children see-through and creates a stacking context. For a translucent background behind solid text use `background: rgb(0 0 0 / 50%)`. Reach for `opacity` to fade things in and out, alpha for tinted surfaces.",
+    "aliases": [
+      "rgba",
+      "Transparency"
+    ],
+    "platforms": {
+      "swiftui": ".opacity()",
+      "compose": "Modifier.alpha()"
+    }
+  },
+  {
+    "id": "gradients",
+    "title": "Gradients",
+    "facets": {
+      "area": "colour",
+      "kind": "function",
+      "baseline": "baseline-widely"
+    },
+    "summary": "linear-, radial- and conic-gradient() paint smooth colour transitions as images.",
+    "description": "Gradients are images, so they go in `background-image` and can stack with other layers. Interpolate in `oklch` (`linear-gradient(in oklch, …)`) to avoid muddy middles. Hard stops make stripes and pie charts; text over a gradient must keep its contrast.",
+    "aliases": [
+      "linear-gradient",
+      "conic-gradient"
+    ],
+    "platforms": {
+      "swiftui": "LinearGradient",
+      "compose": "Brush.linearGradient()"
+    }
+  },
+  {
+    "id": "forced-colors",
+    "title": "Forced colours",
+    "facets": {
+      "area": "colour",
+      "kind": "at-rule",
+      "baseline": "limited"
+    },
+    "summary": "High-contrast modes replace your colours with the user's palette; design for it.",
+    "description": "Windows contrast themes override colours and drop `box-shadow` and background images. Use real borders or transparent outlines so edges still show, `currentColor` for icons, and `@media (forced-colors: active)` with system colours like `CanvasText` for fixes.",
+    "aliases": [
+      "High contrast mode",
+      "forced-colors: active",
+      "System colours"
+    ]
+  },
+  {
+    "id": "transitions",
+    "title": "transition",
+    "facets": {
+      "area": "motion",
+      "kind": "property",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Animates a property smoothly from its old value to its new one when it changes.",
+    "description": "Good for state changes like hover, open and selected: `transition: transform 200ms ease-out`. Name the properties instead of `all`, which animates things you didn't mean to. Pick a keyframe animation when there's no state change or more than two steps.",
+    "aliases": [
+      "transition-property",
+      "Hover effects"
+    ],
+    "platforms": {
+      "swiftui": "withAnimation { }",
+      "compose": "animate*AsState"
+    }
+  },
+  {
+    "id": "animations",
+    "title": "@keyframes",
+    "facets": {
+      "area": "motion",
+      "kind": "at-rule",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Defines multi-step animations that run on their own, without a state change.",
+    "description": "`@keyframes spin { to { rotate: 1turn } }` plus `animation: spin 1s linear infinite`. Use it for loaders, attention cues and entrances. `animation-fill-mode: both` keeps the first and last frames. Wrap decorative loops in `prefers-reduced-motion: no-preference`.",
+    "aliases": [
+      "animation",
+      "Keyframe animation"
+    ],
+    "platforms": {
+      "swiftui": ".keyframeAnimator()",
+      "compose": "rememberInfiniteTransition()"
+    }
+  },
+  {
+    "id": "transforms",
+    "title": "transform",
+    "facets": {
+      "area": "motion",
+      "kind": "property",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Move, rotate, scale or skew a box visually, without changing layout.",
+    "description": "`transform: translateY(-4px) scale(1.02)` shifts the painted box while its neighbours stay put, so animating it skips layout and is cheap. Functions apply right to left in order. It creates a stacking context and a containing block for fixed children.",
+    "aliases": [
+      "translate()",
+      "rotate()",
+      "scale()"
+    ],
+    "platforms": {
+      "swiftui": ".offset / .rotationEffect / .scaleEffect",
+      "compose": "Modifier.graphicsLayer { }"
+    }
+  },
+  {
+    "id": "individual-transforms",
+    "title": "translate, rotate, scale",
+    "facets": {
+      "area": "motion",
+      "kind": "property",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Separate properties for each transform, so one can change without repeating the rest.",
+    "description": "With `translate: 0 -4px` on hover and `scale: 1.1` on active, each state sets one property and they combine. With a single `transform`, every state must repeat the whole list. They apply in a fixed order: translate, then rotate, then scale.",
+    "aliases": [
+      "Individual transform properties"
+    ]
+  },
+  {
+    "id": "easing",
+    "title": "Easing",
+    "facets": {
+      "area": "motion",
+      "kind": "function",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Timing functions that shape an animation's speed: ease-out, cubic-bezier(), linear().",
+    "description": "Things entering should ease out (fast, then settle); things leaving ease in. `cubic-bezier()` tunes the curve, and `linear()` with many points can fake springs and bounces. Avoid `linear` for movement: it looks mechanical.",
+    "aliases": [
+      "cubic-bezier",
+      "linear()",
+      "Timing function"
+    ]
+  },
+  {
+    "id": "view-transitions",
+    "title": "View transitions",
+    "facets": {
+      "area": "motion",
+      "kind": "function",
+      "baseline": "baseline-newly"
+    },
+    "summary": "Animate between two states of the page, or two pages, with a snapshot crossfade.",
+    "description": "`document.startViewTransition(() => update())` snapshots before and after and crossfades; `view-transition-name` morphs matching elements. Same-document transitions are newer Baseline; cross-document (`@view-transition { navigation: auto }`) is not yet everywhere.",
+    "aliases": [
+      "startViewTransition",
+      "view-transition-name"
+    ],
+    "platforms": {
+      "swiftui": ".matchedGeometryEffect()",
+      "compose": "SharedTransitionLayout"
+    }
+  },
+  {
+    "id": "scroll-driven-animations",
+    "title": "Scroll-driven animations",
+    "facets": {
+      "area": "motion",
+      "kind": "property",
+      "baseline": "limited"
+    },
+    "summary": "Tie an animation's progress to scroll position instead of time.",
+    "description": "`animation-timeline: scroll()` follows a scroller; `view()` tracks an element crossing the viewport. Reading-progress bars and reveal effects need no JavaScript and run off the main thread. Not supported everywhere yet, so the page must work without them.",
+    "aliases": [
+      "animation-timeline",
+      "scroll()",
+      "view()"
+    ]
+  },
+  {
+    "id": "starting-style",
+    "title": "@starting-style",
+    "facets": {
+      "area": "motion",
+      "kind": "at-rule",
+      "baseline": "baseline-newly"
+    },
+    "summary": "Sets the 'before' styles so an element can transition in when it first appears.",
+    "description": "A new element has no previous style to transition from. `@starting-style { opacity: 0 }` supplies one, so popovers and dialogs fade in. Pair it with `transition-behavior: allow-discrete` on `display` to animate out before it's hidden.",
+    "aliases": [
+      "Entry animations",
+      "transition-behavior",
+      "allow-discrete"
+    ]
+  },
+  {
+    "id": "bem",
+    "title": "BEM",
+    "facets": {
+      "area": "architecture",
+      "kind": "pattern",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Block__element--modifier class names: flat, single-class selectors with clear ownership.",
+    "description": "`.card`, `.card__title`, `.card--featured`. Every selector has the same low specificity, so order wins and overrides stay predictable. Pick it for hand-written CSS files per component; it needs discipline but no tooling.",
+    "aliases": [
+      "Block Element Modifier",
+      "Naming convention"
+    ]
+  },
+  {
+    "id": "utility-first",
+    "title": "Utility-first CSS",
+    "facets": {
+      "area": "architecture",
+      "kind": "pattern",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Style with many tiny single-purpose classes in the markup, as Tailwind does.",
+    "description": "`class=\"flex gap-4 p-4 rounded\"`. No naming, no unused CSS and a built-in design scale; the cost is long class lists and styles living in markup. Pick it for fast-moving product teams with components; pick BEM or modules when markup is shared or authored by others.",
+    "aliases": [
+      "Atomic CSS",
+      "Tailwind"
+    ]
+  },
+  {
+    "id": "css-modules",
+    "title": "CSS Modules",
+    "facets": {
+      "area": "architecture",
+      "kind": "pattern",
+      "baseline": "baseline-widely"
+    },
+    "summary": "CSS files whose class names are scoped to the importing component at build time.",
+    "description": "`import styles from './Card.module.css'` gives `styles.title`, renamed to something unique, so names never collide. Plain CSS stays plain CSS with no runtime. Pick it over BEM when a bundler is involved and you'd rather not police names by hand.",
+    "aliases": [
+      ".module.css",
+      "Scoped CSS"
+    ]
+  },
+  {
+    "id": "design-tokens",
+    "title": "Design tokens",
+    "facets": {
+      "area": "architecture",
+      "kind": "pattern",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Named values for colour, space, type and radius, shared by design and code.",
+    "description": "`--color-text`, `--space-3`, `--radius-sm` as custom properties: components use names, not raw values. Layer them: primitive tokens (`--blue-600`) feed semantic ones (`--color-action`), and themes swap only the semantic layer.",
+    "aliases": [
+      "Tokens",
+      "Theme variables"
+    ],
+    "platforms": {
+      "swiftui": "Asset catalog colours",
+      "compose": "MaterialTheme tokens"
+    }
+  },
+  {
+    "id": "native-nesting",
+    "title": "CSS nesting",
+    "facets": {
+      "area": "architecture",
+      "kind": "selector",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Write child and state rules inside their parent rule, without a preprocessor.",
+    "description": "`.card { &:hover { … } .title { … } }` works natively now. `&` stands for the parent selector, like in Sass, but string concatenation such as `&__title` doesn't work. Keep nesting shallow: each level adds specificity and makes rules harder to find.",
+    "aliases": [
+      "& selector",
+      "Nesting"
+    ]
+  },
+  {
+    "id": "css-reset",
+    "title": "CSS reset",
+    "facets": {
+      "area": "architecture",
+      "kind": "pattern",
+      "baseline": "baseline-widely"
+    },
+    "summary": "A small base stylesheet that removes inconsistent browser defaults before your styles.",
+    "description": "Modern resets are short: `box-sizing: border-box` everywhere, zero body margin, `img { display: block; max-width: 100% }`, and inherited fonts on form controls. Put it in the lowest `@layer` so it never fights your components.",
+    "aliases": [
+      "Normalize",
+      "Base styles"
+    ]
+  },
+  {
+    "id": "magic-numbers",
+    "title": "Magic numbers",
+    "facets": {
+      "area": "architecture",
+      "kind": "pattern",
+      "baseline": "baseline-widely"
+    },
+    "summary": "An anti-pattern: unexplained values like top: 37px that only work for today's content.",
+    "description": "They break when text, fonts or translations change. Replace them with layout that adapts (flex, grid, `gap`), tokens from the spacing scale, or `calc()` that names its parts. If a number must stay, leave a comment saying where it comes from.",
+    "aliases": [
+      "Anti-pattern",
+      "Hard-coded values"
+    ]
+  },
+  {
+    "id": "css-in-js",
+    "title": "CSS-in-JS",
+    "facets": {
+      "area": "architecture",
+      "kind": "pattern",
+      "baseline": "baseline-widely"
+    },
+    "summary": "Styles written in JavaScript next to components, generated at runtime or at build time.",
+    "description": "Runtime libraries (styled-components, Emotion) make dynamic styles easy but add JavaScript and work on every render. Zero-runtime tools extract static CSS at build time. Today custom properties and CSS Modules cover most needs with less cost.",
+    "aliases": [
+      "styled-components",
+      "Emotion",
+      "Zero-runtime CSS"
+    ]
+  }
+]

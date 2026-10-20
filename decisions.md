@@ -23,6 +23,7 @@ accepted.
 | [0010](docs/adr/0010-web-security-deck-facets.md) | Web security deck: area and kind filters, OWASP Top 10 (2025) as a badge | Proposed | 2026-10-20 |
 | [0011](docs/adr/0011-web-performance-deck-facets.md) | Web performance deck: area and kind filters, the metric it improves as a badge | Proposed | 2026-10-20 |
 | [0012](docs/adr/0012-card-drawings-as-separate-files.md) | Card drawings are separate files, not inlined as data URIs | Proposed | 2026-10-20 |
+| [0013](docs/adr/0013-css-deck-facets.md) | CSS deck: area and kind filters, Baseline status as a badge | Proposed | 2026-10-20 |
 
 ## Format
 

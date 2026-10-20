@@ -16,6 +16,8 @@ A fourth deck, **Web Security**, has 100 attacks, defences and mechanisms (injec
 
 A fifth deck, **Web Performance**, has 100 metrics, mechanisms, techniques and anti-patterns (measurement, network, server, caching, loading, assets, JavaScript, rendering), each tagged with the Core Web Vital or other metric it mainly improves.
 
+A sixth deck, **CSS**, has 100 cards from the cascade and selectors through flexbox, grid, positioning, responsive design, typography, colour and motion to architecture, each with its Baseline status and, for layout, the SwiftUI and Compose equivalent.
+
 **Try it: [flashcards.pearpages.com](https://flashcards.pearpages.com)** — works on phones and desktop, no sign-up.
 
 <img src="./docs/static/demo.png" alt="Two phone screens: the Sheet card in study mode with desktop and mobile drawings, and the browse list grouped by purpose" width="500" />
@@ -63,6 +65,7 @@ src/decks/
   system-design/       # same layout, with AWS / GCP / Azure as its platforms
   web-security/        # same layout, no platform columns
   web-performance/     # same layout, no platform columns
+  css/                 # same layout, with SwiftUI / Compose as its platforms
     cards.json         # the cards
     images/<id>.svg    # one illustration per card (optional)
 ```
@@ -91,7 +94,7 @@ Add an entry to `src/decks/<deck>/cards.json`:
 | `summary`     | Yes      | One line, shown on the front (≤ 90 chars)                            |
 | `description` | Yes      | Revealed on tap (≤ 280 chars to fit the card)                        |
 | `aliases`     | No       | Other names for the same thing                                       |
-| `platforms`   | No       | Equivalents keyed by the deck's declared platforms (e.g. `ios`, `android`, or `aws`, `gcp`, `azure`), ≤ 60 chars each |
+| `platforms`   | No       | Equivalents keyed by the deck's declared platforms (e.g. `ios`, `android`; `aws`, `gcp`, `azure`; or `swiftui`, `compose`), ≤ 60 chars each |
 
 Optionally add `images/<id>.svg` (160×120). Cards without one show a `?` placeholder.
 
