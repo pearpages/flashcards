@@ -47,7 +47,7 @@
     "facets": { "concern": "data", "kind": "pattern", "scale": "growing" },
     "summary": "Store data twice, shaped for the read, to avoid joins on a hot path.",
     "description": "A post keeps `comment_count` and the author's name instead of joining every time. Reads get cheap; writes must update every copy, so do it in the same transaction or accept staleness. Normalise first, denormalise what you've measured.",
-    "aliases": ["Materialised view", "Read model"]
+    "aliases": ["Read model"]
   },
   {
     "id": "object-storage",
@@ -85,6 +85,120 @@
       "aws": "DynamoDB Streams / DMS",
       "gcp": "Datastream",
       "azure": "Cosmos DB change feed"
+    }
+  },
+  {
+    "id": "write-ahead-log",
+    "title": "Write-ahead Log",
+    "facets": { "concern": "data", "kind": "building-block", "scale": "growing" },
+    "summary": "Append every change to a log on disk before applying it, so a crash can replay it.",
+    "description": "Sequential appends are fast and survive crashes: on restart the database replays the log. The same log feeds replicas and change data capture. fsync on commit is what makes a write durable; turning it off trades safety for speed.",
+    "aliases": ["WAL", "Redo log", "Binlog"]
+  },
+  {
+    "id": "lsm-tree",
+    "title": "LSM Tree",
+    "facets": { "concern": "data", "kind": "building-block", "scale": "large-scale" },
+    "summary": "Buffers writes in memory and flushes sorted files: fast writes, slower reads.",
+    "description": "Writes go to a memtable, then become immutable sorted files (SSTables) that compaction merges. Pick it for write-heavy loads (Cassandra, RocksDB); B-trees update in place and favour reads. Compaction costs write amplification and latency spikes.",
+    "aliases": ["Log-structured merge tree", "SSTable", "Compaction", "Write amplification"]
+  },
+  {
+    "id": "bloom-filter",
+    "title": "Bloom Filter",
+    "facets": { "concern": "data", "kind": "building-block", "scale": "large-scale" },
+    "summary": "A tiny bit array that answers 'definitely not here' or 'maybe here'.",
+    "description": "No false negatives, tunable false positives, and no deletes (counting filters add them). LSM stores keep one per file to skip disk reads; it also answers 'have we seen this URL?' at scale. Size it from the expected item count and error rate.",
+    "aliases": ["Probabilistic data structure", "False positive"]
+  },
+  {
+    "id": "oltp-vs-olap",
+    "title": "OLTP vs OLAP",
+    "facets": { "concern": "data", "kind": "principle", "scale": "growing" },
+    "summary": "Many small transactional reads and writes, or a few huge analytical scans.",
+    "description": "OLTP (Postgres, MySQL) serves the app: row storage, indexes, low latency. OLAP (columnar warehouses) answers 'revenue by region by month': column storage, compression, big scans. Analytics on the app database slows the app, so copy the data out.",
+    "aliases": ["Row store", "Column store", "Columnar"]
+  },
+  {
+    "id": "data-warehouse",
+    "title": "Data Warehouse",
+    "facets": { "concern": "data", "kind": "building-block", "scale": "growing" },
+    "summary": "A columnar store of data copied from many systems, for analytics and reporting.",
+    "description": "Loaded by ETL/ELT pipelines or CDC and queried with SQL by analysts and BI tools, away from production so heavy queries can't hurt users. A data lake keeps raw files in object storage; a lakehouse adds tables on top of the lake.",
+    "aliases": ["ETL", "ELT", "Data lake", "Lakehouse"],
+    "platforms": {
+      "aws": "Redshift",
+      "gcp": "BigQuery",
+      "azure": "Synapse Analytics / Microsoft Fabric"
+    }
+  },
+  {
+    "id": "search-index",
+    "title": "Search Index",
+    "facets": { "concern": "data", "kind": "building-block", "scale": "growing" },
+    "summary": "An inverted index maps each word to the documents containing it, for full-text search.",
+    "description": "Gives relevance ranking, typo tolerance, facets and fast text queries that `LIKE '%term%'` can't. It's a secondary copy: keep the database as the source of truth and sync the index via CDC or events, accepting a short delay.",
+    "aliases": ["Inverted index", "Full-text search", "Elasticsearch"],
+    "platforms": {
+      "aws": "OpenSearch Service",
+      "azure": "Azure AI Search"
+    }
+  },
+  {
+    "id": "time-series-database",
+    "title": "Time-series Database",
+    "facets": { "concern": "data", "kind": "building-block", "scale": "growing" },
+    "summary": "Stores timestamped measurements, optimised for appends, time ranges and downsampling.",
+    "description": "Metrics, sensor readings and prices arrive in time order and are read by range. A TSDB compresses them hard, rolls old data up (per minute → per hour) and expires it by retention policy. Beware high-cardinality labels: each one makes a new series.",
+    "aliases": ["TSDB", "Prometheus", "Retention", "Cardinality"],
+    "platforms": {
+      "aws": "Amazon Timestream",
+      "azure": "Azure Data Explorer"
+    }
+  },
+  {
+    "id": "hot-partition",
+    "title": "Hot Partition",
+    "facets": { "concern": "data", "kind": "principle", "scale": "large-scale" },
+    "summary": "One key gets far more traffic than the rest and overloads its shard.",
+    "description": "A celebrity's profile, today's date as the key, a viral product. Spreading keys evenly isn't enough when access isn't even. Fixes: add a random suffix to hot keys and merge on read, cache them, or choose a key with more spread.",
+    "aliases": ["Hot key", "Hotspot", "Key salting"]
+  },
+  {
+    "id": "materialized-view",
+    "title": "Materialised View",
+    "facets": { "concern": "data", "kind": "pattern", "scale": "growing" },
+    "summary": "A query result stored as a table and refreshed, so an expensive read becomes cheap.",
+    "description": "The database keeps the result of a join or aggregate, trading freshness for speed; refresh it on a schedule or incrementally. Unlike hand-made denormalisation, the database owns the copy. CQRS read models are the same idea across services.",
+    "aliases": ["Materialized view", "Precomputed view"]
+  },
+  {
+    "id": "id-generation",
+    "title": "ID Generation",
+    "facets": { "concern": "data", "kind": "pattern", "scale": "day-one" },
+    "summary": "Unique ids without a central counter: random UUIDv4, time-ordered UUIDv7 or Snowflake.",
+    "description": "Auto-increment needs one database and leaks your counts. Random UUIDv4 scatters B-tree inserts; UUIDv7 and Snowflake ids start with a timestamp, so they sort by creation and index well. Snowflake ids fit in 64 bits but need unique worker ids.",
+    "aliases": ["UUIDv7", "Snowflake ID", "ULID", "Auto-increment"]
+  },
+  {
+    "id": "schema-migration",
+    "title": "Schema Migration",
+    "facets": { "concern": "data", "kind": "pattern", "scale": "day-one" },
+    "summary": "Change the schema in backwards-compatible steps: expand, migrate, then contract.",
+    "description": "Old and new code run side by side during a deploy. Add the new column (expand), write both and backfill, switch reads, then drop the old one (contract) in a later release. Changes to big tables need online tools to avoid long locks.",
+    "aliases": ["Expand and contract", "Backfill", "Zero-downtime migration"]
+  },
+  {
+    "id": "resumable-upload",
+    "title": "Resumable Upload",
+    "facets": { "concern": "data", "kind": "pattern", "scale": "growing" },
+    "summary": "Send large files in parts that can retry and resume, straight to object storage.",
+    "description": "One 5 GB request that fails at 99% starts over. Split the file into parts, upload them in parallel with retries, then complete the upload. Clients send the parts directly with signed URLs, so your servers never carry the bytes.",
+    "aliases": ["Multipart upload", "Chunked upload", "tus"],
+    "platforms": {
+      "aws": "S3 multipart upload",
+      "gcp": "Cloud Storage resumable uploads",
+      "azure": "Blob Storage block uploads (Put Block)"
     }
   },
   {
@@ -152,6 +266,30 @@
     "summary": "Cache-Control and ETag headers let browsers and CDNs reuse responses.",
     "description": "`Cache-Control: max-age` says how long a response is fresh; `ETag` plus `If-None-Match` revalidates with a cheap 304. `private` keeps personal data out of shared caches; `no-store` caches nothing. Free caching most APIs leave unused.",
     "aliases": ["Cache-Control", "ETag", "304 Not Modified"]
+  },
+  {
+    "id": "read-through",
+    "title": "Read-through",
+    "facets": { "concern": "caching", "kind": "pattern", "scale": "growing" },
+    "summary": "The cache loads missing data from the database itself; the app only talks to the cache.",
+    "description": "The same flow as cache-aside, but the loading logic lives in the cache layer or library, so every caller gets it the same way. The cache becomes a hard dependency: if it's down, reads fail unless there's a fallback.",
+    "aliases": ["Read-through cache", "Cache loader"]
+  },
+  {
+    "id": "cache-layers",
+    "title": "Cache Layers",
+    "facets": { "concern": "caching", "kind": "principle", "scale": "growing" },
+    "summary": "Browser, CDN, app memory, shared cache, database: each layer saves a trip to the next.",
+    "description": "The closer to the user, the faster and the harder to invalidate. An in-process cache is fastest, but every instance holds its own copy; a shared cache like Redis is the same for all instances. Decide per data type which layers may hold it.",
+    "aliases": ["Multi-level cache", "In-process cache", "L1 / L2 cache"]
+  },
+  {
+    "id": "cache-eviction",
+    "title": "Cache Eviction",
+    "facets": { "concern": "caching", "kind": "principle", "scale": "growing" },
+    "summary": "What to drop when the cache is full: least recently used, least frequently used, oldest.",
+    "description": "LRU suits most workloads; LFU keeps steady favourites but is slow to forget; FIFO is simplest. Watch the hit ratio: a cache that's too small evicts constantly. Redis needs a `maxmemory-policy`, or by default writes fail once memory is full.",
+    "aliases": ["LRU", "LFU", "Hit ratio", "maxmemory-policy"]
   },
   {
     "id": "message-queue",
@@ -235,7 +373,54 @@
     "facets": { "concern": "messaging", "kind": "principle", "scale": "large-scale" },
     "summary": "A slow consumer signals upstream to slow down instead of drowning in work.",
     "description": "Without it, buffers grow until memory runs out or latency explodes. Bound every queue and buffer, then block, drop or reject (429) when full. Pull-based consumers apply backpressure naturally; push-based ones need flow control.",
-    "aliases": ["Flow control", "Load shedding"]
+    "aliases": ["Flow control"]
+  },
+  {
+    "id": "batch-processing",
+    "title": "Batch Processing",
+    "facets": { "concern": "messaging", "kind": "pattern", "scale": "growing" },
+    "summary": "Process a bounded pile of data on a schedule: nightly reports, billing, reindexing.",
+    "description": "Easy to reason about and rerun: if a run fails, fix it and run again. Results are as old as the last run. Make jobs idempotent and resumable, and partition the input so the work spreads across workers (MapReduce, Spark).",
+    "aliases": ["Spark", "MapReduce", "Cron job"],
+    "platforms": {
+      "aws": "AWS Batch / EMR",
+      "gcp": "Dataproc / Dataflow",
+      "azure": "Azure Batch"
+    }
+  },
+  {
+    "id": "stream-processing",
+    "title": "Stream Processing",
+    "facets": { "concern": "messaging", "kind": "pattern", "scale": "large-scale" },
+    "summary": "Process events continuously as they arrive, with results in seconds instead of hours.",
+    "description": "Fraud checks, live dashboards, alerts. Harder than batch: late and out-of-order events need windows and watermarks, and state must survive restarts. Pick it only when freshness pays for the complexity (Flink, Kafka Streams).",
+    "aliases": ["Windowing", "Watermark", "Flink", "Kafka Streams"],
+    "platforms": {
+      "aws": "Managed Service for Apache Flink",
+      "gcp": "Dataflow",
+      "azure": "Stream Analytics"
+    }
+  },
+  {
+    "id": "message-ordering",
+    "title": "Message Ordering",
+    "facets": { "concern": "messaging", "kind": "principle", "scale": "growing" },
+    "summary": "Order holds only within a partition or group key, never across a whole system.",
+    "description": "Kafka orders per partition, SQS FIFO per message group, Pub/Sub per ordering key. Send related messages (same order id) with the same key. Retries and parallel consumers still reorder, so carry a version number and ignore stale updates.",
+    "aliases": ["FIFO", "Partition key", "Ordering key", "Message group"]
+  },
+  {
+    "id": "event-driven-architecture",
+    "title": "Event-driven Architecture",
+    "facets": { "concern": "messaging", "kind": "pattern", "scale": "growing" },
+    "summary": "Services announce what happened and others react, instead of calling each other.",
+    "description": "Adding a consumer needs no change to the producer, and a slow consumer doesn't slow the sender. The price: flows are harder to follow, data is eventually consistent, and event schemas become contracts. Trace ids and a schema registry help.",
+    "aliases": ["Events vs commands", "Schema registry", "Choreography"],
+    "platforms": {
+      "aws": "EventBridge",
+      "gcp": "Eventarc",
+      "azure": "Event Grid"
+    }
   },
   {
     "id": "horizontal-scaling",
@@ -259,7 +444,7 @@
     "facets": { "concern": "scaling", "kind": "building-block", "scale": "day-one" },
     "summary": "Spreads requests across healthy instances; L4 routes connections, L7 routes requests.",
     "description": "L4 (TCP) is fast and protocol-agnostic. L7 (HTTP) can route by path or header, terminate TLS and retry. It removes instances that fail health checks. Sticky sessions are a smell: they mean the service holds state.",
-    "aliases": ["L4 / L7", "Reverse proxy"],
+    "aliases": ["L4 / L7"],
     "platforms": {
       "aws": "Elastic Load Balancing (ALB / NLB)",
       "gcp": "Cloud Load Balancing",
@@ -316,6 +501,61 @@
       "aws": "SQS + Lambda",
       "gcp": "Cloud Tasks + Cloud Run",
       "azure": "Azure Functions with queue trigger"
+    }
+  },
+  {
+    "id": "sticky-sessions",
+    "title": "Sticky Sessions",
+    "facets": { "concern": "scaling", "kind": "pattern", "scale": "growing" },
+    "summary": "The load balancer keeps sending a user to the same instance, usually by cookie.",
+    "description": "A quick fix for in-memory sessions, but load becomes uneven, a dying instance logs its users out, and deploys get harder. Prefer moving state to a shared store; keep affinity for connection-bound protocols like WebSocket.",
+    "aliases": ["Session affinity"],
+    "platforms": {
+      "aws": "ALB target group stickiness",
+      "gcp": "Cloud Load Balancing session affinity",
+      "azure": "Application Gateway cookie-based affinity"
+    }
+  },
+  {
+    "id": "session-management",
+    "title": "Server Sessions vs JWT",
+    "facets": { "concern": "scaling", "kind": "pattern", "scale": "day-one" },
+    "summary": "Keep session state on the server behind a cookie, or in a signed token the client holds.",
+    "description": "Server sessions (an id in a cookie, data in Redis) are small and easy to revoke. A JWT needs no lookup but can't be revoked before it expires, so keep it short-lived with refresh tokens. For a browser app, an HttpOnly cookie session is the simpler default.",
+    "aliases": ["JWT", "Session store", "Refresh token", "HttpOnly cookie"]
+  },
+  {
+    "id": "cold-start",
+    "title": "Cold Start",
+    "facets": { "concern": "scaling", "kind": "principle", "scale": "growing" },
+    "summary": "The first request to a new serverless instance waits while it boots.",
+    "description": "Scaling from zero is cheap but adds latency, worse with large bundles, heavy runtimes and slow initialisation. Mitigate with smaller packages and lazy imports, or pay for warm capacity. Steady high traffic is often cheaper on containers.",
+    "aliases": ["Serverless", "Scale to zero", "Provisioned concurrency"],
+    "platforms": {
+      "aws": "Lambda provisioned concurrency",
+      "gcp": "Cloud Run minimum instances",
+      "azure": "Functions Premium plan always-ready instances"
+    }
+  },
+  {
+    "id": "load-shedding",
+    "title": "Load Shedding",
+    "facets": { "concern": "scaling", "kind": "pattern", "scale": "large-scale" },
+    "summary": "When overloaded, reject some requests fast so the rest still succeed.",
+    "description": "A rate limiter caps each client; shedding protects the server as a whole. Drop low-priority work first (prefetches, analytics) and keep checkout. A fast 503 with `Retry-After` beats slow timeouts for everyone.",
+    "aliases": ["Admission control", "503", "Request priority"]
+  },
+  {
+    "id": "multi-region",
+    "title": "Multi-region",
+    "facets": { "concern": "scaling", "kind": "pattern", "scale": "large-scale" },
+    "summary": "Run in several regions for lower latency and to survive a whole region failing.",
+    "description": "Active-passive keeps a standby region and fails over to it. Active-active serves from every region, but writes need a home region, conflict handling or a globally consistent database. Costly and complex; most systems need multiple zones first.",
+    "aliases": ["Geo-replication", "Active-active", "Active-passive", "Failover"],
+    "platforms": {
+      "aws": "Aurora Global Database / DynamoDB global tables",
+      "gcp": "Spanner multi-region",
+      "azure": "Cosmos DB multi-region writes"
     }
   },
   {
@@ -380,7 +620,7 @@
     "facets": { "concern": "reliability", "kind": "pattern", "scale": "growing" },
     "summary": "Run the new version beside the old, then switch all traffic at once.",
     "description": "Rollback is flipping back. It doubles capacity during the switch, and the database must work with both versions, so schema changes go expand-then-contract. Canary is the gradual sibling.",
-    "aliases": ["Red-black deployment", "Expand and contract"],
+    "aliases": ["Red-black deployment"],
     "platforms": {
       "aws": "CodeDeploy blue/green",
       "gcp": "Cloud Deploy",
@@ -414,6 +654,55 @@
     }
   },
   {
+    "id": "graceful-shutdown",
+    "title": "Graceful Shutdown",
+    "facets": { "concern": "reliability", "kind": "pattern", "scale": "day-one" },
+    "summary": "On deploy, stop taking new work, finish what's in flight, then exit.",
+    "description": "On SIGTERM: fail the readiness check, let the load balancer drain, finish open requests and jobs within a deadline, close connections, exit. Without it, every deploy drops requests and leaves jobs half done.",
+    "aliases": ["SIGTERM", "Connection draining"]
+  },
+  {
+    "id": "heartbeat",
+    "title": "Heartbeat",
+    "facets": { "concern": "reliability", "kind": "building-block", "scale": "growing" },
+    "summary": "Periodic 'I'm alive' messages; missing a few marks a node as failed.",
+    "description": "The timeout is a trade-off: short detects failures fast but flags slow nodes as dead during GC pauses or network blips; long keeps sending traffic to a dead node. A missed heartbeat means unreachable, not dead, which is how split brain starts.",
+    "aliases": ["Failure detector", "Keepalive"]
+  },
+  {
+    "id": "hedged-requests",
+    "title": "Hedged Requests",
+    "facets": { "concern": "reliability", "kind": "pattern", "scale": "large-scale" },
+    "summary": "If a request is slow, send a copy to another replica and use the first answer.",
+    "description": "Cuts tail latency cheaply: hedge only after the p95 delay, so only about 5% of requests are duplicated. Only for idempotent reads. Cancel the loser when one answers, or the extra load causes the slowness you're avoiding.",
+    "aliases": ["Backup requests", "The tail at scale"]
+  },
+  {
+    "id": "chaos-engineering",
+    "title": "Chaos Engineering",
+    "facets": { "concern": "reliability", "kind": "pattern", "scale": "large-scale" },
+    "summary": "Break things on purpose, under control, to find weaknesses before users do.",
+    "description": "Kill instances, add latency or cut a dependency, then check the system degrades as designed. Start in staging with a hypothesis, a small blast radius and an abort button. Game days rehearse the people as well as the systems.",
+    "aliases": ["Game day", "Fault injection", "Chaos Monkey"],
+    "platforms": {
+      "aws": "Fault Injection Service",
+      "azure": "Azure Chaos Studio"
+    }
+  },
+  {
+    "id": "rpo-rto",
+    "title": "RPO and RTO",
+    "facets": { "concern": "reliability", "kind": "principle", "scale": "growing" },
+    "summary": "How much data you can lose (RPO) and how long you can be down (RTO) after a disaster.",
+    "description": "They set the design: nightly backups mean an RPO of a day; synchronous replication gets it near zero. A backup you've never restored doesn't count, so rehearse restores. Keep a copy in another region or account against ransomware and mistakes.",
+    "aliases": ["Disaster recovery", "Backups", "Recovery point objective", "Recovery time objective"],
+    "platforms": {
+      "aws": "AWS Backup",
+      "gcp": "Backup and DR Service",
+      "azure": "Azure Backup / Site Recovery"
+    }
+  },
+  {
     "id": "cap-theorem",
     "title": "CAP Theorem",
     "facets": { "concern": "consistency", "kind": "principle", "scale": "large-scale" },
@@ -443,7 +732,7 @@
     "facets": { "concern": "consistency", "kind": "pattern", "scale": "large-scale" },
     "summary": "Nodes agree on one leader to coordinate work, and pick a new one if it dies.",
     "description": "Use a consensus system (etcd, ZooKeeper) or a lease in a database, never home-made heartbeats. A leader may not know it was replaced, so protect writes with a fencing token that increases on every election.",
-    "aliases": ["Raft", "Lease", "Fencing token"]
+    "aliases": ["Lease", "Fencing token"]
   },
   {
     "id": "two-phase-commit",
@@ -494,6 +783,54 @@
     "summary": "Store every change as an immutable event; current state is a replay of them.",
     "description": "You get a full audit trail and can rebuild any view or answer 'what was it on Tuesday?'. The costs: changing event schemas, snapshots for long histories and a learning curve. Often paired with CQRS.",
     "aliases": ["Event store", "Snapshot"]
+  },
+  {
+    "id": "consensus",
+    "title": "Consensus (Raft)",
+    "facets": { "concern": "consistency", "kind": "building-block", "scale": "large-scale" },
+    "summary": "Nodes agree on one ordered log of decisions by majority vote, even when some crash.",
+    "description": "A leader appends entries and commits once a majority stores them; if it dies, an election picks another. 2f+1 nodes survive f failures, so clusters have 3 or 5. Use etcd or ZooKeeper rather than writing your own.",
+    "aliases": ["Raft", "Paxos", "etcd", "ZooKeeper"]
+  },
+  {
+    "id": "split-brain",
+    "title": "Split Brain",
+    "facets": { "concern": "consistency", "kind": "principle", "scale": "large-scale" },
+    "summary": "A partition leaves two nodes both believing they lead, and both accept writes.",
+    "description": "The data diverges and is painful to merge. Prevent it with majority quorums (the minority side can't elect a leader), odd cluster sizes, and fencing tokens so storage rejects writes from a stale leader.",
+    "aliases": ["Fencing token", "Network partition"]
+  },
+  {
+    "id": "crdt",
+    "title": "CRDT",
+    "facets": { "concern": "consistency", "kind": "building-block", "scale": "large-scale" },
+    "summary": "Data types whose replicas can change independently and always merge to the same state.",
+    "description": "Counters, sets, maps and text that merge without coordination: ideal for offline-first apps and collaborative editing (Yjs, Automerge). The costs are metadata overhead and limited rules: you can't enforce invariants like 'stock ≥ 0'.",
+    "aliases": ["Conflict-free replicated data type", "Yjs", "Automerge", "Local-first"]
+  },
+  {
+    "id": "vector-clocks",
+    "title": "Vector Clocks",
+    "facets": { "concern": "consistency", "kind": "building-block", "scale": "large-scale" },
+    "summary": "A counter per node on each version, to tell 'happened before' from 'concurrent'.",
+    "description": "If one clock is ≤ another in every entry, that version is older and can go; otherwise the writes were concurrent and must be merged or kept as siblings. Timestamps can't tell the two apart. Lamport clocks give an order but can't spot concurrency.",
+    "aliases": ["Version vector", "Lamport clock", "Happened-before"]
+  },
+  {
+    "id": "clock-skew",
+    "title": "Clock Skew",
+    "facets": { "concern": "consistency", "kind": "principle", "scale": "growing" },
+    "summary": "Machine clocks drift apart, so wall-clock timestamps can't order events across servers.",
+    "description": "NTP keeps clocks within milliseconds, not exactly in step. 'Last write wins' by timestamp silently drops writes when clocks disagree. Order with database sequences, versions or logical clocks, and measure durations with a monotonic clock.",
+    "aliases": ["NTP", "Last write wins", "Monotonic clock"]
+  },
+  {
+    "id": "gossip-protocol",
+    "title": "Gossip Protocol",
+    "facets": { "concern": "consistency", "kind": "pattern", "scale": "large-scale" },
+    "summary": "Each node regularly tells a few random peers what it knows, until everyone knows.",
+    "description": "Spreads membership and failure news to thousands of nodes in O(log n) rounds with no central server. Robust to failures but only eventually consistent. Used by Cassandra, Consul and Redis Cluster.",
+    "aliases": ["Epidemic protocol", "SWIM", "Cluster membership"]
   },
   {
     "id": "websocket",
@@ -554,6 +891,78 @@
     "aliases": ["Protocol Buffers", "RPC"]
   },
   {
+    "id": "reverse-proxy",
+    "title": "Reverse Proxy",
+    "facets": { "concern": "networking", "kind": "building-block", "scale": "day-one" },
+    "summary": "A server in front of your app that handles TLS, compression, caching and routing.",
+    "description": "Clients talk to the proxy (nginx, Caddy, Envoy), never straight to the app. It can serve static files, buffer slow clients and hide the internal layout. A load balancer is a reverse proxy that spreads requests across instances.",
+    "aliases": ["nginx", "Envoy", "Caddy", "Forward proxy"]
+  },
+  {
+    "id": "tls-termination",
+    "title": "TLS Termination",
+    "facets": { "concern": "networking", "kind": "building-block", "scale": "day-one" },
+    "summary": "Decrypt HTTPS at the load balancer or proxy and forward plain or re-encrypted traffic.",
+    "description": "Certificates live in one place and backends skip the crypto. Traffic behind the terminator is plain text unless you re-encrypt or use mTLS, which compliance often requires. Automate renewal (ACME) so certificates never expire on you.",
+    "aliases": ["SSL offloading", "ACME", "mTLS"],
+    "platforms": {
+      "aws": "ACM certificates on ALB / CloudFront",
+      "gcp": "Certificate Manager",
+      "azure": "Application Gateway TLS termination"
+    }
+  },
+  {
+    "id": "service-discovery",
+    "title": "Service Discovery",
+    "facets": { "concern": "networking", "kind": "building-block", "scale": "growing" },
+    "summary": "Services find each other's current addresses in a registry instead of config files.",
+    "description": "Instances come and go with autoscaling and deploys. Client-side discovery asks the registry and picks an instance; server-side puts a load balancer in between. Inside Kubernetes, Services and cluster DNS do it for you.",
+    "aliases": ["Service registry", "Consul", "Kubernetes Service"],
+    "platforms": {
+      "aws": "Cloud Map",
+      "gcp": "Service Directory"
+    }
+  },
+  {
+    "id": "service-mesh",
+    "title": "Service Mesh",
+    "facets": { "concern": "networking", "kind": "building-block", "scale": "large-scale" },
+    "summary": "A sidecar proxy next to every service handles its retries, mTLS and metrics.",
+    "description": "Traffic policy moves out of each codebase into infrastructure, the same for every language. The price is an extra hop, more moving parts and a steep learning curve. Worth it with many services and teams; overkill for a handful.",
+    "aliases": ["Sidecar", "Istio", "Linkerd", "mTLS"],
+    "platforms": {
+      "gcp": "Cloud Service Mesh",
+      "azure": "Istio-based add-on for AKS"
+    }
+  },
+  {
+    "id": "edge-functions",
+    "title": "Edge Functions",
+    "facets": { "concern": "networking", "kind": "building-block", "scale": "growing" },
+    "summary": "Small functions that run at CDN locations near users, before requests reach the origin.",
+    "description": "Good for redirects, auth checks, A/B assignment, headers and personalising cached pages. Runtimes are restricted (limited APIs, short CPU time) and far from your database, so keep data access out or use an edge store.",
+    "aliases": ["Edge computing", "Cloudflare Workers"],
+    "platforms": {
+      "aws": "CloudFront Functions / Lambda@Edge"
+    }
+  },
+  {
+    "id": "rest-vs-graphql",
+    "title": "REST vs GraphQL",
+    "facets": { "concern": "networking", "kind": "principle", "scale": "growing" },
+    "summary": "Fixed resource URLs with HTTP caching, or one endpoint where clients pick the fields.",
+    "description": "REST is simple, cacheable by CDNs and suits public APIs. GraphQL suits many clients with different needs and avoids over-fetching, but needs query cost limits, makes HTTP caching harder and moves N+1 queries to the server.",
+    "aliases": ["Over-fetching", "N+1 queries", "API design"]
+  },
+  {
+    "id": "cursor-pagination",
+    "title": "Cursor Pagination",
+    "facets": { "concern": "networking", "kind": "pattern", "scale": "day-one" },
+    "summary": "Page with an opaque cursor (the last item's sort key), not page numbers and OFFSET.",
+    "description": "`OFFSET 10000` makes the database read and skip 10,000 rows, and items shift as rows are added. `WHERE (created_at, id) < (?, ?) LIMIT 20` stays fast and stable. You lose 'jump to page 37', which feeds rarely need.",
+    "aliases": ["Keyset pagination", "Seek method", "OFFSET"]
+  },
+  {
     "id": "slo",
     "title": "SLI, SLO, SLA",
     "facets": { "concern": "observability", "kind": "principle", "scale": "growing" },
@@ -603,5 +1012,29 @@
       "gcp": "Cloud Monitoring",
       "azure": "Azure Monitor metrics"
     }
+  },
+  {
+    "id": "alert-on-symptoms",
+    "title": "Alert on Symptoms",
+    "facets": { "concern": "observability", "kind": "principle", "scale": "growing" },
+    "summary": "Page people for what users feel (errors, latency), not every cause (CPU at 80%).",
+    "description": "Cause alerts fire when nothing is wrong and miss new kinds of failure. Alert on SLO burn rate: a fast burn pages now, a slow one opens a ticket. Every page must be actionable; leave causes to dashboards.",
+    "aliases": ["Burn rate", "Alert fatigue", "On-call"]
+  },
+  {
+    "id": "runbook",
+    "title": "Runbook",
+    "facets": { "concern": "observability", "kind": "pattern", "scale": "growing" },
+    "summary": "Written steps for diagnosing and fixing a known problem, linked from its alert.",
+    "description": "At 3am nobody should improvise. A good runbook says what the alert means, how to check impact, safe mitigations (roll back, fail over, scale up) and who to escalate to. Update it after each incident; automate steps that never change.",
+    "aliases": ["Playbook", "Incident response", "Postmortem"]
+  },
+  {
+    "id": "tail-latency",
+    "title": "Tail Latency",
+    "facets": { "concern": "observability", "kind": "principle", "scale": "large-scale" },
+    "summary": "The slowest 1% of requests: invisible in averages, felt by your most active users.",
+    "description": "A page that calls 100 services hits at least one p99 on about 63% of loads, so tails multiply with fan-out. Track p99 and p99.9, not means. Causes include GC pauses, queueing and noisy neighbours; hedged requests and fewer hops help.",
+    "aliases": ["p99", "Percentiles", "Fan-out"]
   }
 ]

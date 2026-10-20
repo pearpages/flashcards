@@ -13,15 +13,22 @@ item, and add a dated line at the top of **Done**.
 - [ ] **Bundle size.** Inlined SVGs push the JS to ~750 kB (~175 kB gzipped) — consider
       `build.assetsInlineLimit` or lazy-loading images.
 - [ ] **Review Proposed ADRs 0006–0007** (GitHub Pages on `v*` tags; Vitest and CI).
-- [ ] **Review the accessibility deck** (51 cards, ADR-0008 Proposed): check the content and
+- [ ] **Review the accessibility deck** (100 cards, ADR-0008 Proposed): check the content and
       the SwiftUI/Compose names in `src/decks/accessibility/cards.json` against current
-      WAI-ARIA APG, WCAG 2.2 and platform docs; written from memory.
+      WAI-ARIA APG, WCAG 2.2 and platform docs; written from memory. Least sure:
+      `PlainTooltip`/`TooltipBox`, `.isToggle`, `CommandMenu`, `Table`, `OutlineGroup`,
+      `Gauge`, `HorizontalPager`, `stateDescription`, `android:autofillHints`; and the
+      support claims on `aria-controls`, `aria-busy` and `aria-errormessage`.
 - [ ] **Branding with three decks.** The page title, OG tags, `og.webp` and `document.title`
       in `DeckPicker` still say "Design System Flashcards" and "155 components" — decide
       whether the site becomes plain "Flashcards".
-- [ ] **Review the system-design deck** (59 cards, ADR-0009 Proposed): check the
+- [ ] **Review the system-design deck** (104 cards, ADR-0009 Proposed): check the
       descriptions and the AWS/GCP/Azure service names in
       `src/decks/system-design/cards.json` against current provider docs; written from memory.
+      Least sure: GCP Managed Service for Apache Kafka, Backup and DR Service, Service
+      Directory; CloudWatch Application Signals SLOs; Amazon Timestream (now Timestream for
+      InfluxDB?); Azure built-in PgBouncer, Synapse / Fabric, Istio add-on for AKS,
+      Functions Premium always-ready instances.
 
 ### Advertising readiness
 
@@ -36,6 +43,7 @@ item, and add a dated line at the top of **Done**.
 
 ## Done
 
+- [x] 2026-10-20: Grew the accessibility deck to 100 cards (14 more patterns, alertdialog, 10 more ARIA attributes, 24 more WCAG 2.2 criteria; new `photosensitive` value for Three Flashes) and the system-design deck to 104 (45 more: storage internals, data systems, distributed systems, service infrastructure, operations), each card with a drawing.
 - [x] 2026-10-20: System Design deck: 59 cards (data, caching, messaging, scaling, reliability, consistency, networking, observability) with a drawing each and AWS/GCP/Azure equivalents. Decks now declare their own platform columns in `deck.json` (ADR-0009).
 - [x] 2026-10-20: Accessibility deck: 51 cards (10 patterns, 5 roles, 10 ARIA attributes, 11 techniques, 15 WCAG 2.2 criteria) with a drawing each, `kind`/`helps` filters and a WCAG level badge. Legacy links (`#card/<id>`) stay on the design-system deck now that it isn't first alphabetically.
 - [x] 2026-10-16: Released v0.3.0.

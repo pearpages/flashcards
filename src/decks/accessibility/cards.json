@@ -115,6 +115,147 @@
     "aliases": ["SC 2.4.8"]
   },
   {
+    "id": "radio-group",
+    "title": "Radio Group",
+    "facets": { "kind": "pattern", "helps": "keyboard", "level": "wcag-a" },
+    "summary": "Pick one of several options; arrow keys move and select, Tab enters at the checked one.",
+    "description": "Native `<input type=\"radio\">` with a shared `name` inside a `<fieldset>` gives all of this for free. A custom `role=radiogroup` needs roving tabindex and `aria-checked`. Pick a select or listbox over it once there are more than about seven options.",
+    "aliases": ["role=radiogroup", "role=radio"],
+    "platforms": {
+      "android": "selectableGroup() + Role.RadioButton"
+    }
+  },
+  {
+    "id": "checkbox",
+    "title": "Checkbox",
+    "facets": { "kind": "pattern", "helps": "screen-reader", "level": "wcag-a" },
+    "summary": "An independent on/off choice; 'mixed' marks a parent whose children are partly checked.",
+    "description": "Space toggles it, Enter doesn't. `aria-checked=\"mixed\"` (or the native `indeterminate` property, set from script) shows a 'select all' with some children checked. Pick a switch when the change applies immediately.",
+    "aliases": ["role=checkbox", "Tri-state", "Indeterminate"],
+    "platforms": {
+      "android": "Checkbox / TriStateCheckbox"
+    }
+  },
+  {
+    "id": "slider",
+    "title": "Slider",
+    "facets": { "kind": "pattern", "helps": "keyboard", "level": "wcag-a" },
+    "summary": "Picks a value in a range; arrows step, Page Up/Down jump, Home/End go to the ends.",
+    "description": "Native `<input type=\"range\">` is the easy path. A custom `role=slider` needs `aria-valuenow`, `aria-valuemin`, `aria-valuemax` and `aria-valuetext` when the number alone means little. Pair it with a text field for exact values.",
+    "aliases": ["role=slider", "Range"],
+    "platforms": {
+      "ios": "Slider",
+      "android": "Slider"
+    }
+  },
+  {
+    "id": "spinbutton",
+    "title": "Spinbutton",
+    "facets": { "kind": "pattern", "helps": "keyboard", "level": "wcag-a" },
+    "summary": "A number field with step buttons; ↑/↓ change the value and typing still works.",
+    "description": "`role=spinbutton` with `aria-valuenow`, `aria-valuemin` and `aria-valuemax`. Native `<input type=\"number\">` has quirks (it rejects some input silently), so plain text with `inputmode=\"numeric\"` is often better for things like card numbers.",
+    "aliases": ["role=spinbutton", "Stepper", "Number input"],
+    "platforms": {
+      "ios": "Stepper"
+    }
+  },
+  {
+    "id": "toolbar",
+    "title": "Toolbar",
+    "facets": { "kind": "pattern", "helps": "keyboard", "level": "wcag-a" },
+    "summary": "A row of controls that takes one Tab stop; arrow keys move between them.",
+    "description": "`role=toolbar` groups related controls, like a text editor's bold and italic buttons. It only pays off with three or more controls. Label it when a page has more than one, and set `aria-orientation=\"vertical\"` if it runs top to bottom.",
+    "aliases": ["role=toolbar"]
+  },
+  {
+    "id": "tree-view",
+    "title": "Tree View",
+    "facets": { "kind": "pattern", "helps": "keyboard", "level": "wcag-a" },
+    "summary": "A nested list you expand and collapse; → opens or goes to the child, ← closes or goes up.",
+    "description": "`role=tree` with `treeitem` children, each parent with `aria-expanded`. Only one tab stop; typeahead jumps by name. Pick it for file systems and outlines; for site navigation, nested lists of links are simpler and better supported.",
+    "aliases": ["role=tree", "role=treeitem"],
+    "platforms": {
+      "ios": "OutlineGroup"
+    }
+  },
+  {
+    "id": "grid",
+    "title": "Grid",
+    "facets": { "kind": "pattern", "helps": "keyboard", "level": "wcag-a" },
+    "summary": "An interactive table: one tab stop, then arrow keys move from cell to cell.",
+    "description": "`role=grid` suits spreadsheets and calendars, where cells contain controls. For data you just read, use a plain `<table>`: screen readers have table-reading commands that a grid replaces with focus moves.",
+    "aliases": ["role=grid", "role=gridcell", "Data grid"]
+  },
+  {
+    "id": "treegrid",
+    "title": "Treegrid",
+    "facets": { "kind": "pattern", "helps": "keyboard", "level": "wcag-a" },
+    "summary": "A grid whose rows expand like a tree: a file browser or email threads with columns.",
+    "description": "`role=treegrid` combines grid navigation across cells with tree expansion on rows (`aria-expanded`, `aria-level`). It's the most complex APG pattern, so test it with real screen readers, and pick a tree or a table if either would do.",
+    "aliases": ["role=treegrid"]
+  },
+  {
+    "id": "feed",
+    "title": "Feed",
+    "facets": { "kind": "pattern", "helps": "screen-reader", "level": "wcag-a" },
+    "summary": "A scrolling list of articles that loads more as you go; Page Down moves between them.",
+    "description": "`role=feed` holds `role=article` children with `aria-posinset`, and `aria-setsize` (-1 if unknown). Set `aria-busy` while loading. Infinite scroll hides the footer, so give a way past the feed or use a 'Load more' button.",
+    "aliases": ["role=feed", "Infinite scroll"]
+  },
+  {
+    "id": "carousel",
+    "title": "Carousel",
+    "facets": { "kind": "pattern", "helps": "cognitive", "level": "wcag-a" },
+    "summary": "Slides shown one at a time; auto-rotation needs a pause button and stops on focus.",
+    "description": "Previous and next are real buttons; each slide is a `role=group` with `aria-roledescription=\"slide\"` and a label like '2 of 5'. Turn the live region off while it rotates. Most users never see slide two, so think twice.",
+    "aliases": ["Slideshow", "SC 2.2.2"],
+    "platforms": {
+      "ios": "TabView with .page style",
+      "android": "HorizontalPager"
+    }
+  },
+  {
+    "id": "menubar",
+    "title": "Menubar",
+    "facets": { "kind": "pattern", "helps": "keyboard", "level": "wcag-a" },
+    "summary": "A desktop-style bar of menus (File, Edit, View); ←/→ move between menus, ↓ opens one.",
+    "description": "`role=menubar` with `menuitem` children that open `role=menu`. Only for app-like command menus; a site's navigation bar is a `<nav>` of links, and making it a menubar gives keyboard users the wrong keys.",
+    "aliases": ["role=menubar", "role=menuitem"],
+    "platforms": {
+      "ios": "CommandMenu (iPadOS / macOS)"
+    }
+  },
+  {
+    "id": "meter",
+    "title": "Meter",
+    "facets": { "kind": "pattern", "helps": "screen-reader", "level": "wcag-a" },
+    "summary": "Shows a value within a known range: disk used, battery, password strength.",
+    "description": "Native `<meter>` or `role=meter` with `aria-valuenow`, min and max. It isn't a progressbar, which tracks a task moving to completion. Add `aria-valuetext` ('Strong') when the number alone isn't the message.",
+    "aliases": ["role=meter", "Gauge"],
+    "platforms": {
+      "ios": "Gauge"
+    }
+  },
+  {
+    "id": "window-splitter",
+    "title": "Window Splitter",
+    "facets": { "kind": "pattern", "helps": "keyboard", "level": "wcag-a" },
+    "summary": "A focusable divider between panes; arrow keys resize, Enter collapses and restores.",
+    "description": "A `role=separator` that is focusable, with `aria-valuenow` (0–100) for the primary pane's size and `aria-controls` pointing at it. Dragging alone fails 2.5.7, so the keyboard and a collapse button matter.",
+    "aliases": ["role=separator", "Resizable panes"]
+  },
+  {
+    "id": "data-table",
+    "title": "Data Table",
+    "facets": { "kind": "pattern", "helps": "screen-reader", "level": "wcag-a" },
+    "summary": "A real <table> with a caption and header cells, so screen readers can read cell by cell.",
+    "description": "Use `<th scope=\"col\">` and `scope=\"row\"`, and a `<caption>` as its name. A sortable column puts a button inside the `<th>` and `aria-sort` on the `<th>`. Never build data tables from divs: the table commands disappear.",
+    "aliases": ["table", "aria-sort", "caption"],
+    "platforms": {
+      "ios": "Table (iPadOS / macOS)"
+    }
+  },
+  {
     "id": "landmarks",
     "title": "Landmarks",
     "facets": { "kind": "role", "helps": "screen-reader", "level": "wcag-a" },
@@ -165,6 +306,18 @@
     "summary": "role=none strips an element's own semantics but keeps its content readable.",
     "description": "For layout tables or a list restyled as something else. It hides nothing (that's `aria-hidden`) and is ignored on focusable elements. Never put it on a real heading or button to tidy up announcements.",
     "aliases": ["role=none", "role=presentation"]
+  },
+  {
+    "id": "alertdialog-role",
+    "title": "Alertdialog role",
+    "facets": { "kind": "role", "helps": "screen-reader", "level": "wcag-a" },
+    "summary": "A modal dialog that interrupts with an urgent message and needs a response.",
+    "description": "Use `role=alertdialog` for 'Delete 3 files?' or 'Unsaved changes', not for ordinary dialogs. Point `aria-describedby` at the message so it's read on open, and focus the least destructive button (Cancel).",
+    "aliases": ["role=alertdialog", "Confirm dialog"],
+    "platforms": {
+      "ios": ".alert(…)",
+      "android": "AlertDialog"
+    }
   },
   {
     "id": "aria-label",
@@ -270,6 +423,87 @@
     "platforms": {
       "android": "Modifier.semantics { error(\"…\") }"
     }
+  },
+  {
+    "id": "aria-controls",
+    "title": "aria-controls",
+    "facets": { "kind": "attribute", "helps": "screen-reader", "level": "wcag-a" },
+    "summary": "Points from a control to the element it changes, by id.",
+    "description": "Tabs link to their panels and comboboxes to their listbox with it. Many screen readers don't announce it, so it never replaces `aria-expanded` or a sensible DOM order. Add it where a pattern asks for it and don't rely on it."
+  },
+  {
+    "id": "aria-owns",
+    "title": "aria-owns",
+    "facets": { "kind": "attribute", "helps": "screen-reader", "level": "wcag-a" },
+    "summary": "Makes elements elsewhere in the DOM children of this one in the accessibility tree.",
+    "description": "A workaround for portals and popups rendered at the end of `<body>`. It can confuse focus order and isn't supported everywhere, so first try rendering the element in the right place. Never point two elements at the same child."
+  },
+  {
+    "id": "aria-busy",
+    "title": "aria-busy",
+    "facets": { "kind": "attribute", "helps": "screen-reader", "level": "wcag-a" },
+    "summary": "Marks a region as updating, so assistive tech can wait before reading it.",
+    "description": "Set it to `true` while a feed loads or a live region gets several changes, then `false` when done. Support varies, so don't let a region stay busy forever: some screen readers skip its content while it's set."
+  },
+  {
+    "id": "aria-errormessage",
+    "title": "aria-errormessage",
+    "facets": { "kind": "attribute", "helps": "screen-reader", "level": "wcag-a" },
+    "summary": "Points a field at its error text; exposed only while aria-invalid is true.",
+    "description": "Meant for errors as `aria-describedby` is for hints. Screen reader support still lags behind `aria-describedby`, so many teams reference the error from `aria-describedby` too. Either way, the error must also be visible.",
+    "aliases": ["SC 3.3.1"]
+  },
+  {
+    "id": "aria-roledescription",
+    "title": "aria-roledescription",
+    "facets": { "kind": "attribute", "helps": "screen-reader", "level": "wcag-a" },
+    "summary": "Replaces the spoken role name, such as 'slide' instead of 'group'.",
+    "description": "Use it rarely, on an element that already has a valid role, for things with no ARIA role (a carousel slide). Renaming a button to 'clickable thing' hides the role users rely on to know what keys work. Translate it like other text."
+  },
+  {
+    "id": "aria-modal",
+    "title": "aria-modal",
+    "facets": { "kind": "attribute", "helps": "screen-reader", "level": "wcag-a" },
+    "summary": "Tells assistive tech that everything outside this dialog is unavailable.",
+    "description": "Goes on `role=dialog` or `alertdialog` to stop screen readers browsing behind it. It doesn't block mouse or Tab, so a custom modal still needs `inert` on the rest. Native `<dialog>` opened with `showModal()` is modal already."
+  },
+  {
+    "id": "aria-selected",
+    "title": "aria-selected",
+    "facets": { "kind": "attribute", "helps": "screen-reader", "level": "wcag-a" },
+    "summary": "Marks the chosen item in tabs, listboxes and grids: 'selected'.",
+    "description": "Selection is for items in a composite widget: a tab, an option, a gridcell. Checkboxes, radios and switches use `aria-checked` instead. Selection often follows focus in single-select lists; in multi-select ones it doesn't.",
+    "aliases": ["aria-checked"],
+    "platforms": {
+      "ios": ".accessibilityAddTraits(.isSelected)",
+      "android": "Modifier.semantics { selected = true }"
+    }
+  },
+  {
+    "id": "aria-haspopup",
+    "title": "aria-haspopup",
+    "facets": { "kind": "attribute", "helps": "screen-reader", "level": "wcag-a" },
+    "summary": "Says a control opens a popup and what kind: menu, listbox, tree, grid or dialog.",
+    "description": "`true` means menu. Screen readers announce it ('menu button'), so only use it when it really opens that type; a disclosure that reveals content inline doesn't need it. Pair it with `aria-expanded` to say whether it's open."
+  },
+  {
+    "id": "aria-valuetext",
+    "title": "aria-valuetext",
+    "facets": { "kind": "attribute", "helps": "screen-reader", "level": "wcag-a" },
+    "summary": "A readable version of a range value: 'Monday' instead of 1, or '3 of 5 stars'.",
+    "description": "Range widgets (slider, spinbutton, meter, progressbar) announce `aria-valuenow` as a bare number. When the number needs units or names ('$40', 'Medium'), set `aria-valuetext` and keep it updated with the value.",
+    "platforms": {
+      "ios": ".accessibilityValue(\"…\")",
+      "android": "semantics { stateDescription = \"…\" }"
+    }
+  },
+  {
+    "id": "aria-keyshortcuts",
+    "title": "aria-keyshortcuts",
+    "facets": { "kind": "attribute", "helps": "keyboard", "level": "wcag-a" },
+    "summary": "Announces the keyboard shortcut that activates an element, like Control+S.",
+    "description": "It documents a shortcut; it doesn't create one, so you still handle the keys. Show the shortcut visually too (a tooltip or menu hint). Avoid single-key shortcuts or let users turn them off (2.1.4).",
+    "aliases": ["SC 2.1.4"]
   },
   {
     "id": "accessible-name",
@@ -512,5 +746,212 @@
     "summary": "Set <html lang> so screen readers read the text with the right voice and rules.",
     "description": "Without it, a Spanish page may be read with English pronunciation. Mark passages in another language with `lang` on their element (3.1.2, AA). Use a BCP 47 tag such as `en`, `es` or `pt-BR`; it also drives hyphenation and spell-check.",
     "aliases": ["SC 3.1.1", "lang"]
+  },
+  {
+    "id": "meaningful-sequence",
+    "title": "Meaningful Sequence",
+    "facets": { "kind": "criterion", "helps": "screen-reader", "level": "wcag-a" },
+    "summary": "When order matters, the code reads in the same order as the screen.",
+    "description": "CSS can place a price before its product name visually while the DOM has them the other way. Screen readers and reflow follow the DOM. Keep source order equal to reading order, and check with styles turned off.",
+    "aliases": ["SC 1.3.2", "Reading order"]
+  },
+  {
+    "id": "sensory-characteristics",
+    "title": "Sensory Characteristics",
+    "facets": { "kind": "criterion", "helps": "cognitive", "level": "wcag-a" },
+    "summary": "Instructions don't rely only on shape, position, size or sound.",
+    "description": "'Click the round button on the right' fails for a screen reader user and anyone on a reflowed layout. Name the thing: 'Select Continue (the round button on the right)'. A beep alone can't be the only cue either.",
+    "aliases": ["SC 1.3.3"]
+  },
+  {
+    "id": "orientation",
+    "title": "Orientation",
+    "facets": { "kind": "criterion", "helps": "motor", "level": "wcag-aa" },
+    "summary": "Content works in portrait and landscape; don't lock the screen to one.",
+    "description": "People with a tablet mounted to a wheelchair can't rotate it. Lock orientation only when it's essential, like a piano app or a cheque scanner. Test both, including on phones with the larger text setting.",
+    "aliases": ["SC 1.3.4"],
+    "platforms": {
+      "ios": "UISupportedInterfaceOrientations (Info.plist)",
+      "android": "android:screenOrientation"
+    }
+  },
+  {
+    "id": "identify-input-purpose",
+    "title": "Identify Input Purpose",
+    "facets": { "kind": "criterion", "helps": "cognitive", "level": "wcag-aa" },
+    "summary": "Fields about the user carry an autocomplete token so browsers can fill and label them.",
+    "description": "`autocomplete=\"email\"`, `given-name`, `tel`, `street-address`, `one-time-code`. Autofill saves typing and memory, and helps meet Redundant Entry. Use the exact tokens from the HTML spec; made-up values do nothing.",
+    "aliases": ["SC 1.3.5", "autocomplete"],
+    "platforms": {
+      "ios": ".textContentType(.emailAddress)",
+      "android": "android:autofillHints"
+    }
+  },
+  {
+    "id": "audio-description",
+    "title": "Audio Description",
+    "facets": { "kind": "criterion", "helps": "screen-reader", "level": "wcag-aa" },
+    "summary": "Narration of what happens on screen when the soundtrack alone doesn't tell you.",
+    "description": "Needed at AA for prerecorded video whose visuals carry meaning (1.2.5). Write the script so key visuals are spoken in the main audio, and you may not need a separate track. A text transcript with visual notes helps too.",
+    "aliases": ["SC 1.2.5", "Described video"]
+  },
+  {
+    "id": "resize-text",
+    "title": "Resize Text",
+    "facets": { "kind": "criterion", "helps": "low-vision", "level": "wcag-aa" },
+    "summary": "Text can be zoomed to 200% without content getting cut off or overlapping.",
+    "description": "Size with `rem` and avoid fixed heights on containers that hold text. Never disable pinch zoom with `user-scalable=no` or `maximum-scale=1`. Respect the user's default font size by not setting `html { font-size }` in px.",
+    "aliases": ["SC 1.4.4", "Zoom"],
+    "platforms": {
+      "ios": "Dynamic Type",
+      "android": "Text sizes in sp"
+    }
+  },
+  {
+    "id": "images-of-text",
+    "title": "Images of Text",
+    "facets": { "kind": "criterion", "helps": "low-vision", "level": "wcag-aa" },
+    "summary": "Use real text, not text baked into an image, unless it's a logo.",
+    "description": "Text in an image blurs when zoomed, can't change colour or spacing, and can't be translated or searched. Web fonts and CSS can do nearly any visual treatment. Logos and essential cases (a font sample) are exempt.",
+    "aliases": ["SC 1.4.5"]
+  },
+  {
+    "id": "text-spacing",
+    "title": "Text Spacing",
+    "facets": { "kind": "criterion", "helps": "low-vision", "level": "wcag-aa" },
+    "summary": "Layout survives users widening line, paragraph, letter and word spacing.",
+    "description": "Test with line height 1.5, paragraph spacing 2em, letter spacing 0.12em and word spacing 0.16em (a bookmarklet applies them). Fixed-height buttons and cards clip text. Let containers grow with their content.",
+    "aliases": ["SC 1.4.12"]
+  },
+  {
+    "id": "character-key-shortcuts",
+    "title": "Character Key Shortcuts",
+    "facets": { "kind": "criterion", "helps": "motor", "level": "wcag-a" },
+    "summary": "Single-key shortcuts can be turned off, remapped, or only work when the widget has focus.",
+    "description": "Speech input types letters, so 'saying' a word can fire a dozen shortcuts in a row. Gmail-style one-key shortcuts need an off switch, or a modifier like Ctrl. Shortcuts limited to a focused component (a listbox's typeahead) are fine.",
+    "aliases": ["SC 2.1.4"]
+  },
+  {
+    "id": "timing-adjustable",
+    "title": "Timing Adjustable",
+    "facets": { "kind": "criterion", "helps": "cognitive", "level": "wcag-a" },
+    "summary": "Time limits can be turned off, adjusted, or extended with a simple action.",
+    "description": "A session timeout warns before it expires (at least 20 seconds ahead) and offers 'Stay signed in'. Exceptions: real-time events like auctions, limits that are essential, and limits over 20 hours. Save form progress anyway.",
+    "aliases": ["SC 2.2.1", "Session timeout"]
+  },
+  {
+    "id": "pause-stop-hide",
+    "title": "Pause, Stop, Hide",
+    "facets": { "kind": "criterion", "helps": "cognitive", "level": "wcag-a" },
+    "summary": "Moving, blinking or auto-updating content lasting over 5s can be paused or hidden.",
+    "description": "Carousels, tickers, animated banners and auto-refreshing feeds pull attention away from reading. Give a visible pause button, or stop after 5 seconds. Loading spinners are fine. Reduced motion is a different, AAA angle on motion.",
+    "aliases": ["SC 2.2.2", "Auto-play"]
+  },
+  {
+    "id": "three-flashes",
+    "title": "Three Flashes",
+    "facets": { "kind": "criterion", "helps": "photosensitive", "level": "wcag-a" },
+    "summary": "Nothing flashes more than three times in any one second.",
+    "description": "Flashing, especially saturated red, can trigger seizures in people with photosensitive epilepsy, and it's the one failure that harms people directly. Check videos and animations with a tool like PEAT, and avoid strobing effects.",
+    "aliases": ["SC 2.3.1", "Photosensitive epilepsy"]
+  },
+  {
+    "id": "page-titled",
+    "title": "Page Titled",
+    "facets": { "kind": "criterion", "helps": "screen-reader", "level": "wcag-a" },
+    "summary": "Every page has a <title> that says what it is, most specific part first.",
+    "description": "'Checkout – Payment – Shop' is what a screen reader reads first and what tabs and history show. In a single-page app, update `document.title` on every route change. Duplicate titles across pages are the usual failure.",
+    "aliases": ["SC 2.4.2", "document.title"],
+    "platforms": {
+      "ios": ".navigationTitle(\"…\")"
+    }
+  },
+  {
+    "id": "link-purpose",
+    "title": "Link Purpose",
+    "facets": { "kind": "criterion", "helps": "screen-reader", "level": "wcag-a" },
+    "summary": "Each link's text, with its context, says where it goes.",
+    "description": "Screen reader users pull up a list of links, where ten 'Read more' links are useless. Write 'Read more about pricing', or add visually hidden text. An icon-only link needs an accessible name; a URL as text is hard to listen to.",
+    "aliases": ["SC 2.4.4", "Read more"]
+  },
+  {
+    "id": "multiple-ways",
+    "title": "Multiple Ways",
+    "facets": { "kind": "criterion", "helps": "cognitive", "level": "wcag-aa" },
+    "summary": "There's more than one way to find a page: navigation, search, a sitemap or links.",
+    "description": "Different people find things differently: some browse, some search. A site search plus the main navigation usually passes. Steps inside a process, like checkout pages, are exempt.",
+    "aliases": ["SC 2.4.5", "Site search", "Sitemap"]
+  },
+  {
+    "id": "headings-and-labels",
+    "title": "Headings and Labels",
+    "facets": { "kind": "criterion", "helps": "cognitive", "level": "wcag-aa" },
+    "summary": "Headings and labels say what their section or field is about.",
+    "description": "Info and Relationships asks that headings exist; this asks that they're useful. 'Details' and 'More' say little; 'Delivery address' says a lot. Clear headings let everyone skim, and screen reader users jump between them.",
+    "aliases": ["SC 2.4.6"]
+  },
+  {
+    "id": "focus-appearance",
+    "title": "Focus Appearance",
+    "facets": { "kind": "criterion", "helps": "low-vision", "level": "wcag-aaa" },
+    "summary": "The focus ring is at least a 2px outline with 3:1 contrast against the unfocused state.",
+    "description": "AAA, but a good target for a design system's focus ring. A thin dotted outline or a faint colour change fails. A solid 2px outline offset from the control, in a colour that contrasts with the background, passes almost everywhere.",
+    "aliases": ["SC 2.4.13", "Focus ring"]
+  },
+  {
+    "id": "pointer-cancellation",
+    "title": "Pointer Cancellation",
+    "facets": { "kind": "criterion", "helps": "motor", "level": "wcag-a" },
+    "summary": "Actions fire when the pointer is released, so a slip can be cancelled by moving away.",
+    "description": "Trigger on `click` (pointer up), not `mousedown` or `touchstart`. People with tremors often press the wrong thing; releasing outside the target should do nothing. Drag and drop and piano keys are exempt when down-events are essential.",
+    "aliases": ["SC 2.5.2", "Up-event"]
+  },
+  {
+    "id": "label-in-name",
+    "title": "Label in Name",
+    "facets": { "kind": "criterion", "helps": "motor", "level": "wcag-a" },
+    "summary": "A control's accessible name contains the words of its visible label, ideally at the start.",
+    "description": "Voice control users say what they see: 'Click Search'. If an `aria-label` says 'Find products' on a button labelled 'Search', the command fails. Extend the visible text, don't replace it: 'Search products' works.",
+    "aliases": ["SC 2.5.3", "Voice control"]
+  },
+  {
+    "id": "on-focus",
+    "title": "On Focus",
+    "facets": { "kind": "criterion", "helps": "keyboard", "level": "wcag-a" },
+    "summary": "Moving focus to something never triggers a change of context by itself.",
+    "description": "Tabbing onto a field must not submit a form, open a new window or move focus elsewhere. Keyboard users have to pass through elements to reach others. Showing a tooltip or a hint on focus is fine; navigation isn't.",
+    "aliases": ["SC 3.2.1"]
+  },
+  {
+    "id": "on-input",
+    "title": "On Input",
+    "facets": { "kind": "criterion", "helps": "cognitive", "level": "wcag-a" },
+    "summary": "Changing a setting doesn't change context unless the user was warned first.",
+    "description": "A select that navigates as soon as you pick an option traps keyboard users, who fire it by arrowing through the list. Add a Go button, or say beforehand what will happen. Filtering results in place is not a change of context.",
+    "aliases": ["SC 3.2.2", "onchange navigation"]
+  },
+  {
+    "id": "consistent-navigation",
+    "title": "Consistent Navigation",
+    "facets": { "kind": "criterion", "helps": "cognitive", "level": "wcag-aa" },
+    "summary": "Navigation repeated across pages stays in the same relative order.",
+    "description": "Users learn where things are; moving 'Account' around breaks that, especially for people with memory or vision difficulties. Items can be added or hidden per page, as long as the shared ones keep their order.",
+    "aliases": ["SC 3.2.3"]
+  },
+  {
+    "id": "consistent-help",
+    "title": "Consistent Help",
+    "facets": { "kind": "criterion", "helps": "cognitive", "level": "wcag-a" },
+    "summary": "Help options (contact, chat, FAQ) appear in the same place on every page that has them.",
+    "description": "New in WCAG 2.2. People who get stuck need to find help without hunting. It doesn't require help to exist, only that what exists stays in the same relative order, like a footer 'Contact us' link on every page.",
+    "aliases": ["SC 3.2.6"]
+  },
+  {
+    "id": "error-suggestion",
+    "title": "Error Suggestion",
+    "facets": { "kind": "criterion", "helps": "cognitive", "level": "wcag-aa" },
+    "summary": "When an error is detected and a fix is known, say how to fix it.",
+    "description": "'Invalid date' identifies the error; 'Enter the date as DD/MM/YYYY' fixes it. List the allowed values when there are few. Don't suggest anything when it would weaken security, such as which half of a login was wrong.",
+    "aliases": ["SC 3.3.3"]
   }
 ]

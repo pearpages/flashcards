@@ -15,7 +15,7 @@ barely filters. Every card must carry a value for every facet (`pnpm validate`).
 
 - **Kind** (pattern, role, attribute, technique, criterion) groups the browse list.
 - **Helps most** (screen-reader, keyboard, low-vision, motor, cognitive, hearing,
-  vestibular) is a second filter: the group of users a card matters most to.
+  vestibular, photosensitive) is a second filter: the group of users a card matters most to.
 - **WCAG level** (wcag-a, wcag-aa, wcag-aaa) is a badge without a filter row: the level of
   the main success criterion a card helps meet. Values carry the `wcag-` prefix so the badge
   reads as WCAG-AA rather than a bare "AA".
