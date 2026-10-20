@@ -67,6 +67,7 @@ item, and add a dated line at the top of **Done**.
 
 ## Done
 
+- [x] 2026-10-20: Released v0.4.0.
 - [x] 2026-10-20: Testing deck: 100 cards (strategy, unit, doubles, integration, APIs, UI, e2e, non-functional, CI, maintenance) with a drawing each, a test-level badge and JavaScript/Python equivalents (ADR-0014).
 - [x] 2026-10-20: Rebranded to plain "Flashcards": page title, meta and Open Graph/Twitter tags, a new `og.webp` ("Learn the web, one card at a time", six decks), `document.title` on the picker, package.json, README and the knowledge files.
 - [x] 2026-10-20: CSS deck: 100 cards (cascade, selectors, box model, flexbox, grid, positioning, responsive, typography, colour, motion, architecture) with a drawing each, a Baseline status badge and SwiftUI/Compose equivalents for layout (ADR-0013).
