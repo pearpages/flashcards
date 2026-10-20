@@ -10,7 +10,7 @@ item, and add a dated line at the top of **Done**.
 - [ ] **Review native-platform names.** Newer Material 3 Expressive names (ButtonGroup,
       SplitButtonLayout, FloatingToolbar) and some iOS approximations (TipKit for Tour) were
       written from memory — check against current docs in `cards.json`.
-- [ ] **Bundle size.** Inlined SVGs push the JS to ~750 kB (~175 kB gzipped) — consider
+- [ ] **Bundle size.** Inlined SVGs push the JS to ~1.5 MB (~295 kB gzipped) with five decks, up from ~750 kB with one; every deck's drawings load on the home screen — consider
       `build.assetsInlineLimit` or lazy-loading images.
 - [ ] **Review Proposed ADRs 0006–0007** (GitHub Pages on `v*` tags; Vitest and CI).
 - [ ] **Review the accessibility deck** (100 cards, ADR-0008 Proposed): check the content and
@@ -19,7 +19,19 @@ item, and add a dated line at the top of **Done**.
       `PlainTooltip`/`TooltipBox`, `.isToggle`, `CommandMenu`, `Table`, `OutlineGroup`,
       `Gauge`, `HorizontalPager`, `stateDescription`, `android:autofillHints`; and the
       support claims on `aria-controls`, `aria-busy` and `aria-errormessage`.
-- [ ] **Branding with three decks.** The page title, OG tags, `og.webp` and `document.title`
+- [ ] **Review the web-security deck** (100 cards, ADR-0010 Proposed): check content
+      against current OWASP cheat sheets and specs; written from memory. Least sure: the
+      OWASP 2025 category on judgement-call cards (xxe, redos, file-upload, reverse
+      tabnabbing, secrets-management, waf, ddos-protection, data-minimization), NIST SP
+      800-63B rev 4 password figures, OAuth 2.1 status, Trusted Types browser support,
+      CWE-1336 / CWE-915 / CWE-1392 / CWE-636 aliases.
+- [ ] **Review the web-performance deck** (100 cards, ADR-0011 Proposed): check content
+      against web.dev and MDN; written from memory. Least sure: TTFB ≤ 0.8 s and FCP
+      ≤ 1.8 s guides, INP's "one of the slowest" rule, CLS session windows and the 500 ms
+      input exclusion, TCP initial window (~14 kB), passive-by-default listeners in Safari,
+      Speculation Rules support, stale-while-revalidate in browsers, the `improves` badge
+      on judgement-call cards (core-web-vitals, p75, head-of-line-blocking, http3).
+- [ ] **Branding with five decks.** The page title, OG tags, `og.webp` and `document.title`
       in `DeckPicker` still say "Design System Flashcards" and "155 components" — decide
       whether the site becomes plain "Flashcards".
 - [ ] **Review the system-design deck** (104 cards, ADR-0009 Proposed): check the
@@ -43,6 +55,8 @@ item, and add a dated line at the top of **Done**.
 
 ## Done
 
+- [x] 2026-10-20: Web Performance deck: 100 cards (metrics, measurement, network, server, caching, loading, assets, JavaScript, rendering) with a drawing each, anti-patterns as their own kind, and the metric each card improves as a badge (ADR-0011).
+- [x] 2026-10-20: Web Security deck: 100 cards (attacks, defences and mechanisms across injection, browser, auth, sessions, transport, data, supply chain and infrastructure) with a drawing each and an OWASP Top 10 (2025) badge (ADR-0010).
 - [x] 2026-10-20: Grew the accessibility deck to 100 cards (14 more patterns, alertdialog, 10 more ARIA attributes, 24 more WCAG 2.2 criteria; new `photosensitive` value for Three Flashes) and the system-design deck to 104 (45 more: storage internals, data systems, distributed systems, service infrastructure, operations), each card with a drawing.
 - [x] 2026-10-20: System Design deck: 59 cards (data, caching, messaging, scaling, reliability, consistency, networking, observability) with a drawing each and AWS/GCP/Azure equivalents. Decks now declare their own platform columns in `deck.json` (ADR-0009).
 - [x] 2026-10-20: Accessibility deck: 51 cards (10 patterns, 5 roles, 10 ARIA attributes, 11 techniques, 15 WCAG 2.2 criteria) with a drawing each, `kind`/`helps` filters and a WCAG level badge. Legacy links (`#card/<id>`) stay on the design-system deck now that it isn't first alphabetically.

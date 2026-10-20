@@ -1,0 +1,47 @@
+{
+  "id": "web-security",
+  "title": "Web Security",
+  "description": "Attacks, defences and the browser and protocol mechanisms behind them: how each attack works, what stops it, and which OWASP Top 10 (2025) risk it belongs to.",
+  "facets": [
+    {
+      "key": "area",
+      "label": "Area",
+      "values": [
+        "injection",
+        "browser",
+        "auth",
+        "sessions",
+        "transport",
+        "data",
+        "supply-chain",
+        "infrastructure"
+      ]
+    },
+    {
+      "key": "kind",
+      "label": "Kind",
+      "values": [
+        "attack",
+        "defence",
+        "mechanism"
+      ]
+    },
+    {
+      "key": "owasp",
+      "label": "OWASP Top 10 (2025)",
+      "filter": false,
+      "values": [
+        "a01-access-control",
+        "a02-misconfiguration",
+        "a03-supply-chain",
+        "a04-crypto-failures",
+        "a05-injection",
+        "a06-insecure-design",
+        "a07-auth-failures",
+        "a08-integrity-failures",
+        "a09-logging-failures",
+        "a10-exceptional-conditions"
+      ]
+    }
+  ]
+}

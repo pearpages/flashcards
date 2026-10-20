@@ -71,3 +71,43 @@
   background: #f3e8fc;
   color: #7a3cc4;
 }
+
+.tag--attack {
+  background: #fbeaea;
+  color: #b03a3a;
+}
+
+.tag--defence {
+  background: #e6f4ea;
+  color: #1e7a3c;
+}
+
+.tag--mechanism {
+  background: #e8eefc;
+  color: #2f5bc4;
+}
+
+.tag--anti-pattern {
+  background: #fbeaea;
+  color: #b03a3a;
+}
+
+.tag--metric {
+  background: #e8eefc;
+  color: #2f5bc4;
+}
+
+.tag--lcp {
+  background: #e6f4ea;
+  color: #1e7a3c;
+}
+
+.tag--inp {
+  background: #fdf0e1;
+  color: #a85d10;
+}
+
+.tag--cls {
+  background: #f3e8fc;
+  color: #7a3cc4;
+}

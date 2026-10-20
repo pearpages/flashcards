@@ -1,0 +1,45 @@
+{
+  "id": "web-performance",
+  "title": "Web Performance",
+  "description": "Metrics, browser mechanisms, techniques and anti-patterns for fast pages: what each one measures or fixes, when to reach for it, and which Core Web Vital it moves.",
+  "facets": [
+    {
+      "key": "area",
+      "label": "Area",
+      "values": [
+        "metrics",
+        "measurement",
+        "network",
+        "server",
+        "caching",
+        "loading",
+        "assets",
+        "javascript",
+        "rendering"
+      ]
+    },
+    {
+      "key": "kind",
+      "label": "Kind",
+      "values": [
+        "metric",
+        "mechanism",
+        "technique",
+        "anti-pattern"
+      ]
+    },
+    {
+      "key": "improves",
+      "label": "Mainly improves",
+      "filter": false,
+      "values": [
+        "lcp",
+        "inp",
+        "cls",
+        "fcp",
+        "ttfb",
+        "page-weight"
+      ]
+    }
+  ]
+}

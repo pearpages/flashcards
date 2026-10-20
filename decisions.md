@@ -20,6 +20,8 @@ accepted.
 | [0007](docs/adr/0007-vitest-for-unit-tests.md) | Vitest for unit tests, CI on push and pull requests | Proposed | 2026-10-15 |
 | [0008](docs/adr/0008-accessibility-deck-facets.md) | Accessibility deck: kind and who-it-helps filters, WCAG level as a badge | Proposed | 2026-10-20 |
 | [0009](docs/adr/0009-decks-declare-their-platforms.md) | Decks declare their own platform columns (`platforms` in `deck.json`) | Proposed | 2026-10-20 |
+| [0010](docs/adr/0010-web-security-deck-facets.md) | Web security deck: area and kind filters, OWASP Top 10 (2025) as a badge | Proposed | 2026-10-20 |
+| [0011](docs/adr/0011-web-performance-deck-facets.md) | Web performance deck: area and kind filters, the metric it improves as a badge | Proposed | 2026-10-20 |
 
 ## Format
 

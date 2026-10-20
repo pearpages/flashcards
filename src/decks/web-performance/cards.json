@@ -1,0 +1,1517 @@
+[
+  {
+    "id": "core-web-vitals",
+    "title": "Core Web Vitals",
+    "facets": {
+      "area": "metrics",
+      "kind": "metric",
+      "improves": "lcp"
+    },
+    "summary": "Google's three user-centred metrics: loading (LCP), responsiveness (INP), stability (CLS).",
+    "description": "Good means LCP ≤ 2.5 s, INP ≤ 200 ms and CLS ≤ 0.1 at the 75th percentile of real page loads, on mobile and desktop separately. They feed Search's page experience signals. TTFB and FCP are diagnostics that explain them.",
+    "aliases": [
+      "CWV",
+      "Page experience"
+    ]
+  },
+  {
+    "id": "lcp",
+    "title": "Largest Contentful Paint",
+    "facets": {
+      "area": "metrics",
+      "kind": "metric",
+      "improves": "lcp"
+    },
+    "summary": "When the biggest image or text block in the viewport finishes rendering.",
+    "description": "Good ≤ 2.5 s, poor > 4 s. Break it into TTFB, resource load delay, load time and render delay to see which part to fix. Usually the hero image: make it discoverable in the HTML, give it `fetchpriority=\"high\"` and never lazy-load it.",
+    "aliases": [
+      "LCP"
+    ]
+  },
+  {
+    "id": "inp",
+    "title": "Interaction to Next Paint",
+    "facets": {
+      "area": "metrics",
+      "kind": "metric",
+      "improves": "inp"
+    },
+    "summary": "How long the page takes to show a response after a click, tap or key press.",
+    "description": "Good ≤ 200 ms, poor > 500 ms. It looks at all interactions in a visit and reports one of the slowest, not the first. It replaced First Input Delay in March 2024. Long tasks on the main thread are the usual cause.",
+    "aliases": [
+      "INP",
+      "FID"
+    ]
+  },
+  {
+    "id": "cls",
+    "title": "Cumulative Layout Shift",
+    "facets": {
+      "area": "metrics",
+      "kind": "metric",
+      "improves": "cls"
+    },
+    "summary": "How much visible content jumps around unexpectedly while the page is in use.",
+    "description": "Good ≤ 0.1, poor > 0.25. It scores the worst burst of shifts (a session window), and ignores shifts within 500 ms of user input. Images without dimensions, late ads and web fonts swapping in are the classic causes.",
+    "aliases": [
+      "CLS",
+      "Layout shift"
+    ]
+  },
+  {
+    "id": "fcp",
+    "title": "First Contentful Paint",
+    "facets": {
+      "area": "metrics",
+      "kind": "metric",
+      "improves": "fcp"
+    },
+    "summary": "When the first text or image appears, so the user sees the page is loading.",
+    "description": "Good ≤ 1.8 s. A diagnostic, not a Core Web Vital: a fast FCP with a slow LCP points at the hero resource, a slow FCP at the server or render-blocking CSS and scripts.",
+    "aliases": [
+      "FCP"
+    ]
+  },
+  {
+    "id": "ttfb",
+    "title": "Time to First Byte",
+    "facets": {
+      "area": "metrics",
+      "kind": "metric",
+      "improves": "ttfb"
+    },
+    "summary": "Time from starting the navigation to the first byte of the HTML response.",
+    "description": "Includes redirects, DNS, connection, TLS and server think time. web.dev suggests ≤ 0.8 s as a rough guide. Every other loading metric sits on top of it, so fix it first with caching, a CDN and fewer redirects.",
+    "aliases": [
+      "TTFB",
+      "Server response time"
+    ]
+  },
+  {
+    "id": "tbt",
+    "title": "Total Blocking Time",
+    "facets": {
+      "area": "metrics",
+      "kind": "metric",
+      "improves": "inp"
+    },
+    "summary": "Lab metric: how long the main thread was blocked by long tasks during load.",
+    "description": "Sums the part of each task over 50 ms between FCP and the page becoming quiet. Lighthouse uses it because a lab run has no real interactions; it correlates with INP but doesn't replace field data.",
+    "aliases": [
+      "TBT"
+    ]
+  },
+  {
+    "id": "speed-index",
+    "title": "Speed Index",
+    "facets": {
+      "area": "metrics",
+      "kind": "metric",
+      "improves": "fcp"
+    },
+    "summary": "Lab metric: how quickly the visible page fills in, computed from a video filmstrip.",
+    "description": "Two pages with the same LCP can feel different: one paints progressively, one stays blank and pops in. Speed Index rewards the first. Good for comparing builds in WebPageTest or Lighthouse, not for field monitoring.",
+    "aliases": [
+      "SI",
+      "Filmstrip"
+    ]
+  },
+  {
+    "id": "p75",
+    "title": "75th Percentile",
+    "facets": {
+      "area": "metrics",
+      "kind": "metric",
+      "improves": "lcp"
+    },
+    "summary": "Vitals are judged on the value that 75% of page loads beat, not the average.",
+    "description": "Averages hide the slow tail; p75 makes a page pass only if most visits are good, including slower phones and networks. Report p75 per page type and device, and look at p95 too when hunting outliers.",
+    "aliases": [
+      "p75",
+      "Percentile"
+    ]
+  },
+  {
+    "id": "field-vs-lab",
+    "title": "Field vs Lab Data",
+    "facets": {
+      "area": "measurement",
+      "kind": "mechanism",
+      "improves": "lcp"
+    },
+    "summary": "Field data comes from real users; lab data from a controlled test run.",
+    "description": "Field (RUM, CrUX) tells you whether there is a problem and for whom. Lab (Lighthouse, WebPageTest) is repeatable, so use it to debug and to catch regressions before release. When they disagree, trust the field.",
+    "aliases": [
+      "RUM vs synthetic"
+    ]
+  },
+  {
+    "id": "rum",
+    "title": "Real User Monitoring",
+    "facets": {
+      "area": "measurement",
+      "kind": "technique",
+      "improves": "lcp"
+    },
+    "summary": "Collect performance metrics from your actual visitors' browsers and send them home.",
+    "description": "The only way to see your own pages, devices and countries at p75, and to tie speed to conversions. Send with `navigator.sendBeacon` on `visibilitychange`, sample if traffic is large, and record the element or interaction that caused each bad score.",
+    "aliases": [
+      "RUM"
+    ]
+  },
+  {
+    "id": "crux",
+    "title": "Chrome UX Report",
+    "facets": {
+      "area": "measurement",
+      "kind": "mechanism",
+      "improves": "lcp"
+    },
+    "summary": "Google's public field data from opted-in Chrome users, per origin and popular URL.",
+    "description": "A rolling 28-day window, shown in PageSpeed Insights and Search Console and queryable through an API and BigQuery. It's what Search uses, but it's Chrome-only and lags weeks behind a fix, so pair it with your own RUM.",
+    "aliases": [
+      "CrUX",
+      "PageSpeed Insights"
+    ]
+  },
+  {
+    "id": "lighthouse",
+    "title": "Lighthouse",
+    "facets": {
+      "area": "measurement",
+      "kind": "technique",
+      "improves": "lcp"
+    },
+    "summary": "Lab audit in Chrome DevTools and CI that scores a page load and suggests fixes.",
+    "description": "Runs one load on a throttled, emulated phone, so scores vary run to run: compare medians. It can't measure INP during load, so it reports TBT. Use Lighthouse CI to fail a pull request that regresses a budget.",
+    "aliases": [
+      "Lighthouse CI",
+      "Performance score"
+    ]
+  },
+  {
+    "id": "webpagetest",
+    "title": "WebPageTest",
+    "facets": {
+      "area": "measurement",
+      "kind": "technique",
+      "improves": "lcp"
+    },
+    "summary": "Lab testing on real devices and locations, with waterfalls, filmstrips and video.",
+    "description": "Its request waterfall and connection view show exactly what blocked rendering and when. Pick it over Lighthouse to test from another country, on a real connection, or to compare two versions side by side.",
+    "aliases": [
+      "WPT",
+      "Waterfall"
+    ]
+  },
+  {
+    "id": "devtools-performance-panel",
+    "title": "DevTools Performance Panel",
+    "facets": {
+      "area": "measurement",
+      "kind": "technique",
+      "improves": "inp"
+    },
+    "summary": "Records a trace of everything the browser did: network, main thread, paints.",
+    "description": "The flame chart shows which function made a task long; the Interactions track shows each slow click. Throttle the CPU to mimic a mid-range phone, because your laptop hides most problems.",
+    "aliases": [
+      "Performance tab",
+      "Flame chart",
+      "Trace"
+    ]
+  },
+  {
+    "id": "performance-budget",
+    "title": "Performance Budget",
+    "facets": {
+      "area": "measurement",
+      "kind": "technique",
+      "improves": "page-weight"
+    },
+    "summary": "A limit the team agrees on, like 170 kB of JS or LCP under 2.5 s, enforced in CI.",
+    "description": "Budgets turn 'keep it fast' into a test that fails. Budget what you control in a build (bytes per route, request count) and what users feel (LCP in the lab). Raising a budget should be a conscious decision, not a quiet edit.",
+    "aliases": [
+      "Budget",
+      "bundlesize"
+    ]
+  },
+  {
+    "id": "web-vitals-library",
+    "title": "web-vitals Library",
+    "facets": {
+      "area": "measurement",
+      "kind": "technique",
+      "improves": "inp"
+    },
+    "summary": "Google's small script that measures LCP, INP and CLS in the browser the way Chrome does.",
+    "description": "Call `onLCP`, `onINP` and `onCLS` with a function that sends each value to your analytics. The attribution build also reports which element or interaction caused the score, which turns a number into a fix.",
+    "aliases": [
+      "web-vitals",
+      "onINP"
+    ]
+  },
+  {
+    "id": "performance-observer",
+    "title": "PerformanceObserver",
+    "facets": {
+      "area": "measurement",
+      "kind": "mechanism",
+      "improves": "lcp"
+    },
+    "summary": "The browser API that streams performance entries to your code as they happen.",
+    "description": "Observe types such as `largest-contentful-paint`, `layout-shift`, `event`, `resource` and `long-animation-frame`. Pass `buffered: true` to also get entries recorded before your script ran.",
+    "aliases": [
+      "Performance timeline"
+    ]
+  },
+  {
+    "id": "user-timing",
+    "title": "User Timing",
+    "facets": {
+      "area": "measurement",
+      "kind": "mechanism",
+      "improves": "inp"
+    },
+    "summary": "`performance.mark()` and `measure()` time your own milestones, like 'results shown'.",
+    "description": "Marks show up in the DevTools Performance panel and in RUM through PerformanceObserver. Use them for app-specific moments no standard metric captures, such as a dashboard's data arriving or a route change finishing.",
+    "aliases": [
+      "performance.mark",
+      "performance.measure"
+    ]
+  },
+  {
+    "id": "server-timing",
+    "title": "Server-Timing",
+    "facets": {
+      "area": "measurement",
+      "kind": "mechanism",
+      "improves": "ttfb"
+    },
+    "summary": "A response header that tells the browser where the server spent its time.",
+    "description": "`Server-Timing: db;dur=53, render;dur=47` appears in the DevTools Network tab and in Resource Timing, so a slow TTFB in RUM can be split into database, cache and rendering. Keep names generic on public pages.",
+    "aliases": [
+      "Server-Timing header"
+    ]
+  },
+  {
+    "id": "resource-timing",
+    "title": "Resource Timing",
+    "facets": {
+      "area": "measurement",
+      "kind": "mechanism",
+      "improves": "lcp"
+    },
+    "summary": "Per-request timings and sizes for every file the page loaded, readable from script.",
+    "description": "Each entry has DNS, connect, TLS, request and response times plus `transferSize`. Cross-origin files hide most details unless their server sends `Timing-Allow-Origin`. Use it in RUM to spot slow third parties.",
+    "aliases": [
+      "PerformanceResourceTiming",
+      "Timing-Allow-Origin"
+    ]
+  },
+  {
+    "id": "long-animation-frames",
+    "title": "Long Animation Frames",
+    "facets": {
+      "area": "measurement",
+      "kind": "mechanism",
+      "improves": "inp"
+    },
+    "summary": "API that reports frames over 50 ms and which scripts caused them.",
+    "description": "LoAF entries list script source URLs and functions, so field data can name the culprit behind a poor INP. It improves on the Long Tasks API, which only said that something was slow.",
+    "aliases": [
+      "LoAF",
+      "Long tasks API"
+    ]
+  },
+  {
+    "id": "http2",
+    "title": "HTTP/2",
+    "facets": {
+      "area": "network",
+      "kind": "mechanism",
+      "improves": "fcp"
+    },
+    "summary": "Many requests share one connection, with compressed headers and request priorities.",
+    "description": "Ends the HTTP/1.1 limit of about six parallel requests per host, so spriting and domain sharding stop paying off. A lost TCP packet still stalls every stream on the connection. Server push is gone from browsers; use 103 Early Hints.",
+    "aliases": [
+      "h2",
+      "Multiplexing"
+    ]
+  },
+  {
+    "id": "http3",
+    "title": "HTTP/3",
+    "facets": {
+      "area": "network",
+      "kind": "mechanism",
+      "improves": "ttfb"
+    },
+    "summary": "HTTP over QUIC on UDP: faster handshakes and no TCP head-of-line blocking.",
+    "description": "Each stream recovers from loss on its own, and the connection survives a switch from Wi-Fi to mobile data. It helps most on lossy, high-latency networks. Browsers discover it via `Alt-Svc` or an HTTPS DNS record, so turn it on at your CDN.",
+    "aliases": [
+      "h3",
+      "QUIC"
+    ]
+  },
+  {
+    "id": "brotli",
+    "title": "Brotli Compression",
+    "facets": {
+      "area": "network",
+      "kind": "technique",
+      "improves": "page-weight"
+    },
+    "summary": "Text compression for HTML, CSS and JS that beats gzip, sent as `Content-Encoding: br`.",
+    "description": "Compress every text response; skip images, video and fonts, which are already compressed. Use a high level for static files at build time and a moderate one for dynamic responses, where compression time adds to TTFB.",
+    "aliases": [
+      "br",
+      "gzip",
+      "Content-Encoding"
+    ]
+  },
+  {
+    "id": "preconnect",
+    "title": "Preconnect",
+    "facets": {
+      "area": "network",
+      "kind": "technique",
+      "improves": "lcp"
+    },
+    "summary": "`<link rel=\"preconnect\">` opens DNS, TCP and TLS to an origin before it's needed.",
+    "description": "Saves round trips for a critical third-party origin such as an image CDN or font host. Limit it to two or three origins you'll use right away; unused connections waste work. Fonts need `crossorigin` on the hint.",
+    "aliases": [
+      "Resource hints"
+    ]
+  },
+  {
+    "id": "dns-prefetch",
+    "title": "DNS Prefetch",
+    "facets": {
+      "area": "network",
+      "kind": "technique",
+      "improves": "lcp"
+    },
+    "summary": "`<link rel=\"dns-prefetch\">` resolves a hostname early, without opening a connection.",
+    "description": "Cheaper than preconnect, so use it for origins you may need later in the page, or as a fallback next to preconnect. It only saves the DNS lookup; preconnect also does TCP and TLS, preload fetches a specific file.",
+    "aliases": [
+      "Resource hints"
+    ]
+  },
+  {
+    "id": "early-hints",
+    "title": "103 Early Hints",
+    "facets": {
+      "area": "network",
+      "kind": "technique",
+      "improves": "lcp"
+    },
+    "summary": "An interim response that lets the browser preconnect and preload while the server thinks.",
+    "description": "The server or CDN sends `103` with `Link` headers for critical CSS, fonts or origins, then the real 200. It turns slow server time into useful download time. Works for navigations over HTTP/2 or HTTP/3.",
+    "aliases": [
+      "103",
+      "Link header"
+    ]
+  },
+  {
+    "id": "head-of-line-blocking",
+    "title": "Head-of-line Blocking",
+    "facets": {
+      "area": "network",
+      "kind": "mechanism",
+      "improves": "lcp"
+    },
+    "summary": "One stuck item holds up everything queued behind it.",
+    "description": "HTTP/1.1 serves one response at a time per connection. HTTP/2 fixed that for requests, but a lost TCP packet still blocks every stream until it's resent. HTTP/3 over QUIC removes it at the transport layer.",
+    "aliases": [
+      "HOL blocking"
+    ]
+  },
+  {
+    "id": "domain-sharding",
+    "title": "Domain Sharding",
+    "facets": {
+      "area": "network",
+      "kind": "anti-pattern",
+      "improves": "lcp"
+    },
+    "summary": "Splitting assets across extra hostnames to get more parallel connections.",
+    "description": "A trick for HTTP/1.1's per-host limit. Under HTTP/2 each extra host costs DNS, TCP and TLS and breaks prioritisation across the one connection. Serve assets from as few origins as you can.",
+    "aliases": [
+      "static1.example.com"
+    ]
+  },
+  {
+    "id": "redirects",
+    "title": "Redirect Chains",
+    "facets": {
+      "area": "network",
+      "kind": "anti-pattern",
+      "improves": "ttfb"
+    },
+    "summary": "Each redirect adds a full round trip, sometimes a new connection, before the page starts.",
+    "description": "`http://` → `https://` → `www.` → `/en/` costs three round trips on every visit from an old link. Link to the final URL, keep it to one hop, and use HSTS (with preload) to skip the HTTP-to-HTTPS step.",
+    "aliases": [
+      "301",
+      "302"
+    ]
+  },
+  {
+    "id": "cdn",
+    "title": "CDN",
+    "facets": {
+      "area": "network",
+      "kind": "technique",
+      "improves": "ttfb"
+    },
+    "summary": "Servers near your users cache and serve files, cutting the distance each request travels.",
+    "description": "Latency is set by distance: a round trip from Sydney to Virginia is roughly 200 ms. A CDN terminates TLS nearby and serves cached assets, and HTML too if you let it. Check the cache hit ratio, not just that it's on.",
+    "aliases": [
+      "Edge network"
+    ]
+  },
+  {
+    "id": "tcp-slow-start",
+    "title": "TCP Slow Start",
+    "facets": {
+      "area": "network",
+      "kind": "mechanism",
+      "improves": "fcp"
+    },
+    "summary": "A new connection sends only about 14 kB in its first round trip, then doubles.",
+    "description": "The initial congestion window is usually 10 packets. If the first 14 kB of HTML holds the critical CSS and the start of the content, the browser can render before the second round trip. Big inline blobs at the top push content out.",
+    "aliases": [
+      "initcwnd",
+      "14 kB rule",
+      "Congestion window"
+    ]
+  },
+  {
+    "id": "connection-reuse",
+    "title": "Connection Reuse",
+    "facets": {
+      "area": "network",
+      "kind": "mechanism",
+      "improves": "ttfb"
+    },
+    "summary": "Keep connections open so later requests skip DNS, TCP and TLS setup.",
+    "description": "HTTP/1.1 keep-alive and HTTP/2's single connection both do this; HTTP/2 can even coalesce hosts that share a certificate and IP. Every new origin restarts the setup cost, which is why fewer origins load faster.",
+    "aliases": [
+      "Keep-alive",
+      "Connection coalescing"
+    ]
+  },
+  {
+    "id": "static-generation",
+    "title": "Static Generation",
+    "facets": {
+      "area": "server",
+      "kind": "technique",
+      "improves": "ttfb"
+    },
+    "summary": "Render pages to HTML at build time and serve them as files from a CDN.",
+    "description": "The fastest TTFB there is: no server work per request. Content is only as fresh as the last build, so pair it with incremental or on-demand regeneration. Pick SSR when every request needs per-user or real-time data.",
+    "aliases": [
+      "SSG",
+      "ISR",
+      "Prerendering"
+    ]
+  },
+  {
+    "id": "edge-rendering",
+    "title": "Edge Rendering",
+    "facets": {
+      "area": "server",
+      "kind": "technique",
+      "improves": "ttfb"
+    },
+    "summary": "Run server rendering in CDN locations close to the user instead of one origin region.",
+    "description": "Cuts the round trip to the server, but only helps if the data is close too: an edge function that queries a database across the ocean several times is slower than rendering next to it. Good for personalisation of cached pages.",
+    "aliases": [
+      "Edge SSR",
+      "Edge functions"
+    ]
+  },
+  {
+    "id": "page-cache",
+    "title": "Full-page Cache",
+    "facets": {
+      "area": "server",
+      "kind": "technique",
+      "improves": "ttfb"
+    },
+    "summary": "Cache whole HTML responses so repeat requests skip rendering and the database.",
+    "description": "Use `s-maxage` for a CDN or a reverse proxy like Varnish. It works for anonymous pages; a `Vary: Cookie` or per-user markup drops the hit ratio to near zero, so load personal bits separately.",
+    "aliases": [
+      "s-maxage",
+      "Varnish",
+      "Reverse proxy cache"
+    ]
+  },
+  {
+    "id": "precompression",
+    "title": "Precompression",
+    "facets": {
+      "area": "server",
+      "kind": "technique",
+      "improves": "page-weight"
+    },
+    "summary": "Compress static files once at build time at the highest level, and serve the result.",
+    "description": "Brotli's top level is too slow to run per request, but at build time it's free. Ship `app.js.br` and `app.js.gz` next to the file and let the server pick by `Accept-Encoding`. Dynamic responses still need on-the-fly compression.",
+    "aliases": [
+      "Static compression",
+      ".br files"
+    ]
+  },
+  {
+    "id": "n-plus-one-queries",
+    "title": "N+1 Queries",
+    "facets": {
+      "area": "server",
+      "kind": "anti-pattern",
+      "improves": "ttfb"
+    },
+    "summary": "One query for a list, then one more per item: 100 posts become 101 database round trips.",
+    "description": "ORMs make it easy to miss, because each access looks like a property. It shows up as a slow TTFB that grows with page size. Fix it with a join, eager loading or batching (DataLoader), and catch it with query counts in tests.",
+    "aliases": [
+      "N+1",
+      "Eager loading",
+      "DataLoader"
+    ]
+  },
+  {
+    "id": "immutable-assets",
+    "title": "Immutable Assets",
+    "facets": {
+      "area": "caching",
+      "kind": "technique",
+      "improves": "lcp"
+    },
+    "summary": "Hashed file names cached for a year, so repeat visits never re-download them.",
+    "description": "`app.3f9a.js` with `Cache-Control: public, max-age=31536000, immutable`; a new build gets a new name. Keep the HTML itself short-lived or `no-cache`, since it's what points at the new files.",
+    "aliases": [
+      "Fingerprinting",
+      "Cache busting"
+    ]
+  },
+  {
+    "id": "stale-while-revalidate",
+    "title": "stale-while-revalidate",
+    "facets": {
+      "area": "caching",
+      "kind": "technique",
+      "improves": "ttfb"
+    },
+    "summary": "Serve the cached copy instantly while fetching a fresh one in the background.",
+    "description": "`Cache-Control: max-age=60, stale-while-revalidate=600`: fresh for a minute, then served stale for up to ten while it refreshes. Pick it over a short `max-age` when slightly old content is fine and speed matters more. Many CDNs support it.",
+    "aliases": [
+      "SWR"
+    ]
+  },
+  {
+    "id": "service-worker",
+    "title": "Service Worker Caching",
+    "facets": {
+      "area": "caching",
+      "kind": "technique",
+      "improves": "lcp"
+    },
+    "summary": "A script between the page and the network that can answer requests from its own cache.",
+    "description": "Enables offline pages and instant repeat loads with strategies like cache-first for assets and network-first for HTML. Its own startup can delay navigations; enable navigation preload. Workbox handles the common strategies.",
+    "aliases": [
+      "Workbox",
+      "Cache API",
+      "Navigation preload"
+    ]
+  },
+  {
+    "id": "cache-partitioning",
+    "title": "Cache Partitioning",
+    "facets": {
+      "area": "caching",
+      "kind": "mechanism",
+      "improves": "page-weight"
+    },
+    "summary": "Browsers key the HTTP cache by the top-level site, so caches aren't shared between sites.",
+    "description": "Added to stop cross-site tracking via cache timing. It ended the idea that a library on a public CDN is 'probably already cached' from another site. Self-host your libraries: it saves a connection and costs nothing.",
+    "aliases": [
+      "Double-keyed cache",
+      "Shared CDN myth"
+    ]
+  },
+  {
+    "id": "cdn-cache-keys",
+    "title": "CDN Cache Keys",
+    "facets": {
+      "area": "caching",
+      "kind": "technique",
+      "improves": "ttfb"
+    },
+    "summary": "What makes two requests the same cache entry: URL, query string and `Vary` headers.",
+    "description": "Tracking parameters (`?utm_source=…`) or `Vary: User-Agent` split one page into thousands of entries that all miss. Strip or sort query strings in the key and vary only on what really changes the response.",
+    "aliases": [
+      "Vary",
+      "Cache hit ratio"
+    ]
+  },
+  {
+    "id": "bfcache",
+    "title": "Back/forward Cache",
+    "facets": {
+      "area": "caching",
+      "kind": "mechanism",
+      "improves": "lcp"
+    },
+    "summary": "Browsers keep a paused copy of the page so Back and Forward are instant.",
+    "description": "Pages are excluded by `unload` handlers and some open connections, among other reasons. DevTools' Application panel tests eligibility and lists blockers. Use `pagehide`/`pageshow` instead of `unload`.",
+    "aliases": [
+      "bfcache",
+      "pageshow"
+    ]
+  },
+  {
+    "id": "critical-rendering-path",
+    "title": "Critical Rendering Path",
+    "facets": {
+      "area": "loading",
+      "kind": "mechanism",
+      "improves": "fcp"
+    },
+    "summary": "The steps from bytes to pixels: HTML → DOM, CSS → CSSOM, render tree, layout, paint.",
+    "description": "The browser can't paint until it has the HTML and every render-blocking stylesheet, and parser-blocking scripts pause DOM building. Shorten the path: fewer critical resources, fewer bytes in them, and fewer round trips to fetch them.",
+    "aliases": [
+      "CRP",
+      "DOM",
+      "CSSOM"
+    ]
+  },
+  {
+    "id": "render-blocking-resources",
+    "title": "Render-blocking Resources",
+    "facets": {
+      "area": "loading",
+      "kind": "anti-pattern",
+      "improves": "fcp"
+    },
+    "summary": "Stylesheets and synchronous scripts in <head> that hold back the first paint.",
+    "description": "Every `<link rel=stylesheet>` and plain `<script>` in `<head>` must download before anything shows. Add `defer` or `type=module` to scripts, inline the critical CSS, load the rest without blocking, and give print-only CSS a `media` attribute.",
+    "aliases": [
+      "Blocking CSS",
+      "Parser-blocking script"
+    ]
+  },
+  {
+    "id": "critical-css",
+    "title": "Critical CSS",
+    "facets": {
+      "area": "loading",
+      "kind": "technique",
+      "improves": "fcp"
+    },
+    "summary": "Inline the few styles the first screen needs; load the full stylesheet later.",
+    "description": "Saves a round trip before first paint. Keep the inline block small (well under 14 kB with the HTML) and generate it with a tool, or it drifts from the real CSS. Worth it for landing pages; for an app shell, one small cached stylesheet may be simpler.",
+    "aliases": [
+      "Above-the-fold CSS",
+      "Inline CSS"
+    ]
+  },
+  {
+    "id": "defer-async",
+    "title": "defer vs async",
+    "facets": {
+      "area": "loading",
+      "kind": "technique",
+      "improves": "fcp"
+    },
+    "summary": "Both download scripts without blocking the parser; they differ in when they run.",
+    "description": "`defer` runs after parsing, in document order: use it for your app code. `async` runs as soon as it arrives, in any order: fine for independent scripts like analytics. `type=module` is deferred by default. Plain `<script>` blocks parsing.",
+    "aliases": [
+      "async",
+      "defer",
+      "type=module"
+    ]
+  },
+  {
+    "id": "preload",
+    "title": "Preload",
+    "facets": {
+      "area": "loading",
+      "kind": "technique",
+      "improves": "lcp"
+    },
+    "summary": "Fetch a resource the current page needs soon but the browser would discover late.",
+    "description": "`<link rel=preload as=font crossorigin>` for fonts referenced in CSS, or the LCP image set as a CSS background. Preload only what this page uses in the first seconds: everything preloaded competes for bandwidth, and unused preloads trigger console warnings.",
+    "aliases": [
+      "rel=preload",
+      "Late discovery"
+    ]
+  },
+  {
+    "id": "prefetch",
+    "title": "Prefetch",
+    "facets": {
+      "area": "loading",
+      "kind": "technique",
+      "improves": "lcp"
+    },
+    "summary": "Fetch, at low priority, what the next page will probably need.",
+    "description": "`<link rel=prefetch>` stores a resource in the HTTP cache for a likely next navigation, without competing with the current page. Preload is for this page; prefetch is for the next. For whole next pages in Chromium, speculation rules can prerender instead.",
+    "aliases": [
+      "rel=prefetch"
+    ]
+  },
+  {
+    "id": "fetchpriority",
+    "title": "fetchpriority",
+    "facets": {
+      "area": "loading",
+      "kind": "technique",
+      "improves": "lcp"
+    },
+    "summary": "A hint that raises or lowers a resource's priority against its siblings.",
+    "description": "`<img fetchpriority=high>` on the LCP image makes it download before other images instead of waiting for layout. `low` suits below-the-fold carousels and non-critical fetches. It's a hint, not a guarantee, and only reorders; it doesn't start a fetch earlier like preload.",
+    "aliases": [
+      "Priority Hints",
+      "fetchpriority=high"
+    ]
+  },
+  {
+    "id": "modulepreload",
+    "title": "modulepreload",
+    "facets": {
+      "area": "loading",
+      "kind": "technique",
+      "improves": "lcp"
+    },
+    "summary": "Preload an ES module and its parsing, so deep import chains don't load one by one.",
+    "description": "Without it, the browser finds each import only after fetching its parent: a waterfall. `<link rel=modulepreload>` fetches and parses the module early. Bundlers like Vite add these for you; reach for it by hand only with unbundled modules.",
+    "aliases": [
+      "rel=modulepreload",
+      "Import waterfall"
+    ]
+  },
+  {
+    "id": "speculation-rules",
+    "title": "Speculation Rules",
+    "facets": {
+      "area": "loading",
+      "kind": "technique",
+      "improves": "lcp"
+    },
+    "summary": "Tell the browser which links to prefetch or fully prerender before the click.",
+    "description": "A `<script type=speculationrules>` JSON block lists URLs or patterns with an eagerness level; a prerendered page appears instantly. Chromium only so far, so treat it as progressive enhancement. Prerender runs the page's scripts, so exclude logout links and analytics side effects.",
+    "aliases": [
+      "Prerender",
+      "speculationrules"
+    ]
+  },
+  {
+    "id": "lazy-loading",
+    "title": "Lazy Loading",
+    "facets": {
+      "area": "loading",
+      "kind": "technique",
+      "improves": "page-weight"
+    },
+    "summary": "Load offscreen images and iframes only when they near the viewport.",
+    "description": "`loading=lazy` on `<img>` and `<iframe>` is native and needs no script. Use it below the fold only: on the hero image it delays LCP. For components and routes, the JavaScript equivalent is a dynamic `import()`.",
+    "aliases": [
+      "loading=lazy",
+      "Deferred loading"
+    ]
+  },
+  {
+    "id": "ssr-vs-csr",
+    "title": "SSR vs CSR",
+    "facets": {
+      "area": "loading",
+      "kind": "technique",
+      "improves": "lcp"
+    },
+    "summary": "Send ready HTML from the server, or an empty shell that JavaScript fills in.",
+    "description": "Server rendering shows content after one round trip; client rendering waits for the bundle to download and run, then fetches data. CSR suits apps behind a login; content pages want SSR or static generation. SSR raises TTFB, which streaming offsets.",
+    "aliases": [
+      "Server-side rendering",
+      "Client-side rendering",
+      "SPA"
+    ]
+  },
+  {
+    "id": "streaming-ssr",
+    "title": "Streaming SSR",
+    "facets": {
+      "area": "loading",
+      "kind": "technique",
+      "improves": "ttfb"
+    },
+    "summary": "Send the HTML in chunks: the shell first, slow parts as their data arrives.",
+    "description": "The browser starts on the head and the layout while the server still waits on a slow query, then fills in each part. React `renderToPipeableStream` with Suspense and similar APIs do this. Pick it over plain SSR when one slow source holds up the whole page.",
+    "aliases": [
+      "HTML streaming",
+      "Chunked transfer",
+      "Suspense"
+    ]
+  },
+  {
+    "id": "hydration",
+    "title": "Hydration",
+    "facets": {
+      "area": "loading",
+      "kind": "mechanism",
+      "improves": "inp"
+    },
+    "summary": "The client re-runs components over server HTML to attach event handlers.",
+    "description": "Server HTML looks ready, but until hydration finishes, clicks do nothing or wait: a common cause of poor INP on content sites. It costs a download plus a full render in JavaScript. Ship less to hydrate: islands, server components, or progressive and lazy hydration.",
+    "aliases": [
+      "Rehydration",
+      "Uncanny valley"
+    ]
+  },
+  {
+    "id": "islands-architecture",
+    "title": "Islands Architecture",
+    "facets": {
+      "area": "loading",
+      "kind": "technique",
+      "improves": "inp"
+    },
+    "summary": "Static HTML with small interactive islands that hydrate on their own.",
+    "description": "Only the carousel and the search box ship JavaScript; the rest of the page stays plain HTML. Islands can hydrate on load, when idle or when visible. Fits content-heavy sites (Astro, Fresh); highly interactive apps gain less.",
+    "aliases": [
+      "Partial hydration",
+      "Astro"
+    ]
+  },
+  {
+    "id": "responsive-images",
+    "title": "Responsive Images",
+    "facets": {
+      "area": "assets",
+      "kind": "technique",
+      "improves": "lcp"
+    },
+    "summary": "srcset and sizes let the browser download the right image for the screen.",
+    "description": "List widths in `srcset` (`hero-800.jpg 800w`) and the displayed width in `sizes`; the browser picks per screen and pixel density. Without `sizes` it assumes full viewport width. Use `<picture>` only for art direction or format fallbacks.",
+    "aliases": [
+      "srcset",
+      "sizes",
+      "picture"
+    ]
+  },
+  {
+    "id": "modern-image-formats",
+    "title": "Modern Image Formats",
+    "facets": {
+      "area": "assets",
+      "kind": "technique",
+      "improves": "page-weight"
+    },
+    "summary": "AVIF and WebP are often far smaller than JPEG and PNG at the same quality.",
+    "description": "Serve AVIF where supported, WebP next, JPEG last, via `<picture>` sources or an image CDN reading the `Accept` header. AVIF compresses best but encodes slowly; WebP is the safe default. Keep SVG for icons and line art.",
+    "aliases": [
+      "AVIF",
+      "WebP",
+      "JPEG XL"
+    ]
+  },
+  {
+    "id": "image-dimensions",
+    "title": "Image Dimensions",
+    "facets": {
+      "area": "assets",
+      "kind": "technique",
+      "improves": "cls"
+    },
+    "summary": "Set width and height on every image so the browser reserves its space.",
+    "description": "With `width` and `height` attributes the browser computes the aspect ratio before the file loads, so text doesn't jump when it arrives. CSS `height: auto` keeps it responsive. The most common, cheapest fix for layout shift.",
+    "aliases": [
+      "width/height attributes",
+      "Aspect ratio"
+    ]
+  },
+  {
+    "id": "image-compression",
+    "title": "Image Compression",
+    "facets": {
+      "area": "assets",
+      "kind": "technique",
+      "improves": "page-weight"
+    },
+    "summary": "Re-encode at a sensible quality and size; most images ship far heavier than needed.",
+    "description": "Resize to the largest displayed size, then compress (quality around 75–85 is usually indistinguishable) and strip metadata. Lossy for photos, lossless for screenshots and diagrams. Automate it in the build or an image CDN so it never depends on someone remembering.",
+    "aliases": [
+      "Squoosh",
+      "Lossy",
+      "Lossless"
+    ]
+  },
+  {
+    "id": "image-cdn",
+    "title": "Image CDN",
+    "facets": {
+      "area": "assets",
+      "kind": "technique",
+      "improves": "page-weight"
+    },
+    "summary": "A service that resizes, converts and caches images on the fly from URL parameters.",
+    "description": "Request `/img/hero.jpg?w=800&fm=auto` and get an AVIF or WebP at that width, cached at the edge. It replaces a build-time pipeline for user uploads and large catalogues. Allowlist the sizes it will produce, or it becomes an expensive resizing service for anyone.",
+    "aliases": [
+      "Image service",
+      "On-the-fly resizing"
+    ]
+  },
+  {
+    "id": "lazy-loaded-lcp-image",
+    "title": "Lazy-loaded LCP Image",
+    "facets": {
+      "area": "assets",
+      "kind": "anti-pattern",
+      "improves": "lcp"
+    },
+    "summary": "loading=lazy on the hero image makes the browser wait for layout before fetching it.",
+    "description": "Lazy images aren't fetched until layout shows they're near the viewport, so the most important image starts late. Blanket lazy-loading in a component library is the usual cause. Load the hero eagerly with `fetchpriority=high`; lazy-load the rest.",
+    "aliases": [
+      "Lazy hero image"
+    ]
+  },
+  {
+    "id": "video-instead-of-gif",
+    "title": "Video Instead of GIF",
+    "facets": {
+      "area": "assets",
+      "kind": "technique",
+      "improves": "page-weight"
+    },
+    "summary": "An animated GIF is often many times larger than the same clip as MP4 or WebM.",
+    "description": "Use `<video autoplay muted loop playsinline>` with an MP4 or WebM source; it decodes efficiently and can be paused. Respect `prefers-reduced-motion`, and give it a `poster` for the first frame.",
+    "aliases": [
+      "Animated GIF",
+      "MP4",
+      "WebM"
+    ]
+  },
+  {
+    "id": "image-placeholders",
+    "title": "Image Placeholders",
+    "facets": {
+      "area": "assets",
+      "kind": "technique",
+      "improves": "cls"
+    },
+    "summary": "Show a colour, blur or tiny preview in the reserved box while the image loads.",
+    "description": "A dominant colour or blurred thumbnail (LQIP, BlurHash) makes loading feel faster and keeps the space reserved. It doesn't make LCP faster, and a large inline placeholder can slow it. Keep it to a few hundred bytes.",
+    "aliases": [
+      "LQIP",
+      "BlurHash",
+      "Blur-up"
+    ]
+  },
+  {
+    "id": "svg-optimization",
+    "title": "SVG Optimisation",
+    "facets": {
+      "area": "assets",
+      "kind": "technique",
+      "improves": "page-weight"
+    },
+    "summary": "Strip editor metadata and round coordinates; exported SVGs carry lots of junk.",
+    "description": "SVGO removes comments, editor namespaces and hidden layers and shortens paths, often halving the file. Inline small icons that appear above the fold; reference large or repeated ones as files so they cache. SVG compresses well with Brotli.",
+    "aliases": [
+      "SVGO",
+      "Icon sprites"
+    ]
+  },
+  {
+    "id": "font-display",
+    "title": "font-display",
+    "facets": {
+      "area": "assets",
+      "kind": "technique",
+      "improves": "fcp"
+    },
+    "summary": "Decides what text shows while a web font loads: fallback now, or invisible text.",
+    "description": "`swap` shows the fallback at once and swaps when the font arrives: text is readable but may shift. `optional` uses the font only if it's ready almost immediately, so no shift: good for body text. Avoid the default `block`, which can hide text.",
+    "aliases": [
+      "FOIT",
+      "FOUT",
+      "font-display: swap"
+    ]
+  },
+  {
+    "id": "font-subsetting",
+    "title": "Font Subsetting",
+    "facets": {
+      "area": "assets",
+      "kind": "technique",
+      "improves": "page-weight"
+    },
+    "summary": "Keep only the characters you use and split by script with unicode-range.",
+    "description": "A full font with every language can be hundreds of kilobytes; a Latin subset is a fraction of that. `unicode-range` in `@font-face` makes the browser download a subset only when the page uses those characters. Serve WOFF2.",
+    "aliases": [
+      "unicode-range",
+      "WOFF2",
+      "glyphhanger"
+    ]
+  },
+  {
+    "id": "variable-fonts",
+    "title": "Variable Fonts",
+    "facets": {
+      "area": "assets",
+      "kind": "technique",
+      "improves": "page-weight"
+    },
+    "summary": "One font file that holds every weight and width along continuous axes.",
+    "description": "Replaces separate regular, medium, bold and black files with one request. It wins when you use three or more weights; with one or two, static files may be smaller. Set the axes with `font-weight` or `font-variation-settings`.",
+    "aliases": [
+      "font-variation-settings",
+      "Font axes"
+    ]
+  },
+  {
+    "id": "font-fallback-metrics",
+    "title": "Font Fallback Metrics",
+    "facets": {
+      "area": "assets",
+      "kind": "technique",
+      "improves": "cls"
+    },
+    "summary": "Tune the fallback font to match the web font's size, so the swap doesn't move text.",
+    "description": "An `@font-face` for a local font such as Arial with `size-adjust`, `ascent-override` and `descent-override` makes it take the same space as your web font. Next.js `next/font` and Fontaine generate the values. It removes most font-swap layout shift.",
+    "aliases": [
+      "size-adjust",
+      "ascent-override",
+      "Fontaine"
+    ]
+  },
+  {
+    "id": "self-hosting-fonts",
+    "title": "Self-hosting Fonts",
+    "facets": {
+      "area": "assets",
+      "kind": "technique",
+      "improves": "fcp"
+    },
+    "summary": "Serve fonts from your own origin instead of a third-party font service.",
+    "description": "Since browsers partition the HTTP cache per site, a shared font CDN no longer saves a download, but still costs extra connections. Self-hosting removes them and lets you preload and subset. Check the font's licence allows it.",
+    "aliases": [
+      "Google Fonts",
+      "Cache partitioning"
+    ]
+  },
+  {
+    "id": "unused-css",
+    "title": "Unused CSS",
+    "facets": {
+      "area": "assets",
+      "kind": "anti-pattern",
+      "improves": "fcp"
+    },
+    "summary": "Stylesheets full of rules no page uses still block rendering while they download.",
+    "description": "Whole UI kits imported for three components are the usual cause. DevTools Coverage shows what's unused on a page. Split CSS per route or component, and let the framework or a purge step drop dead rules; beware purging classes built at runtime.",
+    "aliases": [
+      "Coverage",
+      "PurgeCSS",
+      "CSS bloat"
+    ]
+  },
+  {
+    "id": "event-loop",
+    "title": "Event Loop",
+    "facets": {
+      "area": "javascript",
+      "kind": "mechanism",
+      "improves": "inp"
+    },
+    "summary": "One thread takes a task, runs it to the end, drains microtasks, then may render.",
+    "description": "Clicks, timers and network callbacks queue as tasks; promises queue as microtasks that run before the next task. Rendering happens between tasks, so one long task blocks both input and paint. That's why breaking work up improves INP.",
+    "aliases": [
+      "Task queue",
+      "Microtasks"
+    ]
+  },
+  {
+    "id": "main-thread",
+    "title": "Main Thread",
+    "facets": {
+      "area": "javascript",
+      "kind": "mechanism",
+      "improves": "inp"
+    },
+    "summary": "The one thread that runs your JavaScript, style, layout, paint and input handling.",
+    "description": "While it's busy, nothing else on the page responds. Parsing and running large bundles, hydration and third-party scripts compete for it. Free it by shipping less JavaScript, splitting long tasks and moving pure computation to a web worker.",
+    "aliases": [
+      "UI thread",
+      "Main-thread work"
+    ]
+  },
+  {
+    "id": "long-tasks",
+    "title": "Long Tasks",
+    "facets": {
+      "area": "javascript",
+      "kind": "mechanism",
+      "improves": "inp"
+    },
+    "summary": "Any main-thread task over 50 ms: input that arrives during one has to wait.",
+    "description": "DevTools marks them with red corners; Total Blocking Time adds up the part of each beyond 50 ms. Long Animation Frames (LoAF) attribute slow frames to scripts in the field. Fix by splitting work, yielding and doing less.",
+    "aliases": [
+      "50 ms",
+      "Long Animation Frames",
+      "LoAF"
+    ]
+  },
+  {
+    "id": "yield-to-main",
+    "title": "Yield to Main",
+    "facets": {
+      "area": "javascript",
+      "kind": "technique",
+      "improves": "inp"
+    },
+    "summary": "Split long work and hand control back so the browser can handle input in between.",
+    "description": "`await scheduler.yield()` between chunks keeps your task at the front of the queue after the break; where it isn't supported, fall back to `await new Promise(r => setTimeout(r))`. Update the UI first, then yield, then do the non-urgent rest.",
+    "aliases": [
+      "scheduler.yield",
+      "Chunking",
+      "Time slicing"
+    ]
+  },
+  {
+    "id": "web-workers",
+    "title": "Web Workers",
+    "facets": {
+      "area": "javascript",
+      "kind": "technique",
+      "improves": "inp"
+    },
+    "summary": "Run heavy computation on a background thread so the main thread stays responsive.",
+    "description": "Good for parsing large files, search indexing, image processing and diffing. Workers have no DOM and talk via `postMessage`, which copies data unless you transfer it. Libraries like Comlink hide the messaging. Not a fix for slow rendering.",
+    "aliases": [
+      "Worker",
+      "postMessage",
+      "Comlink"
+    ]
+  },
+  {
+    "id": "code-splitting",
+    "title": "Code Splitting",
+    "facets": {
+      "area": "javascript",
+      "kind": "technique",
+      "improves": "page-weight"
+    },
+    "summary": "Break the bundle so each route or feature loads only the code it needs.",
+    "description": "Split per route first, then for heavy components behind interaction (editors, charts) using dynamic `import()` and `React.lazy`. Too many tiny chunks add requests and waterfalls; preload the chunk you know comes next.",
+    "aliases": [
+      "Dynamic import",
+      "Lazy routes",
+      "Chunks"
+    ]
+  },
+  {
+    "id": "tree-shaking",
+    "title": "Tree Shaking",
+    "facets": {
+      "area": "javascript",
+      "kind": "technique",
+      "improves": "page-weight"
+    },
+    "summary": "The bundler drops exports nothing imports, if modules are ES modules without side effects.",
+    "description": "Import named functions (`import { debounce } from 'lodash-es'`), not whole CommonJS packages. Mark libraries `\"sideEffects\": false` in package.json when true. Top-level code with side effects, like registering globals, can't be removed.",
+    "aliases": [
+      "Dead code elimination",
+      "sideEffects"
+    ]
+  },
+  {
+    "id": "bundle-analysis",
+    "title": "Bundle Analysis",
+    "facets": {
+      "area": "javascript",
+      "kind": "technique",
+      "improves": "page-weight"
+    },
+    "summary": "A treemap of what's inside each bundle, to find the heavy and duplicated parts.",
+    "description": "Tools like rollup-plugin-visualizer, webpack-bundle-analyzer or source-map-explorer show sizes per module. Look for duplicate versions, whole libraries for one function, locale data and polyfills. Track gzipped size in CI so it can't creep up.",
+    "aliases": [
+      "Treemap",
+      "source-map-explorer",
+      "Size budget"
+    ]
+  },
+  {
+    "id": "unused-javascript",
+    "title": "Unused JavaScript",
+    "facets": {
+      "area": "javascript",
+      "kind": "anti-pattern",
+      "improves": "inp"
+    },
+    "summary": "Code downloaded, parsed and compiled on every load, but never run on that page.",
+    "description": "JavaScript costs more than its download: parsing and compiling take main-thread time. DevTools Coverage often shows half the bundle unused on first load. Remove it, split it by route, or load it on interaction.",
+    "aliases": [
+      "Coverage",
+      "Dead code"
+    ]
+  },
+  {
+    "id": "minification",
+    "title": "Minification",
+    "facets": {
+      "area": "javascript",
+      "kind": "technique",
+      "improves": "page-weight"
+    },
+    "summary": "Remove whitespace and comments and shorten names, before the server compresses it.",
+    "description": "Minifiers such as esbuild, Terser and SWC cut JavaScript and CSS size, and compression then cuts it further. Every production build should do both. Ship source maps separately so errors stay readable.",
+    "aliases": [
+      "Terser",
+      "esbuild",
+      "Uglify"
+    ]
+  },
+  {
+    "id": "modern-build-targets",
+    "title": "Modern Build Targets",
+    "facets": {
+      "area": "javascript",
+      "kind": "technique",
+      "improves": "page-weight"
+    },
+    "summary": "Compile for browsers people actually use, so you don't ship polyfills and transpiled code.",
+    "description": "Transpiling `async`/`await` and classes for old browsers bloats every bundle. Set a modern Browserslist or build target, and load polyfills only where a feature is missing. Check your real browser share before dropping one.",
+    "aliases": [
+      "Browserslist",
+      "Polyfills",
+      "Differential serving"
+    ]
+  },
+  {
+    "id": "third-party-scripts",
+    "title": "Third-party Scripts",
+    "facets": {
+      "area": "javascript",
+      "kind": "anti-pattern",
+      "improves": "inp"
+    },
+    "summary": "Tags, chat widgets and A/B tools you don't control eat main-thread time.",
+    "description": "Each one adds connections, bytes and long tasks, and can pull in more scripts. Audit them regularly and remove the unused, load the rest with `async` or after interaction, use facades for embeds, and consider moving tags server-side or to a worker (Partytown).",
+    "aliases": [
+      "Tag manager",
+      "Partytown",
+      "Third-party JavaScript"
+    ]
+  },
+  {
+    "id": "facades",
+    "title": "Facades",
+    "facets": {
+      "area": "javascript",
+      "kind": "technique",
+      "improves": "page-weight"
+    },
+    "summary": "Show a lightweight preview of an embed and load the real thing on click.",
+    "description": "A YouTube embed or chat widget can pull in hundreds of kilobytes before anyone uses it. Render a static thumbnail with a play button (lite-youtube-embed) and swap in the real iframe on click. Costs an extra click delay; preconnect on hover softens it.",
+    "aliases": [
+      "lite-youtube-embed",
+      "Click to load"
+    ]
+  },
+  {
+    "id": "debounce-throttle",
+    "title": "Debounce vs Throttle",
+    "facets": {
+      "area": "javascript",
+      "kind": "technique",
+      "improves": "inp"
+    },
+    "summary": "Debounce waits until events stop; throttle runs at most once per interval.",
+    "description": "Debounce search-as-you-type: query 300 ms after the last keystroke. Throttle scroll or resize handlers that must update while it happens. Still update the input itself on every keystroke; only defer the expensive work.",
+    "aliases": [
+      "Debounce",
+      "Throttle"
+    ]
+  },
+  {
+    "id": "list-virtualization",
+    "title": "List Virtualisation",
+    "facets": {
+      "area": "javascript",
+      "kind": "technique",
+      "improves": "inp"
+    },
+    "summary": "Render only the rows on screen for long lists, recycling them as you scroll.",
+    "description": "Ten thousand rows become forty DOM nodes (TanStack Virtual, react-window). Costs: browser find-in-page and screen reader counts see only rendered rows, and variable heights are harder. Try `content-visibility: auto` or pagination first.",
+    "aliases": [
+      "Windowing",
+      "react-window",
+      "TanStack Virtual"
+    ]
+  },
+  {
+    "id": "pixel-pipeline",
+    "title": "Pixel Pipeline",
+    "facets": {
+      "area": "rendering",
+      "kind": "mechanism",
+      "improves": "inp"
+    },
+    "summary": "JavaScript → Style → Layout → Paint → Composite: each change triggers some of these.",
+    "description": "Changing `width` or `top` runs layout, paint and composite; changing `color` skips layout; changing `transform` or `opacity` can skip both and only composite. Cheaper steps mean smoother animations and faster frames after input.",
+    "aliases": [
+      "Rendering pipeline",
+      "Reflow",
+      "Repaint"
+    ]
+  },
+  {
+    "id": "layout-thrashing",
+    "title": "Layout Thrashing",
+    "facets": {
+      "area": "rendering",
+      "kind": "anti-pattern",
+      "improves": "inp"
+    },
+    "summary": "Reading layout after each write forces the browser to recalculate layout again and again.",
+    "description": "A loop that sets a style then reads `offsetHeight` makes every read force a synchronous layout. Batch all reads first, then all writes, or defer writes to `requestAnimationFrame`. DevTools flags these as 'Forced reflow'.",
+    "aliases": [
+      "Forced synchronous layout",
+      "Forced reflow"
+    ]
+  },
+  {
+    "id": "compositor-animations",
+    "title": "Compositor Animations",
+    "facets": {
+      "area": "rendering",
+      "kind": "technique",
+      "improves": "inp"
+    },
+    "summary": "Animate only transform and opacity, which can run off the main thread.",
+    "description": "Moving with `transform: translate()` instead of `left`, and fading with `opacity`, skips layout and paint, so the animation stays smooth even while JavaScript is busy. Animating `width`, `height` or `top` re-lays out every frame.",
+    "aliases": [
+      "GPU animation",
+      "transform",
+      "opacity"
+    ]
+  },
+  {
+    "id": "will-change",
+    "title": "will-change",
+    "facets": {
+      "area": "rendering",
+      "kind": "technique",
+      "improves": "inp"
+    },
+    "summary": "Tells the browser an element is about to animate, so it can promote it to a layer.",
+    "description": "`will-change: transform` avoids a hitch at the start of an animation. Each layer costs GPU memory, so apply it to the few elements that animate, ideally just before, and remove it after. Never set it on `*` or large lists.",
+    "aliases": [
+      "Layer promotion"
+    ]
+  },
+  {
+    "id": "content-visibility",
+    "title": "content-visibility",
+    "facets": {
+      "area": "rendering",
+      "kind": "technique",
+      "improves": "inp"
+    },
+    "summary": "content-visibility: auto skips rendering offscreen sections until they're near view.",
+    "description": "Long pages with many sections lay out and paint only what's visible. Pair it with `contain-intrinsic-size: auto 500px` so the scrollbar doesn't jump. Content stays in the DOM, so find-in-page and accessibility still work, unlike virtualisation.",
+    "aliases": [
+      "contain-intrinsic-size"
+    ]
+  },
+  {
+    "id": "css-containment",
+    "title": "CSS Containment",
+    "facets": {
+      "area": "rendering",
+      "kind": "technique",
+      "improves": "inp"
+    },
+    "summary": "contain tells the browser a subtree's layout and paint don't affect the rest.",
+    "description": "`contain: layout paint` on a widget means a change inside it doesn't re-lay out the whole page. Useful for feeds, ads and widgets that update often. `contain: strict` also fixes its size, so set dimensions first.",
+    "aliases": [
+      "contain",
+      "contain: layout"
+    ]
+  },
+  {
+    "id": "dom-size",
+    "title": "DOM Size",
+    "facets": {
+      "area": "rendering",
+      "kind": "anti-pattern",
+      "improves": "inp"
+    },
+    "summary": "Huge DOM trees make every style recalculation, layout and query slower.",
+    "description": "Lighthouse warns well before pages get into tens of thousands of nodes; deep nesting from wrapper divs adds up fast. Render less: paginate, virtualise long lists, use `content-visibility`, and don't render hidden menus and tabs until opened.",
+    "aliases": [
+      "Excessive DOM",
+      "DOM nodes"
+    ]
+  },
+  {
+    "id": "reserve-space",
+    "title": "Reserve Space",
+    "facets": {
+      "area": "rendering",
+      "kind": "technique",
+      "improves": "cls"
+    },
+    "summary": "Give late content (ads, embeds, banners) a fixed box before it arrives.",
+    "description": "Set `min-height` or `aspect-ratio` on ad slots, embeds and skeletons so nothing pushes text down when they load. Insert banners above existing content only in response to user input. Shifts within 500 ms of an interaction don't count toward CLS.",
+    "aliases": [
+      "aspect-ratio",
+      "Skeleton",
+      "Ad slots"
+    ]
+  },
+  {
+    "id": "request-animation-frame",
+    "title": "requestAnimationFrame",
+    "facets": {
+      "area": "rendering",
+      "kind": "mechanism",
+      "improves": "inp"
+    },
+    "summary": "Runs a callback right before the next paint: the place for visual updates.",
+    "description": "Use it for JavaScript animations and to batch DOM writes once per frame; `setTimeout` drifts and can run several times per frame. It pauses in background tabs. CSS animations and transitions are usually simpler still.",
+    "aliases": [
+      "rAF"
+    ]
+  },
+  {
+    "id": "inp-phases",
+    "title": "INP Phases",
+    "facets": {
+      "area": "rendering",
+      "kind": "mechanism",
+      "improves": "inp"
+    },
+    "summary": "An interaction's latency is input delay + processing time + presentation delay.",
+    "description": "Input delay: the main thread was busy with something else. Processing: your event handlers ran. Presentation: style, layout and paint of the next frame. The web-vitals attribution build reports each part, so you know which one to fix.",
+    "aliases": [
+      "Input delay",
+      "Processing time",
+      "Presentation delay"
+    ]
+  },
+  {
+    "id": "passive-listeners",
+    "title": "Passive Listeners",
+    "facets": {
+      "area": "rendering",
+      "kind": "technique",
+      "improves": "inp"
+    },
+    "summary": "{ passive: true } promises a touch or wheel handler won't block scrolling.",
+    "description": "Without it, the browser may wait for your handler in case it calls `preventDefault()`, making scrolling stutter. Browsers already treat document-level `touchstart` and `wheel` listeners as passive. Prefer CSS `touch-action` over cancelling events.",
+    "aliases": [
+      "passive: true",
+      "touch-action"
+    ]
+  }
+]

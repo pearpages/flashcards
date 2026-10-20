@@ -12,6 +12,10 @@ A second deck, **Accessibility**, covers 100 ARIA patterns, roles and attributes
 
 A third deck, **System Design**, has 104 building blocks, patterns and principles of backend systems (caching, messaging, consistency, reliability…), each with the AWS, Google Cloud and Azure service where one exists.
 
+A fourth deck, **Web Security**, has 100 attacks, defences and mechanisms (injection, browser, auth, sessions, transport, data, supply chain, infrastructure), each tagged with its OWASP Top 10 (2025) category.
+
+A fifth deck, **Web Performance**, has 100 metrics, mechanisms, techniques and anti-patterns (measurement, network, server, caching, loading, assets, JavaScript, rendering), each tagged with the Core Web Vital or other metric it mainly improves.
+
 **Try it: [flashcards.pearpages.com](https://flashcards.pearpages.com)** — works on phones and desktop, no sign-up.
 
 <img src="./docs/static/demo.png" alt="Two phone screens: the Sheet card in study mode with desktop and mobile drawings, and the browse list grouped by purpose" width="500" />
@@ -57,6 +61,8 @@ src/decks/
   design-system/
     deck.json          # title, description, the filters (facets) and the platform columns
   system-design/       # same layout, with AWS / GCP / Azure as its platforms
+  web-security/        # same layout, no platform columns
+  web-performance/     # same layout, no platform columns
     cards.json         # the cards
     images/<id>.svg    # one illustration per card (optional)
 ```

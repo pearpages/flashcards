@@ -1,0 +1,1531 @@
+[
+  {
+    "id": "sql-injection",
+    "title": "SQL Injection",
+    "facets": {
+      "area": "injection",
+      "kind": "attack",
+      "owasp": "a05-injection"
+    },
+    "summary": "User input pasted into a SQL string becomes part of the query itself.",
+    "description": "Building `WHERE name = '` + input + `'` lets `' OR 1=1 --` rewrite the query: read other rows, skip a login check, change data. The fix is parameterised queries, not escaping or blocklists. A least-privilege database user limits the damage.",
+    "aliases": [
+      "SQLi",
+      "CWE-89"
+    ]
+  },
+  {
+    "id": "parameterized-queries",
+    "title": "Parameterised Queries",
+    "facets": {
+      "area": "injection",
+      "kind": "defence",
+      "owasp": "a05-injection"
+    },
+    "summary": "Send the SQL and the values separately, so input can never change the query.",
+    "description": "`db.query('… WHERE id = $1', [id])`: the database parses the statement first, then binds the values as data. ORMs do this until you drop to raw strings. Table and column names can't be parameters, so map them from an allowlist.",
+    "aliases": [
+      "Prepared statements",
+      "Bind variables"
+    ]
+  },
+  {
+    "id": "nosql-injection",
+    "title": "NoSQL Injection",
+    "facets": {
+      "area": "injection",
+      "kind": "attack",
+      "owasp": "a05-injection"
+    },
+    "summary": "Query operators smuggled in through JSON input change what a NoSQL query matches.",
+    "description": "If `{ user: req.body.user }` receives `{ \"$ne\": null }`, the filter matches any user. Validate types with a schema (a string must be a string) before building queries, and turn off server-side JavaScript operators such as `$where`.",
+    "aliases": [
+      "Operator injection",
+      "CWE-943"
+    ]
+  },
+  {
+    "id": "command-injection",
+    "title": "Command Injection",
+    "facets": {
+      "area": "injection",
+      "kind": "attack",
+      "owasp": "a05-injection"
+    },
+    "summary": "Input reaches a shell command, so `;` or `&&` lets it run commands of its own.",
+    "description": "`exec('convert ' + filename)` also runs whatever follows a `;` in the filename. Call the program directly with an argument array (`execFile`, or `spawn` without a shell), validate against an allowlist, and prefer a library to shelling out.",
+    "aliases": [
+      "OS command injection",
+      "CWE-78"
+    ]
+  },
+  {
+    "id": "path-traversal",
+    "title": "Path Traversal",
+    "facets": {
+      "area": "injection",
+      "kind": "attack",
+      "owasp": "a01-access-control"
+    },
+    "summary": "`../` in a file name walks out of the intended folder to read or write other files.",
+    "description": "`/download?file=../../etc/passwd`. Resolve the full path after decoding and check it still starts with the base directory. Better: never build paths from user input; look files up by an id you control.",
+    "aliases": [
+      "Directory traversal",
+      "CWE-22"
+    ]
+  },
+  {
+    "id": "xxe",
+    "title": "XML External Entities",
+    "facets": {
+      "area": "injection",
+      "kind": "attack",
+      "owasp": "a02-misconfiguration"
+    },
+    "summary": "An XML parser that resolves external entities reads local files or calls internal URLs.",
+    "description": "A DOCTYPE can declare an entity pointing at `file:///etc/passwd` or an internal URL, and the parser fetches it into the document. Turn off DTDs and external entities in the parser's settings, or accept JSON instead. Check your parser's defaults.",
+    "aliases": [
+      "XXE",
+      "CWE-611"
+    ]
+  },
+  {
+    "id": "server-side-template-injection",
+    "title": "Server-side Template Injection",
+    "facets": {
+      "area": "injection",
+      "kind": "attack",
+      "owasp": "a05-injection"
+    },
+    "summary": "User input compiled as a template runs expressions, often code, on the server.",
+    "description": "`render('Hello ' + name)` instead of `render('Hello {{name}}', { name })` lets `{{7*7}}` evaluate, and many engines reach code execution from there. Keep templates fixed and pass input as data; never build a template from it.",
+    "aliases": [
+      "SSTI",
+      "CWE-1336"
+    ]
+  },
+  {
+    "id": "log-injection",
+    "title": "Log Injection",
+    "facets": {
+      "area": "injection",
+      "kind": "attack",
+      "owasp": "a09-logging-failures"
+    },
+    "summary": "Newlines or control characters in input forge log lines or break log tooling.",
+    "description": "A username containing `\\n` can add a fake 'login succeeded' line, and markup in a value can attack a web log viewer. Log structured JSON, which escapes values, and strip control characters from free text before it's written.",
+    "aliases": [
+      "Log forging",
+      "CWE-117"
+    ]
+  },
+  {
+    "id": "prototype-pollution",
+    "title": "Prototype Pollution",
+    "facets": {
+      "area": "injection",
+      "kind": "attack",
+      "owasp": "a05-injection"
+    },
+    "summary": "Merging untrusted JSON writes a `__proto__` key that changes every object in the app.",
+    "description": "A deep merge given `{\"__proto__\": {\"isAdmin\": true}}` adds `isAdmin` to all plain objects. Reject `__proto__`, `constructor` and `prototype` keys, use `Map` or `Object.create(null)` for lookups, and validate input with a schema.",
+    "aliases": [
+      "CWE-1321"
+    ]
+  },
+  {
+    "id": "insecure-deserialization",
+    "title": "Insecure Deserialisation",
+    "facets": {
+      "area": "injection",
+      "kind": "attack",
+      "owasp": "a08-integrity-failures"
+    },
+    "summary": "Deserialising untrusted bytes can build objects whose methods run attacker code.",
+    "description": "Native formats (Java serialisation, Python `pickle`, PHP `unserialize`) can create arbitrary classes and run code while loading. Never use them on untrusted input; use JSON with a schema, and sign data that has to round-trip through a client.",
+    "aliases": [
+      "Object injection",
+      "CWE-502"
+    ]
+  },
+  {
+    "id": "mass-assignment",
+    "title": "Mass Assignment",
+    "facets": {
+      "area": "injection",
+      "kind": "attack",
+      "owasp": "a01-access-control"
+    },
+    "summary": "Binding a request body straight onto a model lets clients set fields like `role`.",
+    "description": "`user.update(req.body)` happily saves `{\"role\": \"admin\"}`. Bind an explicit allowlist of fields per endpoint (a DTO or schema), never the whole body. Blocklists fail the day someone adds a column.",
+    "aliases": [
+      "Over-posting",
+      "CWE-915"
+    ]
+  },
+  {
+    "id": "input-validation",
+    "title": "Input Validation",
+    "facets": {
+      "area": "injection",
+      "kind": "defence",
+      "owasp": "a05-injection"
+    },
+    "summary": "Check input against what's allowed (type, length, format) as it enters the system.",
+    "description": "Validate on the server with a schema (Zod, JSON Schema, Pydantic) and reject what doesn't fit; client-side checks are only for UX. Allowlists beat blocklists. It narrows attacks but never replaces output encoding or parameterised queries.",
+    "aliases": [
+      "Allowlist",
+      "Schema validation"
+    ]
+  },
+  {
+    "id": "file-upload-validation",
+    "title": "File Upload Handling",
+    "facets": {
+      "area": "injection",
+      "kind": "defence",
+      "owasp": "a06-insecure-design"
+    },
+    "summary": "Treat uploads as hostile: check by content, cap size, rename, store away from your code.",
+    "description": "Don't trust the file name or `Content-Type`. Generate your own name, keep files in object storage, serve them from another domain with `Content-Disposition: attachment`, and re-encode images. The server must never execute an upload.",
+    "aliases": [
+      "Unrestricted upload",
+      "CWE-434"
+    ]
+  },
+  {
+    "id": "redos",
+    "title": "ReDoS",
+    "facets": {
+      "area": "injection",
+      "kind": "attack",
+      "owasp": "a06-insecure-design"
+    },
+    "summary": "A regex with nested repetition takes exponential time on a crafted string.",
+    "description": "`/(a+)+$/` against a long run of `a`s ending in `!` backtracks for seconds, and in Node one request stalls all the others. Avoid nested quantifiers, cap input length before matching, and use a linear-time engine (RE2) for user-supplied patterns.",
+    "aliases": [
+      "Regular expression denial of service",
+      "CWE-1333"
+    ]
+  },
+  {
+    "id": "same-origin-policy",
+    "title": "Same-origin Policy",
+    "facets": {
+      "area": "browser",
+      "kind": "mechanism",
+      "owasp": "a01-access-control"
+    },
+    "summary": "Scripts from one origin can't read responses or the DOM of another origin.",
+    "description": "An origin is scheme + host + port. A page may still send requests and embed images or scripts cross-origin; it just can't read the results. CORS relaxes the reading rule, and CSRF exists because sending is allowed.",
+    "aliases": [
+      "SOP",
+      "Origin"
+    ]
+  },
+  {
+    "id": "cors",
+    "title": "CORS",
+    "facets": {
+      "area": "browser",
+      "kind": "mechanism",
+      "owasp": "a02-misconfiguration"
+    },
+    "summary": "Response headers that let named origins read your API from their pages.",
+    "description": "`Access-Control-Allow-Origin` names who may read. Never reflect any `Origin` back together with `Access-Control-Allow-Credentials: true`: any site could read logged-in data. CORS loosens the same-origin policy; it never blocks a request reaching you.",
+    "aliases": [
+      "Cross-Origin Resource Sharing",
+      "Preflight"
+    ]
+  },
+  {
+    "id": "stored-xss",
+    "title": "Stored XSS",
+    "facets": {
+      "area": "browser",
+      "kind": "attack",
+      "owasp": "a05-injection"
+    },
+    "summary": "A script saved in your data (a comment, a display name) runs for everyone who views it.",
+    "description": "The script runs in your origin: it can read the page, act as the viewer and steal tokens that aren't `HttpOnly`. Encode output for its context, sanitise rich HTML, and add a Content Security Policy as a second layer.",
+    "aliases": [
+      "Persistent XSS",
+      "Cross-site scripting",
+      "CWE-79"
+    ]
+  },
+  {
+    "id": "reflected-xss",
+    "title": "Reflected XSS",
+    "facets": {
+      "area": "browser",
+      "kind": "attack",
+      "owasp": "a05-injection"
+    },
+    "summary": "Input from the URL echoed into the page runs as script for whoever opens the link.",
+    "description": "`/search?q=<script>…` printed unencoded in 'Results for …' runs in the victim's session; the attacker only needs them to click a link. Same fixes as stored XSS: escape by default (template auto-escaping) and add a CSP.",
+    "aliases": [
+      "Non-persistent XSS",
+      "CWE-79"
+    ]
+  },
+  {
+    "id": "dom-xss",
+    "title": "DOM-based XSS",
+    "facets": {
+      "area": "browser",
+      "kind": "attack",
+      "owasp": "a05-injection"
+    },
+    "summary": "Client-side code writes attacker-controlled data into a sink like innerHTML.",
+    "description": "`el.innerHTML = location.hash.slice(1)` never reaches the server, so server-side filters miss it. Use `textContent` and framework bindings; avoid `dangerouslySetInnerHTML`, `eval` and `javascript:` URLs. Trusted Types can enforce this.",
+    "aliases": [
+      "Client-side XSS",
+      "CWE-79"
+    ]
+  },
+  {
+    "id": "output-encoding",
+    "title": "Output Encoding",
+    "facets": {
+      "area": "browser",
+      "kind": "defence",
+      "owasp": "a05-injection"
+    },
+    "summary": "Escape data for the exact context it lands in: HTML, attribute, URL or JavaScript.",
+    "description": "`<` becomes `&lt;` in HTML text, but attributes, URLs and script blocks each have their own rules. Template engines and React escape text by default, so XSS appears where you opt out. Prefer it to sanitising whenever the input is plain text.",
+    "aliases": [
+      "Contextual escaping",
+      "Auto-escaping"
+    ]
+  },
+  {
+    "id": "html-sanitization",
+    "title": "HTML Sanitisation",
+    "facets": {
+      "area": "browser",
+      "kind": "defence",
+      "owasp": "a05-injection"
+    },
+    "summary": "Strip dangerous tags and attributes from rich HTML you must render, keep the safe ones.",
+    "description": "For user-written rich text, use a maintained allowlist sanitiser such as DOMPurify, never regexes. Sanitise just before rendering, with the browser's own parser. If the input should be plain text, encode it instead.",
+    "aliases": [
+      "DOMPurify",
+      "Allowlist sanitiser"
+    ]
+  },
+  {
+    "id": "content-security-policy",
+    "title": "Content Security Policy",
+    "facets": {
+      "area": "browser",
+      "kind": "defence",
+      "owasp": "a05-injection"
+    },
+    "summary": "A response header listing where scripts and other resources may come from.",
+    "description": "`script-src 'nonce-…' 'strict-dynamic'` blocks injected scripts that lack the nonce, which limits what an XSS bug can do. Avoid `'unsafe-inline'`. Roll out with `Content-Security-Policy-Report-Only` first. A safety net, not a substitute for encoding.",
+    "aliases": [
+      "CSP",
+      "Nonce"
+    ]
+  },
+  {
+    "id": "trusted-types",
+    "title": "Trusted Types",
+    "facets": {
+      "area": "browser",
+      "kind": "defence",
+      "owasp": "a05-injection"
+    },
+    "summary": "The browser rejects plain strings in DOM XSS sinks unless a policy created them.",
+    "description": "With `require-trusted-types-for 'script'` in the CSP, `el.innerHTML = string` throws; only values made by a named policy, which sanitises, get through. Reviewing DOM XSS becomes reviewing a few policies. Browsers without support ignore it.",
+    "aliases": [
+      "require-trusted-types-for"
+    ]
+  },
+  {
+    "id": "clickjacking",
+    "title": "Clickjacking",
+    "facets": {
+      "area": "browser",
+      "kind": "attack",
+      "owasp": "a02-misconfiguration"
+    },
+    "summary": "Your page is framed invisibly over a decoy, so users click your buttons unknowingly.",
+    "description": "The attacker loads your 'Delete account' page in a transparent iframe aligned over their 'Claim prize' button. Stop it by forbidding framing with CSP `frame-ancestors`, plus `X-Frame-Options` for very old browsers.",
+    "aliases": [
+      "UI redressing",
+      "CWE-1021"
+    ]
+  },
+  {
+    "id": "frame-ancestors",
+    "title": "frame-ancestors",
+    "facets": {
+      "area": "browser",
+      "kind": "defence",
+      "owasp": "a02-misconfiguration"
+    },
+    "summary": "A CSP directive listing which sites may embed your page in a frame.",
+    "description": "`frame-ancestors 'none'` forbids all framing; `'self'` allows only your own pages. It replaces `X-Frame-Options`, which can't list several origins. Send it on every HTML response, not just the login page.",
+    "aliases": [
+      "X-Frame-Options",
+      "CSP"
+    ]
+  },
+  {
+    "id": "csrf",
+    "title": "CSRF",
+    "facets": {
+      "area": "browser",
+      "kind": "attack",
+      "owasp": "a01-access-control"
+    },
+    "summary": "Another site makes the user's browser send a request your site trusts because of cookies.",
+    "description": "A hidden form on evil.example posts to bank.example/transfer and the browser attaches the session cookie. Defend with `SameSite` cookies plus a CSRF token, or by checking `Origin` on state-changing requests. A GET must never change state.",
+    "aliases": [
+      "Cross-site request forgery",
+      "CWE-352"
+    ]
+  },
+  {
+    "id": "csrf-token",
+    "title": "CSRF Token",
+    "facets": {
+      "area": "browser",
+      "kind": "defence",
+      "owasp": "a01-access-control"
+    },
+    "summary": "A secret per session or form that other sites can't read, required on every write.",
+    "description": "The server puts a random token in each form and checks it on POST; another site can send the request but can't know the token. Pair it with `SameSite` cookies: tokens also cover attacks from sibling subdomains that SameSite lets through.",
+    "aliases": [
+      "Synchronizer token",
+      "Double-submit cookie"
+    ]
+  },
+  {
+    "id": "samesite-cookies",
+    "title": "SameSite Cookies",
+    "facets": {
+      "area": "browser",
+      "kind": "defence",
+      "owasp": "a01-access-control"
+    },
+    "summary": "A cookie attribute that stops the browser sending it on cross-site requests.",
+    "description": "`Lax` sends the cookie only on top-level GET navigations from other sites; `Strict` never sends it cross-site; `None` always does and needs `Secure`. Set it explicitly. Sibling subdomains count as same-site, so Lax alone doesn't stop them.",
+    "aliases": [
+      "SameSite=Lax",
+      "SameSite=Strict"
+    ]
+  },
+  {
+    "id": "open-redirect",
+    "title": "Open Redirect",
+    "facets": {
+      "area": "browser",
+      "kind": "attack",
+      "owasp": "a01-access-control"
+    },
+    "summary": "A redirect parameter sends users from your trusted domain to any site the attacker picks.",
+    "description": "`/login?next=https://evil.example` makes phishing links look like yours and can leak OAuth codes. Accept only relative paths or an allowlist of destinations, and check the parsed URL, not a string prefix (`you.com.evil.example`).",
+    "aliases": [
+      "Unvalidated redirect",
+      "CWE-601"
+    ]
+  },
+  {
+    "id": "nosniff",
+    "title": "nosniff",
+    "facets": {
+      "area": "browser",
+      "kind": "defence",
+      "owasp": "a02-misconfiguration"
+    },
+    "summary": "`X-Content-Type-Options: nosniff` stops browsers guessing what a response is.",
+    "description": "Without it, a browser may treat an uploaded 'image' as script or HTML because its bytes look like one. With it, scripts and stylesheets must arrive with the right `Content-Type`. Send it on every response and set accurate types.",
+    "aliases": [
+      "X-Content-Type-Options",
+      "MIME sniffing"
+    ]
+  },
+  {
+    "id": "referrer-policy",
+    "title": "Referrer-Policy",
+    "facets": {
+      "area": "browser",
+      "kind": "defence",
+      "owasp": "a02-misconfiguration"
+    },
+    "summary": "Controls how much of the current URL is sent in the Referer header to other sites.",
+    "description": "URLs can carry tokens, reset links or search terms. `strict-origin-when-cross-origin`, the browser default, sends only the origin to other sites; `no-referrer` sends nothing. Even so, keep secrets out of URLs.",
+    "aliases": [
+      "Referer header"
+    ]
+  },
+  {
+    "id": "postmessage-origin",
+    "title": "postMessage Origin Check",
+    "facets": {
+      "area": "browser",
+      "kind": "defence",
+      "owasp": "a01-access-control"
+    },
+    "summary": "Check event.origin on every message, and name the target origin when you send.",
+    "description": "Any window that holds a reference to yours can `postMessage` it. Without checking `event.origin` against an exact allowlist, a framing or opening page can drive your handler. When sending, pass the exact target origin, never `'*'` for sensitive data.",
+    "aliases": [
+      "postMessage",
+      "Cross-window messaging"
+    ]
+  },
+  {
+    "id": "reverse-tabnabbing",
+    "title": "Reverse Tabnabbing",
+    "facets": {
+      "area": "browser",
+      "kind": "attack",
+      "owasp": "a06-insecure-design"
+    },
+    "summary": "A page opened in a new tab uses window.opener to send your tab to a phishing page.",
+    "description": "Links with `target=\"_blank\"` once gave the new page `window.opener`. Modern browsers now imply `rel=\"noopener\"` for them, but `window.open()` calls still need `noopener`. Add it when opening untrusted URLs.",
+    "aliases": [
+      "Tabnabbing",
+      "noopener"
+    ]
+  },
+  {
+    "id": "cross-origin-isolation",
+    "title": "Cross-origin Isolation",
+    "facets": {
+      "area": "browser",
+      "kind": "defence",
+      "owasp": "a06-insecure-design"
+    },
+    "summary": "COOP and COEP headers keep your page away from other origins' windows and process.",
+    "description": "`Cross-Origin-Opener-Policy: same-origin` cuts the link to cross-origin popups and openers. Adding `Cross-Origin-Embedder-Policy` makes the page cross-origin isolated, guarding against Spectre-style leaks and unlocking `SharedArrayBuffer`.",
+    "aliases": [
+      "COOP",
+      "COEP",
+      "Spectre"
+    ]
+  },
+  {
+    "id": "password-hashing",
+    "title": "Password Hashing",
+    "facets": {
+      "area": "auth",
+      "kind": "defence",
+      "owasp": "a04-crypto-failures"
+    },
+    "summary": "Store passwords with a slow, salted hash like Argon2id so a leaked table is hard to crack.",
+    "description": "Argon2id first, then scrypt or bcrypt (bcrypt ignores input past 72 bytes). Never plain SHA-256 or MD5: GPUs try billions a second. Each hash gets its own random salt, which the library handles. Rehash on login when you raise the cost.",
+    "aliases": [
+      "Argon2id",
+      "bcrypt",
+      "scrypt",
+      "CWE-916"
+    ]
+  },
+  {
+    "id": "password-policy",
+    "title": "Password Policy",
+    "facets": {
+      "area": "auth",
+      "kind": "defence",
+      "owasp": "a07-auth-failures"
+    },
+    "summary": "Long passwords checked against breach lists; no composition rules or forced rotation.",
+    "description": "NIST SP 800-63B: at least 15 characters when the password is the only factor (8 with MFA), allow 64 or more and any character, and allow paste so managers work. Block known-breached passwords. Composition rules and forced resets make passwords predictable.",
+    "aliases": [
+      "NIST SP 800-63B",
+      "Breached password check"
+    ]
+  },
+  {
+    "id": "credential-stuffing",
+    "title": "Credential Stuffing",
+    "facets": {
+      "area": "auth",
+      "kind": "attack",
+      "owasp": "a07-auth-failures"
+    },
+    "summary": "Attackers replay username and password pairs leaked from other sites against your login.",
+    "description": "It works because people reuse passwords, and it looks like normal logins spread over many IPs. Defend with MFA or passkeys, breached-password checks, throttling per account and per IP, bot detection and alerts on failure spikes. CAPTCHAs alone only slow it.",
+    "aliases": [
+      "Account takeover",
+      "ATO"
+    ]
+  },
+  {
+    "id": "login-throttling",
+    "title": "Login Throttling",
+    "facets": {
+      "area": "auth",
+      "kind": "defence",
+      "owasp": "a07-auth-failures"
+    },
+    "summary": "Slow down repeated failed logins per account and per IP without locking real users out.",
+    "description": "Hard lockouts let anyone lock out any account by guessing badly. Prefer growing delays, a challenge or step-up after a few failures, and limits per IP and per account. Count failures in a shared store so every server sees them.",
+    "aliases": [
+      "Rate limiting",
+      "Account lockout",
+      "CWE-307"
+    ]
+  },
+  {
+    "id": "mfa",
+    "title": "Multi-factor Authentication",
+    "facets": {
+      "area": "auth",
+      "kind": "defence",
+      "owasp": "a07-auth-failures"
+    },
+    "summary": "Require a second factor, something you have or are, on top of the password.",
+    "description": "Stops most attacks that only have the password. Strength varies: SMS can be SIM-swapped and any code can be phished in real time, while passkeys and security keys resist phishing. Give recovery codes, and guard the recovery path as well as login.",
+    "aliases": [
+      "MFA",
+      "2FA"
+    ]
+  },
+  {
+    "id": "totp",
+    "title": "TOTP",
+    "facets": {
+      "area": "auth",
+      "kind": "mechanism",
+      "owasp": "a07-auth-failures"
+    },
+    "summary": "Six-digit codes from a shared secret and the current 30-second window (RFC 6238).",
+    "description": "The server and the authenticator app share a secret from the QR code; both compute an HMAC of it and the time step. Allow one step of clock drift, reject a code once it's used, and store the secret encrypted. Phishable: a fake site can relay the code in time.",
+    "aliases": [
+      "Authenticator app",
+      "RFC 6238",
+      "One-time password"
+    ]
+  },
+  {
+    "id": "passkeys",
+    "title": "Passkeys",
+    "facets": {
+      "area": "auth",
+      "kind": "defence",
+      "owasp": "a07-auth-failures"
+    },
+    "summary": "Public-key login (WebAuthn) bound to the site, so there's no password to steal or phish.",
+    "description": "The device keeps a private key per site and signs the server's challenge after a fingerprint, face or PIN. The browser uses it only on the matching origin, so phishing pages get nothing, and the server stores only a public key. Keep a recovery path.",
+    "aliases": [
+      "WebAuthn",
+      "FIDO2",
+      "Security key"
+    ]
+  },
+  {
+    "id": "oauth-2",
+    "title": "OAuth 2.0",
+    "facets": {
+      "area": "auth",
+      "kind": "mechanism",
+      "owasp": "a07-auth-failures"
+    },
+    "summary": "Lets an app act for a user with a scoped access token instead of their password.",
+    "description": "Use the authorization code flow with PKCE for every client; the implicit and password grants are dropped in OAuth 2.1. Register exact redirect URIs, use `state` against CSRF and ask for the narrowest scopes. OAuth grants access; OIDC says who the user is.",
+    "aliases": [
+      "Authorization code flow",
+      "OAuth 2.1",
+      "Access token"
+    ]
+  },
+  {
+    "id": "pkce",
+    "title": "PKCE",
+    "facets": {
+      "area": "auth",
+      "kind": "defence",
+      "owasp": "a07-auth-failures"
+    },
+    "summary": "A one-time secret that ties an authorization code to the app that asked for it.",
+    "description": "The client sends a hash of a random `code_verifier` with the request, then the verifier itself when it swaps the code for tokens. A stolen code (from a log, a malicious app or a redirect) is useless without it. Use method `S256`, for every client type.",
+    "aliases": [
+      "Proof Key for Code Exchange",
+      "RFC 7636",
+      "code_verifier"
+    ]
+  },
+  {
+    "id": "openid-connect",
+    "title": "OpenID Connect",
+    "facets": {
+      "area": "auth",
+      "kind": "mechanism",
+      "owasp": "a07-auth-failures"
+    },
+    "summary": "An identity layer on OAuth 2.0: a signed ID token says who logged in.",
+    "description": "Validate the ID token's signature, `iss`, `aud`, `exp` and `nonce` before trusting it. Key users on `iss` + `sub`, not email, which can change or be unverified. Pick OIDC for 'Sign in with…' and plain OAuth for API access.",
+    "aliases": [
+      "OIDC",
+      "ID token",
+      "SSO"
+    ]
+  },
+  {
+    "id": "authn-vs-authz",
+    "title": "Authentication vs Authorisation",
+    "facets": {
+      "area": "auth",
+      "kind": "mechanism",
+      "owasp": "a01-access-control"
+    },
+    "summary": "Authentication proves who you are; authorisation decides what you're allowed to do.",
+    "description": "A valid login says nothing about access to this record. Check authorisation on the server for every request and object, deny by default, and keep the rules in one place instead of scattered through handlers. 401 means not logged in; 403 means not allowed.",
+    "aliases": [
+      "AuthN",
+      "AuthZ",
+      "401 vs 403"
+    ]
+  },
+  {
+    "id": "user-enumeration",
+    "title": "User Enumeration",
+    "facets": {
+      "area": "auth",
+      "kind": "attack",
+      "owasp": "a07-auth-failures"
+    },
+    "summary": "Different responses for real and unknown accounts let attackers list valid usernames.",
+    "description": "'Wrong password' vs 'No such user', a faster reply for unknown users, or a sign-up form saying 'email taken' all leak it. Return the same message and status, do similar work both ways, and answer resets with 'If the account exists, we've emailed you'.",
+    "aliases": [
+      "Account enumeration",
+      "CWE-204"
+    ]
+  },
+  {
+    "id": "password-reset",
+    "title": "Password Reset",
+    "facets": {
+      "area": "auth",
+      "kind": "defence",
+      "owasp": "a07-auth-failures"
+    },
+    "summary": "A single-use, short-lived random token sent to the verified email, and nothing more.",
+    "description": "Generate the token with a secure random source, store only its hash, expire it within an hour and invalidate it on use. Never build the link from the request's Host header. After a reset, end other sessions and tell the user. Skip security questions.",
+    "aliases": [
+      "Forgot password",
+      "Reset token",
+      "Host header poisoning"
+    ]
+  },
+  {
+    "id": "api-keys",
+    "title": "API Keys",
+    "facets": {
+      "area": "auth",
+      "kind": "mechanism",
+      "owasp": "a07-auth-failures"
+    },
+    "summary": "Long random secrets that identify a calling program; simple, but they never expire alone.",
+    "description": "Show the key once and store only its hash, with a visible prefix (`sk_live_…`) so leaks can be found by scanners. Scope keys and let users rotate and revoke them. A key identifies a program, not a person: for access on a user's behalf, use OAuth.",
+    "aliases": [
+      "Secret key",
+      "Bearer token"
+    ]
+  },
+  {
+    "id": "rbac-abac",
+    "title": "RBAC vs ABAC",
+    "facets": {
+      "area": "auth",
+      "kind": "mechanism",
+      "owasp": "a01-access-control"
+    },
+    "summary": "Grant access by role (admin, editor) or by rules over attributes (owner, team, time).",
+    "description": "RBAC is easy to audit but multiplies into roles like 'editor-EU-readonly'. ABAC and relationship-based models (ReBAC, after Google's Zanzibar) express 'owners can edit their own docs' directly. Many apps use roles for coarse access plus ownership checks.",
+    "aliases": [
+      "Role-based access control",
+      "Attribute-based access control",
+      "ReBAC"
+    ]
+  },
+  {
+    "id": "idor",
+    "title": "IDOR",
+    "facets": {
+      "area": "auth",
+      "kind": "attack",
+      "owasp": "a01-access-control"
+    },
+    "summary": "Changing an id in a request (/invoices/1042 → 1043) returns someone else's data.",
+    "description": "The server checks the user is logged in but not that the object is theirs. Scope every query to the user (`WHERE id = ? AND owner_id = ?`) or call a central policy check. Random UUIDs make guessing harder but are not access control.",
+    "aliases": [
+      "Insecure direct object reference",
+      "BOLA",
+      "CWE-639"
+    ]
+  },
+  {
+    "id": "function-level-authorization",
+    "title": "Missing Function-level Authorisation",
+    "facets": {
+      "area": "auth",
+      "kind": "attack",
+      "owasp": "a01-access-control"
+    },
+    "summary": "An admin endpoint that checks the user is logged in but not that they're an admin.",
+    "description": "Hiding a button in the UI doesn't protect the API behind it: attackers call it directly. Enforce roles on the server for every route, deny by default, and test with a low-privilege account. Route-level guards or middleware make a forgotten check less likely.",
+    "aliases": [
+      "BFLA",
+      "Privilege escalation",
+      "CWE-285"
+    ]
+  },
+  {
+    "id": "cookie-flags",
+    "title": "Cookie Flags",
+    "facets": {
+      "area": "sessions",
+      "kind": "defence",
+      "owasp": "a07-auth-failures"
+    },
+    "summary": "HttpOnly, Secure and SameSite keep a session cookie from scripts, HTTP and other sites.",
+    "description": "`HttpOnly` hides it from JavaScript, so XSS can't read it (it can still act as the user). `Secure` sends it only over HTTPS. `SameSite=Lax` stops most cross-site sends and `Strict` stops all. Omit `Domain` so subdomains don't receive it.",
+    "aliases": [
+      "HttpOnly",
+      "Secure",
+      "SameSite"
+    ]
+  },
+  {
+    "id": "cookie-prefixes",
+    "title": "Cookie Prefixes",
+    "facets": {
+      "area": "sessions",
+      "kind": "defence",
+      "owasp": "a07-auth-failures"
+    },
+    "summary": "Names starting __Host- or __Secure- make the browser enforce how a cookie was set.",
+    "description": "A `__Host-` cookie must be `Secure`, have `Path=/` and no `Domain`, so a compromised subdomain or a plain-HTTP page can't overwrite it. `__Secure-` only requires `Secure`. Free hardening for session cookies: rename `sid` to `__Host-sid`.",
+    "aliases": [
+      "__Host-",
+      "__Secure-",
+      "Cookie tossing"
+    ]
+  },
+  {
+    "id": "session-fixation",
+    "title": "Session Fixation",
+    "facets": {
+      "area": "sessions",
+      "kind": "attack",
+      "owasp": "a07-auth-failures"
+    },
+    "summary": "The attacker plants a known session id in the victim's browser, then waits for a login.",
+    "description": "If the id stays the same across login, the attacker's copy becomes logged in too. Issue a new session id on login and on any privilege change, and never accept session ids from URLs. Framework login helpers usually do this for you.",
+    "aliases": [
+      "CWE-384"
+    ]
+  },
+  {
+    "id": "session-hijacking",
+    "title": "Session Hijacking",
+    "facets": {
+      "area": "sessions",
+      "kind": "attack",
+      "owasp": "a07-auth-failures"
+    },
+    "summary": "Stealing a valid session token, via XSS, logs, the network or malware, to act as the user.",
+    "description": "The token is the login, so guard it: HttpOnly and Secure cookies, HTTPS everywhere, no tokens in URLs, idle timeouts and re-authentication for sensitive actions. Binding a session to an IP address breaks mobile users; device-bound sessions are emerging.",
+    "aliases": [
+      "Cookie theft",
+      "Sidejacking"
+    ]
+  },
+  {
+    "id": "session-expiry",
+    "title": "Session Expiry",
+    "facets": {
+      "area": "sessions",
+      "kind": "defence",
+      "owasp": "a07-auth-failures"
+    },
+    "summary": "End sessions after inactivity and after a maximum age, on the server, not just the cookie.",
+    "description": "An idle timeout limits a forgotten laptop; an absolute timeout limits a stolen token. Expire the session server-side, because a cookie's expiry is only a hint to the browser. Ask for the password again before changing the email or password.",
+    "aliases": [
+      "Idle timeout",
+      "Absolute timeout",
+      "Re-authentication"
+    ]
+  },
+  {
+    "id": "jwt",
+    "title": "JWT",
+    "facets": {
+      "area": "sessions",
+      "kind": "mechanism",
+      "owasp": "a07-auth-failures"
+    },
+    "summary": "A signed JSON token (header.payload.signature) a server can verify without a lookup.",
+    "description": "Good for short-lived access tokens between services. Signed isn't encrypted: anyone can read the payload. Check the signature, `exp`, `iss` and `aud` every time. JWTs can't be revoked before they expire, so a cookie session is usually simpler for browsers.",
+    "aliases": [
+      "JSON Web Token",
+      "RFC 7519"
+    ]
+  },
+  {
+    "id": "jwt-algorithm-confusion",
+    "title": "JWT Algorithm Confusion",
+    "facets": {
+      "area": "sessions",
+      "kind": "attack",
+      "owasp": "a04-crypto-failures"
+    },
+    "summary": "Trusting the algorithm named in a token lets attackers pick none, or swap RS256 for HS256.",
+    "description": "With `alg: none` the signature check is skipped; with HS256 a careless library may verify using the RSA public key as the HMAC secret, which anyone has. Pin the expected algorithm and key on the server, use a maintained library, and ignore the header's choice.",
+    "aliases": [
+      "alg: none",
+      "Key confusion",
+      "CWE-347"
+    ]
+  },
+  {
+    "id": "token-storage",
+    "title": "Token Storage",
+    "facets": {
+      "area": "sessions",
+      "kind": "defence",
+      "owasp": "a07-auth-failures"
+    },
+    "summary": "Where a browser app keeps its tokens: an HttpOnly cookie beats localStorage.",
+    "description": "Any script can read localStorage, so one XSS bug steals every token in it. An HttpOnly cookie can't be read (XSS can still use it while the page is open) but needs CSRF defences. A backend-for-frontend keeps OAuth tokens out of the browser entirely.",
+    "aliases": [
+      "localStorage",
+      "BFF",
+      "Backend for frontend"
+    ]
+  },
+  {
+    "id": "refresh-token-rotation",
+    "title": "Refresh Token Rotation",
+    "facets": {
+      "area": "sessions",
+      "kind": "defence",
+      "owasp": "a07-auth-failures"
+    },
+    "summary": "Each use of a refresh token returns a new one; reusing an old one revokes the whole chain.",
+    "description": "Lets access tokens last only minutes without constant logins. If a thief and the user both use the same refresh token, the second use is detected and every token in that chain is revoked. Store refresh tokens like passwords: hashed and revocable.",
+    "aliases": [
+      "Refresh token",
+      "Reuse detection"
+    ]
+  },
+  {
+    "id": "logout",
+    "title": "Logout",
+    "facets": {
+      "area": "sessions",
+      "kind": "defence",
+      "owasp": "a07-auth-failures"
+    },
+    "summary": "Logging out must end the session on the server, not just delete the cookie.",
+    "description": "Invalidate the session record, clear the cookie and revoke refresh tokens. Offer 'log out everywhere', and do it automatically after a password change. With stateless JWTs, logout only works if tokens are short-lived or you keep a denylist.",
+    "aliases": [
+      "Session invalidation",
+      "Sign out everywhere"
+    ]
+  },
+  {
+    "id": "tls",
+    "title": "TLS",
+    "facets": {
+      "area": "transport",
+      "kind": "mechanism",
+      "owasp": "a04-crypto-failures"
+    },
+    "summary": "Encrypts and authenticates a connection, so nobody on the path can read or change it.",
+    "description": "The handshake checks the server's certificate and agrees keys; after that, traffic is encrypted and tamper-evident. Use TLS 1.2 or later (1.3 preferred) everywhere, internal traffic included. It protects data in transit, not on the server.",
+    "aliases": [
+      "HTTPS",
+      "TLS 1.3",
+      "SSL"
+    ]
+  },
+  {
+    "id": "hsts",
+    "title": "HSTS",
+    "facets": {
+      "area": "transport",
+      "kind": "defence",
+      "owasp": "a04-crypto-failures"
+    },
+    "summary": "A header telling browsers to only ever use HTTPS for your domain.",
+    "description": "`Strict-Transport-Security: max-age=31536000; includeSubDomains` stops SSL stripping on later visits. The very first visit is still exposed unless the domain is on the browsers' preload list. Make sure every subdomain serves HTTPS first.",
+    "aliases": [
+      "Strict-Transport-Security",
+      "HSTS preload"
+    ]
+  },
+  {
+    "id": "man-in-the-middle",
+    "title": "Man-in-the-middle",
+    "facets": {
+      "area": "transport",
+      "kind": "attack",
+      "owasp": "a04-crypto-failures"
+    },
+    "summary": "An attacker on the network path reads or changes traffic between client and server.",
+    "description": "Public Wi-Fi, a rogue router or DNS spoofing can put someone in the middle. TLS with proper certificate validation defeats it, and HSTS stops downgrades to plain HTTP. Code that skips certificate checks is the usual hole.",
+    "aliases": [
+      "MITM",
+      "On-path attack"
+    ]
+  },
+  {
+    "id": "certificate-validation",
+    "title": "Certificate Validation",
+    "facets": {
+      "area": "transport",
+      "kind": "defence",
+      "owasp": "a04-crypto-failures"
+    },
+    "summary": "Check the certificate's chain, hostname and dates before trusting a TLS connection.",
+    "description": "Browsers do it for you; your own HTTP clients may be configured not to. Never ship `rejectUnauthorized: false`, `verify=False` or a trust-all `TrustManager` 'just for testing'. For an internal CA, add it to the trust store instead.",
+    "aliases": [
+      "Hostname verification",
+      "CWE-295"
+    ]
+  },
+  {
+    "id": "mixed-content",
+    "title": "Mixed Content",
+    "facets": {
+      "area": "transport",
+      "kind": "mechanism",
+      "owasp": "a04-crypto-failures"
+    },
+    "summary": "An HTTPS page loading scripts, images or API calls over plain HTTP.",
+    "description": "Those requests can be read or swapped on the network, so browsers block mixed scripts, iframes and fetches, and upgrade or block images. Serve everything over HTTPS, or add CSP `upgrade-insecure-requests` while you migrate.",
+    "aliases": [
+      "upgrade-insecure-requests"
+    ]
+  },
+  {
+    "id": "mtls",
+    "title": "Mutual TLS",
+    "facets": {
+      "area": "transport",
+      "kind": "defence",
+      "owasp": "a07-auth-failures"
+    },
+    "summary": "Both sides present certificates, so the server also knows which client is calling.",
+    "description": "Common between services (often through a service mesh) and for high-trust APIs. It authenticates machines, not users. The hard part is issuing and rotating certificates, so automate it with short-lived ones.",
+    "aliases": [
+      "mTLS",
+      "Client certificates"
+    ]
+  },
+  {
+    "id": "downgrade-attack",
+    "title": "Downgrade Attack",
+    "facets": {
+      "area": "transport",
+      "kind": "attack",
+      "owasp": "a04-crypto-failures"
+    },
+    "summary": "Forcing a connection onto a weaker protocol or cipher that can then be read.",
+    "description": "SSL stripping rewrites HTTPS links to HTTP; protocol downgrades push a connection to an old version or weak cipher (POODLE). Fixes: HSTS, turning off old protocols and ciphers on the server, and TLS 1.3, whose handshake detects downgrades.",
+    "aliases": [
+      "SSL stripping",
+      "POODLE"
+    ]
+  },
+  {
+    "id": "hashing-vs-encryption",
+    "title": "Hashing vs Encryption",
+    "facets": {
+      "area": "data",
+      "kind": "mechanism",
+      "owasp": "a04-crypto-failures"
+    },
+    "summary": "Hashing is one-way, for checking; encryption is reversible with a key, for reading back.",
+    "description": "Passwords get a slow hash because you only ever compare them. Data you must read again, like a third-party API token, gets encryption with its key in a KMS. Encoding (Base64) is neither and hides nothing. An HMAC is a keyed hash that proves integrity.",
+    "aliases": [
+      "Base64",
+      "HMAC"
+    ]
+  },
+  {
+    "id": "envelope-encryption",
+    "title": "Envelope Encryption",
+    "facets": {
+      "area": "data",
+      "kind": "defence",
+      "owasp": "a04-crypto-failures"
+    },
+    "summary": "Encrypt data with a data key, and encrypt that key with a master key kept in a KMS.",
+    "description": "The master key never leaves the KMS; the wrapped data key is stored next to the data. Rotating the master key only re-wraps small keys, and every unwrap is an audited KMS call. Use an authenticated mode like AES-GCM with a unique nonce each time.",
+    "aliases": [
+      "KMS",
+      "Data key",
+      "AES-GCM"
+    ]
+  },
+  {
+    "id": "encryption-at-rest",
+    "title": "Encryption at Rest",
+    "facets": {
+      "area": "data",
+      "kind": "defence",
+      "owasp": "a04-crypto-failures"
+    },
+    "summary": "Disks, backups and buckets are encrypted, so a lost drive or snapshot reveals nothing.",
+    "description": "Cloud disk and bucket encryption is usually one setting: turn it on everywhere, backups included. It doesn't stop anyone who can query the running database, so for the most sensitive fields add application-level encryption with keys the database can't reach.",
+    "aliases": [
+      "Disk encryption",
+      "Field-level encryption"
+    ]
+  },
+  {
+    "id": "secure-randomness",
+    "title": "Secure Randomness",
+    "facets": {
+      "area": "data",
+      "kind": "defence",
+      "owasp": "a04-crypto-failures"
+    },
+    "summary": "Tokens, ids and keys come from a cryptographic random generator, never Math.random().",
+    "description": "`Math.random()` and its cousins are predictable: someone who sees a few outputs can work out the next ones. Use `crypto.getRandomValues()`, Node's `crypto.randomBytes()` or Python's `secrets`, with at least 128 bits for session ids and reset tokens.",
+    "aliases": [
+      "CSPRNG",
+      "CWE-338"
+    ]
+  },
+  {
+    "id": "timing-attack",
+    "title": "Timing Attack",
+    "facets": {
+      "area": "data",
+      "kind": "attack",
+      "owasp": "a04-crypto-failures"
+    },
+    "summary": "Measuring how long a comparison takes reveals how much of a secret was right.",
+    "description": "An ordinary string comparison stops at the first different character, so checking a token or signature leaks its prefix bit by bit over many requests. Compare secrets in constant time (`crypto.timingSafeEqual`, `hmac.compare_digest`).",
+    "aliases": [
+      "Side channel",
+      "Constant-time comparison",
+      "CWE-208"
+    ]
+  },
+  {
+    "id": "secrets-management",
+    "title": "Secrets Management",
+    "facets": {
+      "area": "data",
+      "kind": "defence",
+      "owasp": "a02-misconfiguration"
+    },
+    "summary": "API keys and passwords live in a secrets manager, injected at runtime, never in git.",
+    "description": "A secret in code lands in every clone, fork and CI log. Load secrets from a vault or the platform's secret store, give each service its own with least privilege, rotate them, and scan commits. A leaked key must be revoked, not just removed from history.",
+    "aliases": [
+      "Vault",
+      "Secret scanning",
+      "CWE-798"
+    ]
+  },
+  {
+    "id": "pii-in-logs",
+    "title": "Sensitive Data in Logs",
+    "facets": {
+      "area": "data",
+      "kind": "defence",
+      "owasp": "a09-logging-failures"
+    },
+    "summary": "Logs never hold passwords, tokens, card numbers, or more personal data than needed.",
+    "description": "Logs are copied to more systems, with looser access, than the database. Redact at the logger with an allowlist of fields, never log whole request bodies or auth headers, and set a retention period. A token in a log works for anyone who reads it.",
+    "aliases": [
+      "Log redaction",
+      "PII",
+      "CWE-532"
+    ]
+  },
+  {
+    "id": "data-minimization",
+    "title": "Data Minimisation",
+    "facets": {
+      "area": "data",
+      "kind": "defence",
+      "owasp": "a06-insecure-design"
+    },
+    "summary": "Don't collect or keep data you don't need: it can't leak if it isn't there.",
+    "description": "Ask why each field is stored, and delete it when its purpose ends. Keep a payment provider's card token, not the card. The GDPR requires it, and it shrinks every breach, backup and data-access request.",
+    "aliases": [
+      "Retention",
+      "GDPR"
+    ]
+  },
+  {
+    "id": "verbose-errors",
+    "title": "Verbose Error Messages",
+    "facets": {
+      "area": "data",
+      "kind": "attack",
+      "owasp": "a10-exceptional-conditions"
+    },
+    "summary": "Stack traces and SQL errors shown to users reveal versions, paths and queries.",
+    "description": "Show users a generic message with a reference id, and log the details server-side under that id. Turn off framework debug pages in production. Errors that differ by cause (unknown user vs wrong password) leak too, so keep them uniform.",
+    "aliases": [
+      "Stack trace",
+      "Information exposure",
+      "CWE-209"
+    ]
+  },
+  {
+    "id": "fail-closed",
+    "title": "Fail Closed",
+    "facets": {
+      "area": "data",
+      "kind": "defence",
+      "owasp": "a10-exceptional-conditions"
+    },
+    "summary": "When a security check errors, deny the request instead of letting it through.",
+    "description": "If the auth service times out or a policy check throws, the safe default is no access. A `catch` that logs and carries on, or an `if (!denied)` that passes on errors, fails open. Fail open on purpose only for features that aren't about security.",
+    "aliases": [
+      "Fail secure",
+      "Fail open",
+      "CWE-636"
+    ]
+  },
+  {
+    "id": "dependency-confusion",
+    "title": "Dependency Confusion",
+    "facets": {
+      "area": "supply-chain",
+      "kind": "attack",
+      "owasp": "a03-supply-chain"
+    },
+    "summary": "A public package named like your private one gets installed instead of it.",
+    "description": "If the package manager also checks the public registry, an attacker publishes `your-internal-lib` with a higher version. Use scoped names (`@company/lib`), map the scope to your private registry, and reserve the names publicly.",
+    "aliases": [
+      "Namespace confusion",
+      "Substitution attack"
+    ]
+  },
+  {
+    "id": "typosquatting",
+    "title": "Typosquatting",
+    "facets": {
+      "area": "supply-chain",
+      "kind": "attack",
+      "owasp": "a03-supply-chain"
+    },
+    "summary": "Malicious packages named like popular ones wait for someone to mistype an install.",
+    "description": "`lodahs` instead of `lodash`: its install script runs the moment it's added. Copy names from official docs, review every new dependency, and use tooling that flags new, little-used or recently transferred packages.",
+    "aliases": [
+      "Package typosquatting"
+    ]
+  },
+  {
+    "id": "lockfiles",
+    "title": "Lockfiles",
+    "facets": {
+      "area": "supply-chain",
+      "kind": "defence",
+      "owasp": "a03-supply-chain"
+    },
+    "summary": "Pin every direct and transitive dependency to an exact version and hash.",
+    "description": "`pnpm-lock.yaml`, `package-lock.json` or `poetry.lock` make installs reproducible and record integrity hashes, so a changed tarball fails. Commit them, install with `--frozen-lockfile` in CI, and read lockfile diffs in review.",
+    "aliases": [
+      "Frozen lockfile",
+      "Integrity hash"
+    ]
+  },
+  {
+    "id": "subresource-integrity",
+    "title": "Subresource Integrity",
+    "facets": {
+      "area": "supply-chain",
+      "kind": "defence",
+      "owasp": "a08-integrity-failures"
+    },
+    "summary": "An integrity hash on a CDN script makes the browser refuse it if the file changes.",
+    "description": "`<script src=\"…\" integrity=\"sha384-…\" crossorigin>` stops a compromised CDN serving altered code. It only works for versioned files that never change. Self-hosting removes the third party altogether.",
+    "aliases": [
+      "SRI"
+    ]
+  },
+  {
+    "id": "sbom",
+    "title": "SBOM",
+    "facets": {
+      "area": "supply-chain",
+      "kind": "mechanism",
+      "owasp": "a03-supply-chain"
+    },
+    "summary": "A machine-readable list of every component and version inside your software.",
+    "description": "SPDX or CycloneDX files generated at build time let you answer 'are we affected?' in minutes when a new CVE drops. They describe what's inside; they don't fix anything. Some customers and regulators now ask for them.",
+    "aliases": [
+      "Software bill of materials",
+      "CycloneDX",
+      "SPDX"
+    ]
+  },
+  {
+    "id": "dependency-scanning",
+    "title": "Dependency Scanning",
+    "facets": {
+      "area": "supply-chain",
+      "kind": "defence",
+      "owasp": "a03-supply-chain"
+    },
+    "summary": "Automatically check dependencies against databases of known vulnerabilities.",
+    "description": "Dependabot, `npm audit`, Snyk or OSV-Scanner flag packages with published advisories and can open update PRs. Triage by whether the vulnerable code is reachable and exposed, not by raw counts, or alert fatigue sets in.",
+    "aliases": [
+      "SCA",
+      "Software composition analysis"
+    ]
+  },
+  {
+    "id": "install-scripts",
+    "title": "Install Scripts",
+    "facets": {
+      "area": "supply-chain",
+      "kind": "attack",
+      "owasp": "a03-supply-chain"
+    },
+    "summary": "Packages can run code at install time (postinstall), before you ever import them.",
+    "description": "A malicious or hijacked package runs with your rights on every laptop and CI runner that installs it. Turn lifecycle scripts off by default (`ignore-scripts`, or pnpm's allowlist of packages that may build) and allow them one by one.",
+    "aliases": [
+      "postinstall",
+      "Lifecycle scripts"
+    ]
+  },
+  {
+    "id": "artifact-signing",
+    "title": "Artifact Signing",
+    "facets": {
+      "area": "supply-chain",
+      "kind": "defence",
+      "owasp": "a08-integrity-failures"
+    },
+    "summary": "Sign build outputs so consumers can check who built them and that nothing changed.",
+    "description": "Sigstore's cosign signs container images with short-lived keys; npm provenance links a package to the CI run that built it. Verify signatures when you deploy or install, or signing proves nothing.",
+    "aliases": [
+      "Sigstore",
+      "cosign",
+      "Provenance"
+    ]
+  },
+  {
+    "id": "pipeline-poisoning",
+    "title": "Poisoned Pipeline",
+    "facets": {
+      "area": "supply-chain",
+      "kind": "attack",
+      "owasp": "a08-integrity-failures"
+    },
+    "summary": "Untrusted code runs in CI with access to secrets or deploy rights.",
+    "description": "A pull request from a fork that edits the build script, or a `pull_request_target` workflow that checks out its code, can steal tokens. Run untrusted code without secrets, give each job a least-privilege token, and protect release branches.",
+    "aliases": [
+      "Poisoned pipeline execution",
+      "CI/CD attack"
+    ]
+  },
+  {
+    "id": "pinned-actions",
+    "title": "Pinned CI Actions",
+    "facets": {
+      "area": "supply-chain",
+      "kind": "defence",
+      "owasp": "a03-supply-chain"
+    },
+    "summary": "Reference third-party CI actions by full commit SHA, not by a tag that can move.",
+    "description": "`uses: some/action@v3` runs whatever the tag points to today, so a hijacked maintainer account changes your build. A full 40-character commit SHA can't move. Let Dependabot or Renovate bump the SHAs for you.",
+    "aliases": [
+      "GitHub Actions",
+      "Commit SHA pinning"
+    ]
+  },
+  {
+    "id": "ssrf",
+    "title": "SSRF",
+    "facets": {
+      "area": "infrastructure",
+      "kind": "attack",
+      "owasp": "a01-access-control"
+    },
+    "summary": "The server fetches a URL the attacker chose, reaching internal services it shouldn't.",
+    "description": "Webhooks, link previews and 'import from URL' fetch from inside your network, where admin panels and cloud metadata trust the caller. Allowlist destinations, block private and link-local addresses after resolving DNS, don't follow redirects, and use an egress proxy.",
+    "aliases": [
+      "Server-side request forgery",
+      "CWE-918"
+    ]
+  },
+  {
+    "id": "cloud-metadata",
+    "title": "Cloud Metadata Protection",
+    "facets": {
+      "area": "infrastructure",
+      "kind": "defence",
+      "owasp": "a01-access-control"
+    },
+    "summary": "Require IMDSv2 so an SSRF bug can't read instance credentials from 169.254.169.254.",
+    "description": "The metadata endpoint hands out the instance role's credentials. IMDSv2 first needs a session token from a PUT request with a hop limit, which most SSRF bugs can't send. Enforce it on every instance, keep instance roles minimal, and block the address in proxies.",
+    "aliases": [
+      "IMDSv2",
+      "169.254.169.254",
+      "Instance metadata"
+    ]
+  },
+  {
+    "id": "least-privilege",
+    "title": "Least Privilege",
+    "facets": {
+      "area": "infrastructure",
+      "kind": "defence",
+      "owasp": "a01-access-control"
+    },
+    "summary": "Every user, service and key gets only the permissions its job needs.",
+    "description": "A compromised part can then only do what it was allowed to. Split read and write database users, scope cloud roles to named resources instead of `*`, and give people admin rights just in time. Review grants: left alone, permissions only grow.",
+    "aliases": [
+      "PoLP",
+      "Just-in-time access"
+    ]
+  },
+  {
+    "id": "waf",
+    "title": "Web Application Firewall",
+    "facets": {
+      "area": "infrastructure",
+      "kind": "defence",
+      "owasp": "a05-injection"
+    },
+    "summary": "Filters HTTP traffic against known attack patterns before it reaches the app.",
+    "description": "Useful for virtual patching while you fix a bug, blocking scanners and bots, and rate limiting. Encodings can slip past signatures and false positives block real users, so start in log-only mode. It's a layer on top of secure code, never a replacement.",
+    "aliases": [
+      "WAF",
+      "Virtual patching",
+      "ModSecurity"
+    ]
+  },
+  {
+    "id": "ddos-protection",
+    "title": "DDoS Protection",
+    "facets": {
+      "area": "infrastructure",
+      "kind": "defence",
+      "owasp": "a06-insecure-design"
+    },
+    "summary": "Absorb floods of traffic at the edge so the origin keeps serving real users.",
+    "description": "Network floods are soaked up by the CDN or provider's network, not your servers. Application-layer floods need rate limits, caching and challenges for suspicious clients. Keep the origin's IP hidden behind the edge, and protect expensive endpoints like search.",
+    "aliases": [
+      "DoS",
+      "Layer 7 flood"
+    ]
+  },
+  {
+    "id": "network-segmentation",
+    "title": "Network Segmentation",
+    "facets": {
+      "area": "infrastructure",
+      "kind": "defence",
+      "owasp": "a02-misconfiguration"
+    },
+    "summary": "Split the network into zones so a breach in one can't freely reach the others.",
+    "description": "Databases sit in private subnets only the app tier can reach; admin tools sit behind a VPN or an identity-aware proxy. Default-deny rules between services limit lateral movement. Zero trust goes further and authenticates every call, even inside the network.",
+    "aliases": [
+      "Private subnet",
+      "Zero trust",
+      "Lateral movement"
+    ]
+  },
+  {
+    "id": "default-credentials",
+    "title": "Default Credentials",
+    "facets": {
+      "area": "infrastructure",
+      "kind": "attack",
+      "owasp": "a02-misconfiguration"
+    },
+    "summary": "Admin panels, databases and devices left with their factory username and password.",
+    "description": "Scanners try well-known default logins on new services within minutes of them going online. Generate a unique password at install or force a change, disable unused default accounts, and keep admin interfaces off the public internet.",
+    "aliases": [
+      "Factory password",
+      "CWE-1392"
+    ]
+  },
+  {
+    "id": "exposed-files",
+    "title": "Exposed Files",
+    "facets": {
+      "area": "infrastructure",
+      "kind": "attack",
+      "owasp": "a02-misconfiguration"
+    },
+    "summary": "A public .git folder, .env file or backup on the web server hands over source and secrets.",
+    "description": "Deploying the whole project folder publishes `.git/`, `.env`, `*.bak` files and database dumps. Serve only a build output folder, deny dotfiles in the web server, turn off directory listing, and scan your own site for these paths.",
+    "aliases": [
+      ".env",
+      ".git",
+      "Directory listing",
+      "CWE-538"
+    ]
+  },
+  {
+    "id": "debug-mode",
+    "title": "Debug Mode in Production",
+    "facets": {
+      "area": "infrastructure",
+      "kind": "attack",
+      "owasp": "a02-misconfiguration"
+    },
+    "summary": "Framework debug pages left on expose settings, source code and sometimes a live console.",
+    "description": "Some debug pages show environment variables, and some open an interactive console that runs code. Make production the safe default, read the setting from the environment, and check it in the deploy pipeline. Strip test and admin-only routes from builds.",
+    "aliases": [
+      "Debug toolbar",
+      "CWE-489"
+    ]
+  },
+  {
+    "id": "security-logging",
+    "title": "Security Logging",
+    "facets": {
+      "area": "infrastructure",
+      "kind": "defence",
+      "owasp": "a09-logging-failures"
+    },
+    "summary": "Record logins, failures, permission denials and admin actions so attacks can be spotted.",
+    "description": "Log who, what, when and from where in a structured format, ship it off the host, and alert on patterns such as failure spikes or new admin grants. Logs nobody watches don't help, so alerting matters as much as logging.",
+    "aliases": [
+      "Audit events",
+      "SIEM"
+    ]
+  },
+  {
+    "id": "audit-trail",
+    "title": "Audit Trail",
+    "facets": {
+      "area": "infrastructure",
+      "kind": "defence",
+      "owasp": "a09-logging-failures"
+    },
+    "summary": "A tamper-evident record of who changed what, kept apart from the data it describes.",
+    "description": "Append-only entries with actor, action, target, before and after values and time. Store them where the app's own credentials can't edit or delete them, like a separate account or write-once storage. It answers 'who made this user an admin?'.",
+    "aliases": [
+      "Audit log",
+      "Append-only",
+      "WORM"
+    ]
+  },
+  {
+    "id": "container-hardening",
+    "title": "Container Hardening",
+    "facets": {
+      "area": "infrastructure",
+      "kind": "defence",
+      "owasp": "a02-misconfiguration"
+    },
+    "summary": "Run containers as non-root, read-only, with minimal images and capabilities.",
+    "description": "Start from a slim or distroless base so there's less to exploit, set a non-root `USER`, drop Linux capabilities, mount the filesystem read-only and never run `--privileged`. Scan images for known CVEs and rebuild often so patches land.",
+    "aliases": [
+      "Distroless",
+      "Non-root",
+      "Rootless"
+    ]
+  }
+]
