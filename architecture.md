@@ -51,7 +51,8 @@ flowchart LR
 
 ## Data flow
 
-1. **Load:** at build time Vite inlines every `deck.json`, `cards.json` and SVG URL;
+1. **Load:** at build time Vite bundles every `deck.json` and `cards.json`, and emits each
+   SVG as its own hashed file in `dist/assets/` (only its URL goes in the JS);
    `decks/index.ts` groups them by folder. Image variants come from the file name:
    `<id>.svg`, `<id>.mobile.svg`, `<id>.ios.svg`, `<id>.android.svg`.
 2. **Pick:** `App` reads the deck id from the hash. No (or an unknown) deck shows
@@ -97,5 +98,8 @@ No state is persisted: reload starts from the URL hash with no filters.
   run by hand. The tag always equals the `package.json` version (`npm version`); the
   `release` skill in `.claude/skills/` runs the whole release. `public/CNAME` carries the domain into `dist/`, and DNS points the name at
   `pearpages.github.io`.
-- **Bundle:** small SVGs are inlined as data URIs, so the JS bundle is ~750 kB (~175 kB
-  gzipped) and Vite warns about chunk size.
+- **Bundle:** `vite.config.ts` never inlines SVGs (`assetsInlineLimit`), so drawings are
+  separate files the browser fetches when an `<img>` shows them; browse thumbnails use
+  `loading="lazy"` ([ADR-0012](docs/adr/0012-card-drawings-as-separate-files.md)). The JS
+  is ~670 kB (~210 kB gzipped) with five decks: React, Framer Motion and the card text,
+  so Vite still warns about chunk size.

@@ -195,7 +195,7 @@ export default function BrowseView({
                       onClick={() => onSelect(card)}
                     >
                       {thumb ? (
-                        <img className="browse__thumb" src={thumb} alt="" />
+                        <img className="browse__thumb" src={thumb} alt="" loading="lazy" decoding="async" />
                       ) : (
                         <span className="browse__thumb browse__thumb--empty">?</span>
                       )}

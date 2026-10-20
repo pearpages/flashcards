@@ -10,8 +10,9 @@ item, and add a dated line at the top of **Done**.
 - [ ] **Review native-platform names.** Newer Material 3 Expressive names (ButtonGroup,
       SplitButtonLayout, FloatingToolbar) and some iOS approximations (TipKit for Tour) were
       written from memory — check against current docs in `cards.json`.
-- [ ] **Bundle size.** Inlined SVGs push the JS to ~1.5 MB (~295 kB gzipped) with five decks, up from ~750 kB with one; every deck's drawings load on the home screen — consider
-      `build.assetsInlineLimit` or lazy-loading images.
+- [ ] **Split card text per deck** if the bundle grows again: the JS is ~670 kB (~210 kB
+      gzipped) after ADR-0012, about a third of it card text for all five decks. Loading a
+      deck's cards on entry needs async loading in `decks/index.ts`, `App` and `DeckView`.
 - [ ] **Review Proposed ADRs 0006–0007** (GitHub Pages on `v*` tags; Vitest and CI).
 - [ ] **Review the accessibility deck** (100 cards, ADR-0008 Proposed): check the content and
       the SwiftUI/Compose names in `src/decks/accessibility/cards.json` against current
@@ -55,6 +56,7 @@ item, and add a dated line at the top of **Done**.
 
 ## Done
 
+- [x] 2026-10-20: Bundle size: card drawings are separate hashed files instead of inlined data URIs, browse thumbnails lazy-load; JS 1.8 MB → 670 kB (337 → 210 kB gzipped) (ADR-0012).
 - [x] 2026-10-20: Web Performance deck: 100 cards (metrics, measurement, network, server, caching, loading, assets, JavaScript, rendering) with a drawing each, anti-patterns as their own kind, and the metric each card improves as a badge (ADR-0011).
 - [x] 2026-10-20: Web Security deck: 100 cards (attacks, defences and mechanisms across injection, browser, auth, sessions, transport, data, supply chain and infrastructure) with a drawing each and an OWASP Top 10 (2025) badge (ADR-0010).
 - [x] 2026-10-20: Grew the accessibility deck to 100 cards (14 more patterns, alertdialog, 10 more ARIA attributes, 24 more WCAG 2.2 criteria; new `photosensitive` value for Three Flashes) and the system-design deck to 104 (45 more: storage internals, data systems, distributed systems, service infrastructure, operations), each card with a drawing.
