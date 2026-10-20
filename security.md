@@ -1,6 +1,6 @@
 # Security
 
-The security surface of Design System Flashcards and the rules that protect it. General
+The security surface of Flashcards and the rules that protect it. General
 rules are in [principles.md](principles.md); how the pieces fit in
 [architecture.md](architecture.md). Update this file whenever the surface changes (new
 input, endpoint, secret, dependency, permission).

@@ -22,7 +22,7 @@ function previewImages(deck: Deck): string[] {
 
 export default function DeckPicker({ decks, onSelect }: DeckPickerProps) {
   useEffect(() => {
-    document.title = "Design System Flashcards";
+    document.title = "Flashcards";
   }, []);
 
   return (

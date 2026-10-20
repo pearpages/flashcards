@@ -1,10 +1,11 @@
-# Design System Flashcards
+# Flashcards
 
-A mobile-first flashcard app for learning design system components. Each deck is a data
-folder in `src/decks/` (the first one, design-system, has 155 components) with filters,
-a browse view, desktop/mobile/iOS/Android drawings and native-platform equivalents. It is a
-static React + Vite site; the source is public on GitHub, and pushing a `v*` tag publishes
-it to GitHub Pages at flashcards.pearpages.com.
+A mobile-first flashcard app with six decks (design system, CSS, accessibility, web
+performance, web security, system design). Each deck is a data folder in `src/decks/`
+with its own filters, badges, drawings and, where it declares them, platform equivalents
+(iOS/Android, SwiftUI/Compose, AWS/GCP/Azure); all decks share one browse view and
+study stack. It is a static React + Vite site; the source is public on GitHub, and
+pushing a `v*` tag publishes it to GitHub Pages at flashcards.pearpages.com.
 
 ## Project documents — read before working
 

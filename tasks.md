@@ -40,9 +40,6 @@ item, and add a dated line at the top of **Done**.
       `hyphens` prefixes, unprefixed `line-clamp`; `.keyframeAnimator()`,
       `SharedTransitionLayout`, `ViewThatFits` / `BoxWithConstraints` as container-query
       equivalents, `Modifier.weight()` for `fr`.
-- [ ] **Branding with six decks.** The page title, OG tags, `og.webp` and `document.title`
-      in `DeckPicker` still say "Design System Flashcards" and "155 components" — decide
-      whether the site becomes plain "Flashcards".
 - [ ] **Review the system-design deck** (104 cards, ADR-0009 Proposed): check the
       descriptions and the AWS/GCP/Azure service names in
       `src/decks/system-design/cards.json` against current provider docs; written from memory.
@@ -64,6 +61,7 @@ item, and add a dated line at the top of **Done**.
 
 ## Done
 
+- [x] 2026-10-20: Rebranded to plain "Flashcards": page title, meta and Open Graph/Twitter tags, a new `og.webp` ("Learn the web, one card at a time", six decks), `document.title` on the picker, package.json, README and the knowledge files.
 - [x] 2026-10-20: CSS deck: 100 cards (cascade, selectors, box model, flexbox, grid, positioning, responsive, typography, colour, motion, architecture) with a drawing each, a Baseline status badge and SwiftUI/Compose equivalents for layout (ADR-0013).
 - [x] 2026-10-20: Bundle size: card drawings are separate hashed files instead of inlined data URIs, browse thumbnails lazy-load; JS 1.8 MB → 670 kB (337 → 210 kB gzipped) (ADR-0012).
 - [x] 2026-10-20: Web Performance deck: 100 cards (metrics, measurement, network, server, caching, loading, assets, JavaScript, rendering) with a drawing each, anti-patterns as their own kind, and the metric each card improves as a badge (ADR-0011).

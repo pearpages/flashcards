@@ -1,4 +1,4 @@
-# Design System Flashcards
+# Flashcards
 
 [![Live site](https://img.shields.io/badge/live-flashcards.pearpages.com-5b5bd6)](https://flashcards.pearpages.com)
 [![CI](https://github.com/pearpages/flashcards/actions/workflows/ci.yml/badge.svg)](https://github.com/pearpages/flashcards/actions/workflows/ci.yml)
@@ -6,7 +6,9 @@
 [![Release](https://img.shields.io/github/v/release/pearpages/flashcards)](https://github.com/pearpages/flashcards/releases)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-A mobile-first flashcard deck for learning design system components: 155 components, each tagged three ways: its purpose (forms, navigation, overlays…), its layer (primitive, component, pattern) and its atomic design level (atom, molecule, organism, template). Each card has wireframe drawings and, for most, the iOS and Android equivalents.
+A mobile-first flashcard app with six decks: design systems, CSS, accessibility, web performance, web security and system design. Every card has a wireframe drawing, and each deck brings its own filters and badges.
+
+The first deck, **Design System**, has 155 components, each tagged three ways: its purpose (forms, navigation, overlays…), its layer (primitive, component, pattern) and its atomic design level (atom, molecule, organism, template). Each card has wireframe drawings and, for most, the iOS and Android equivalents.
 
 A second deck, **Accessibility**, covers 100 ARIA patterns, roles and attributes, techniques and WCAG 2.2 criteria, filtered by kind and by who they help most (screen reader, keyboard, low vision, motor, cognitive, hearing, vestibular, photosensitive), with the WCAG level as a badge and the SwiftUI and Compose equivalents.
 

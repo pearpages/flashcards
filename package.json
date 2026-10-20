@@ -2,11 +2,16 @@
   "name": "flashcards",
   "private": true,
   "version": "0.3.0",
-  "description": "Mobile-first flashcards for learning design system components, with drawings, filters and iOS/Android equivalents.",
+  "description": "Mobile-first flashcards for learning design systems, CSS, accessibility, web performance, web security and system design, with drawings, filters and native equivalents.",
   "keywords": [
     "flashcards",
     "design-system",
     "ui-components",
+    "css",
+    "accessibility",
+    "web-performance",
+    "web-security",
+    "system-design",
     "learning",
     "react",
     "vite"

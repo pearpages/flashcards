@@ -1,6 +1,6 @@
 # Decisions
 
-Architecture Decision Records for Design System Flashcards. Each ADR in `docs/adr/` records
+Architecture Decision Records for Flashcards. Each ADR in `docs/adr/` records
 one choice, its context and its trade-off. The rules that follow from them are in
 [principles.md](principles.md).
 
