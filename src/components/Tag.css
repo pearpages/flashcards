@@ -41,3 +41,18 @@
   background: #fdf0e1;
   color: #a85d10;
 }
+
+.tag--wcag-a {
+  background: #e6f4ea;
+  color: #1e7a3c;
+}
+
+.tag--wcag-aa {
+  background: #e8eefc;
+  color: #2f5bc4;
+}
+
+.tag--wcag-aaa {
+  background: #f3e8fc;
+  color: #7a3cc4;
+}

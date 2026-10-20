@@ -1,0 +1,41 @@
+{
+  "id": "accessibility",
+  "title": "Accessibility",
+  "description": "ARIA roles and attributes, widget patterns, techniques and WCAG 2.2 criteria: what each one is for, when to pick it over its siblings, and the native iOS and Android equivalent.",
+  "facets": [
+    {
+      "key": "kind",
+      "label": "Kind",
+      "values": [
+        "pattern",
+        "role",
+        "attribute",
+        "technique",
+        "criterion"
+      ]
+    },
+    {
+      "key": "helps",
+      "label": "Helps most",
+      "values": [
+        "screen-reader",
+        "keyboard",
+        "low-vision",
+        "motor",
+        "cognitive",
+        "hearing",
+        "vestibular"
+      ]
+    },
+    {
+      "key": "level",
+      "label": "WCAG level",
+      "filter": false,
+      "values": [
+        "wcag-a",
+        "wcag-aa",
+        "wcag-aaa"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,516 @@
+[
+  {
+    "id": "modal-dialog",
+    "title": "Modal Dialog",
+    "facets": { "kind": "pattern", "helps": "keyboard", "level": "wcag-a" },
+    "summary": "An overlay that takes focus, keeps Tab inside and makes the page behind inert.",
+    "description": "Use `<dialog>` with `showModal()`: it makes the rest of the page inert and closes on Esc. Move focus inside on open, return it to the trigger on close, and name the dialog with `aria-labelledby` pointing at its title.",
+    "aliases": ["role=dialog", "aria-modal"],
+    "platforms": {
+      "ios": ".accessibilityAddTraits(.isModal)",
+      "android": "Dialog composable"
+    }
+  },
+  {
+    "id": "disclosure",
+    "title": "Disclosure",
+    "facets": { "kind": "pattern", "helps": "screen-reader", "level": "wcag-a" },
+    "summary": "A button that shows and hides a region, with aria-expanded telling its state.",
+    "description": "The simplest show/hide: a `<button aria-expanded>` next to the content, or native `<details>`/`<summary>`. Pick it over Accordion when the sections are independent and don't need headings.",
+    "aliases": ["Show/hide", "details/summary"],
+    "platforms": {
+      "ios": "DisclosureGroup",
+      "android": "semantics { expand() / collapse() }"
+    }
+  },
+  {
+    "id": "accordion",
+    "title": "Accordion",
+    "facets": { "kind": "pattern", "helps": "screen-reader", "level": "wcag-a" },
+    "summary": "Stacked headings whose buttons each expand one panel.",
+    "description": "Each header is a button inside a heading (`h3 > button[aria-expanded]`), so heading navigation still works. Panels may be `role=region` labelled by their header, but only when there are few, or the landmarks list floods.",
+    "platforms": {
+      "ios": "DisclosureGroup in a List",
+      "android": "semantics { expand() / collapse() }"
+    }
+  },
+  {
+    "id": "tabs",
+    "title": "Tabs",
+    "facets": { "kind": "pattern", "helps": "keyboard", "level": "wcag-a" },
+    "summary": "A tablist of tabs with one visible tabpanel; arrow keys move between tabs.",
+    "description": "Only the selected tab is in the Tab order (roving tabindex); ←/→ move and Home/End jump. `aria-selected` marks the active tab and `aria-controls` links its panel. Activate on Enter instead of on focus when panels are slow to load.",
+    "aliases": ["tablist", "tabpanel"],
+    "platforms": {
+      "ios": "Picker with .segmented style",
+      "android": "TabRow; each Tab has Role.Tab"
+    }
+  },
+  {
+    "id": "menu-button",
+    "title": "Menu Button",
+    "facets": { "kind": "pattern", "helps": "keyboard", "level": "wcag-a" },
+    "summary": "A button that opens a menu of actions; aria-haspopup and aria-expanded announce it.",
+    "description": "`role=menu` is for app-like command menus with arrow keys and typeahead, not for site navigation, which is a list of links in `<nav>`. Focus moves to the first item on open and back to the button on Esc.",
+    "aliases": ["role=menu", "aria-haspopup"],
+    "platforms": {
+      "ios": "Menu",
+      "android": "DropdownMenu"
+    }
+  },
+  {
+    "id": "combobox",
+    "title": "Combobox",
+    "facets": { "kind": "pattern", "helps": "screen-reader", "level": "wcag-a" },
+    "summary": "A text input with a popup listbox; focus stays in the input while options highlight.",
+    "description": "`aria-activedescendant` points at the highlighted option so it is announced without moving focus. `aria-expanded` sits on the input; `aria-autocomplete` says whether typing filters the list or completes inline.",
+    "aliases": ["Autocomplete", "aria-activedescendant"],
+    "platforms": {
+      "ios": ".searchable with .searchSuggestions",
+      "android": "ExposedDropdownMenuBox"
+    }
+  },
+  {
+    "id": "listbox",
+    "title": "Listbox",
+    "facets": { "kind": "pattern", "helps": "keyboard", "level": "wcag-a" },
+    "summary": "A list of selectable options with one tab stop; arrow keys move, Space selects.",
+    "description": "Use native `<select>` when you can: it works everywhere for free. A custom listbox needs `role=option` children, `aria-selected`, `aria-multiselectable` for multiple choice, typeahead, and a single tab stop.",
+    "aliases": ["role=option"],
+    "platforms": {
+      "ios": "List(selection:)",
+      "android": "selectableGroup() + Modifier.selectable"
+    }
+  },
+  {
+    "id": "switch",
+    "title": "Switch",
+    "facets": { "kind": "pattern", "helps": "screen-reader", "level": "wcag-a" },
+    "summary": "An on/off control announced as 'switch, on' that takes effect immediately.",
+    "description": "Use `role=switch` with `aria-checked`, or `<input type=checkbox role=switch>`. Pick it over a checkbox when the change applies at once (settings), and over a toggle button when the label names a setting rather than an action.",
+    "aliases": ["role=switch", "Toggle"],
+    "platforms": {
+      "ios": "Toggle",
+      "android": "Switch (Role.Switch)"
+    }
+  },
+  {
+    "id": "tooltip",
+    "title": "Tooltip",
+    "facets": { "kind": "pattern", "helps": "low-vision", "level": "wcag-aa" },
+    "summary": "Short supplementary text on hover and focus, linked with aria-describedby.",
+    "description": "Never the only label and never interactive. WCAG 1.4.13: it appears on focus as well as hover, stays while the pointer moves onto it, and closes on Esc without moving focus. Icon buttons still need their own name.",
+    "aliases": ["role=tooltip", "SC 1.4.13"],
+    "platforms": {
+      "ios": ".help(\"…\")",
+      "android": "PlainTooltip in a TooltipBox"
+    }
+  },
+  {
+    "id": "breadcrumb",
+    "title": "Breadcrumb",
+    "facets": { "kind": "pattern", "helps": "cognitive", "level": "wcag-aaa" },
+    "summary": "A labelled nav with an ordered list of links; the last one has aria-current=page.",
+    "description": "`<nav aria-label=\"Breadcrumb\">` wraps an `<ol>`, so screen readers announce how many levels deep you are. Draw separators with CSS or mark them `aria-hidden`. Showing where you are helps meet 2.4.8 Location (AAA).",
+    "aliases": ["SC 2.4.8"]
+  },
+  {
+    "id": "landmarks",
+    "title": "Landmarks",
+    "facets": { "kind": "role", "helps": "screen-reader", "level": "wcag-a" },
+    "summary": "header, nav, main, aside and footer: regions screen reader users jump between.",
+    "description": "They map to banner, navigation, main, complementary and contentinfo. Use one `<main>` per page and label repeated landmarks (two navs) with `aria-label`. A `<section>` only becomes a region landmark once it has an accessible name.",
+    "aliases": ["banner", "navigation", "main", "contentinfo", "region"]
+  },
+  {
+    "id": "button-role",
+    "title": "Button role",
+    "facets": { "kind": "role", "helps": "keyboard", "level": "wcag-a" },
+    "summary": "Native <button> gives you the role, focus, Enter and Space for free.",
+    "description": "`role=button` on a div only changes what is announced: you still owe `tabindex=0`, Enter and Space handlers and disabled behaviour. Use `<button type=\"button\">` and style it however you like.",
+    "aliases": ["role=button"],
+    "platforms": {
+      "ios": ".accessibilityAddTraits(.isButton)",
+      "android": "Modifier.semantics { role = Role.Button }"
+    }
+  },
+  {
+    "id": "alert-role",
+    "title": "Alert role",
+    "facets": { "kind": "role", "helps": "screen-reader", "level": "wcag-aa" },
+    "summary": "An assertive live region: interrupts the screen reader to announce at once.",
+    "description": "For urgent, time-sensitive messages (session expiring, save failed). `role=alert` implies `aria-live=assertive`. Put the text into a container that is already in the DOM; a region inserted with its content may not be read.",
+    "aliases": ["role=alert", "SC 4.1.3"],
+    "platforms": {
+      "ios": "AccessibilityNotification.Announcement",
+      "android": "liveRegion = LiveRegionMode.Assertive"
+    }
+  },
+  {
+    "id": "status-role",
+    "title": "Status role",
+    "facets": { "kind": "role", "helps": "screen-reader", "level": "wcag-aa" },
+    "summary": "A polite live region for advisory messages like 'Saved' or '3 results'.",
+    "description": "`role=status` waits until the user pauses. Prefer it to alert unless a delay would cause harm: too many interruptions and people stop listening. Use `role=log` for appended history such as chat messages.",
+    "aliases": ["role=status", "role=log", "SC 4.1.3"],
+    "platforms": {
+      "ios": "Announcement with low speech priority",
+      "android": "liveRegion = LiveRegionMode.Polite"
+    }
+  },
+  {
+    "id": "presentation-role",
+    "title": "Presentation role",
+    "facets": { "kind": "role", "helps": "screen-reader", "level": "wcag-a" },
+    "summary": "role=none strips an element's own semantics but keeps its content readable.",
+    "description": "For layout tables or a list restyled as something else. It hides nothing (that's `aria-hidden`) and is ignored on focusable elements. Never put it on a real heading or button to tidy up announcements.",
+    "aliases": ["role=none", "role=presentation"]
+  },
+  {
+    "id": "aria-label",
+    "title": "aria-label",
+    "facets": { "kind": "attribute", "helps": "screen-reader", "level": "wcag-a" },
+    "summary": "Names an element with a string when there is no visible label.",
+    "description": "Good for icon buttons and repeated landmarks. It replaces the content as the name, page translators often skip it, and voice control users can't see it, so prefer a visible label. It's ignored on plain divs and spans.",
+    "platforms": {
+      "ios": ".accessibilityLabel(\"…\")",
+      "android": "contentDescription"
+    }
+  },
+  {
+    "id": "aria-labelledby",
+    "title": "aria-labelledby",
+    "facets": { "kind": "attribute", "helps": "screen-reader", "level": "wcag-a" },
+    "summary": "Names an element from the text of other elements, referenced by id.",
+    "description": "It beats `aria-label` and native labels in the name computation. List several ids to join them in order ('Delete' + row title); hidden elements can be referenced. Use it for dialogs, regions and tables titled by a visible heading."
+  },
+  {
+    "id": "aria-describedby",
+    "title": "aria-describedby",
+    "facets": { "kind": "attribute", "helps": "screen-reader", "level": "wcag-a" },
+    "summary": "Adds secondary text, like a hint or an error, read after the name and role.",
+    "description": "Point it at help text, a format hint or an error message so it's announced on focus. It's a description, not a name: keep it short, because it is read every time. Pair it with `aria-invalid` on a field that failed validation.",
+    "platforms": {
+      "ios": ".accessibilityHint(\"…\")"
+    }
+  },
+  {
+    "id": "aria-hidden",
+    "title": "aria-hidden",
+    "facets": { "kind": "attribute", "helps": "screen-reader", "level": "wcag-a" },
+    "summary": "Removes an element and its children from the accessibility tree.",
+    "description": "For decorative icons and duplicated content. It doesn't stop focus: an `aria-hidden` button can still be tabbed to and is announced as nothing. To take a region away from everyone, keyboards included, use `inert` or `hidden`.",
+    "platforms": {
+      "ios": ".accessibilityHidden(true)",
+      "android": "Modifier.clearAndSetSemantics { }"
+    }
+  },
+  {
+    "id": "aria-expanded",
+    "title": "aria-expanded",
+    "facets": { "kind": "attribute", "helps": "screen-reader", "level": "wcag-a" },
+    "summary": "Says whether what a control opens is open: 'collapsed' or 'expanded'.",
+    "description": "It goes on the button, not the panel. Use it for disclosures, accordions, menu buttons and comboboxes, and update it on every toggle: a stale value is worse than none.",
+    "platforms": {
+      "android": "semantics { expand() / collapse() }"
+    }
+  },
+  {
+    "id": "aria-pressed",
+    "title": "aria-pressed",
+    "facets": { "kind": "attribute", "helps": "screen-reader", "level": "wcag-a" },
+    "summary": "Makes a button a toggle, announced as 'pressed' or 'not pressed'.",
+    "description": "Keep the label constant ('Mute') and flip `aria-pressed`; changing the label to 'Unmute' as well reads as 'Unmute, pressed'. Use a switch for a setting, and a radio group when only one of several can be on.",
+    "aliases": ["Toggle button"],
+    "platforms": {
+      "ios": ".accessibilityAddTraits(.isToggle)",
+      "android": "Modifier.toggleable(value, onValueChange)"
+    }
+  },
+  {
+    "id": "aria-current",
+    "title": "aria-current",
+    "facets": { "kind": "attribute", "helps": "screen-reader", "level": "wcag-a" },
+    "summary": "Marks the current item in a set: the page, step, date or location.",
+    "description": "`aria-current=page` on the active nav link, `step` in a wizard, `date` in a calendar. It isn't `aria-selected`: current is where you are, selected is what you've picked inside a widget like tabs or a listbox.",
+    "platforms": {
+      "ios": ".accessibilityAddTraits(.isSelected)",
+      "android": "Modifier.semantics { selected = true }"
+    }
+  },
+  {
+    "id": "aria-live",
+    "title": "aria-live",
+    "facets": { "kind": "attribute", "helps": "screen-reader", "level": "wcag-aa" },
+    "summary": "Asks screen readers to announce changes inside a region without moving focus.",
+    "description": "`polite` waits for a pause, `assertive` interrupts. The region must exist before its text changes. `aria-atomic=true` reads the whole region instead of just what changed. Prefer `role=status` or `role=alert`, which set it for you.",
+    "aliases": ["Live region", "aria-atomic"],
+    "platforms": {
+      "android": "Modifier.semantics { liveRegion = … }"
+    }
+  },
+  {
+    "id": "aria-disabled",
+    "title": "aria-disabled",
+    "facets": { "kind": "attribute", "helps": "keyboard", "level": "wcag-a" },
+    "summary": "Announces a control as unavailable but keeps it focusable.",
+    "description": "Native `disabled` takes a button out of the Tab order, so keyboard users never learn it exists or why. `aria-disabled=true` keeps it reachable and readable, but you must block the action yourself. Good for a Submit that explains what's missing.",
+    "platforms": {
+      "ios": ".disabled(true)",
+      "android": "Modifier.semantics { disabled() }"
+    }
+  },
+  {
+    "id": "aria-invalid",
+    "title": "aria-invalid",
+    "facets": { "kind": "attribute", "helps": "screen-reader", "level": "wcag-a" },
+    "summary": "Flags a field that failed validation; screen readers say 'invalid entry'.",
+    "description": "Set it only once the user has tried (on blur or submit), never on an untouched form. Link the error text with `aria-describedby` and say it in words: a red border alone fails Use of Colour. Meets 3.3.1 Error Identification.",
+    "aliases": ["SC 3.3.1"],
+    "platforms": {
+      "android": "Modifier.semantics { error(\"…\") }"
+    }
+  },
+  {
+    "id": "accessible-name",
+    "title": "Accessible name",
+    "facets": { "kind": "technique", "helps": "screen-reader", "level": "wcag-a" },
+    "summary": "What a screen reader announces for an element, computed from several sources.",
+    "description": "Precedence: `aria-labelledby`, `aria-label`, the native label (`<label>`, `alt`, `<caption>`), the content for buttons and links, then `title`. Voice users say the name, so it must contain the visible label (2.5.3 Label in Name).",
+    "aliases": ["Accessible name computation", "SC 2.5.3"]
+  },
+  {
+    "id": "roving-tabindex",
+    "title": "Roving tabindex",
+    "facets": { "kind": "technique", "helps": "keyboard", "level": "wcag-a" },
+    "summary": "One tab stop per widget: the active item has tabindex=0, the rest have -1.",
+    "description": "Tab enters and leaves a toolbar, tablist or grid in one press; arrow keys move focus by swapping which item has `tabindex=0`. The alternative, `aria-activedescendant`, keeps DOM focus on the container and suits comboboxes."
+  },
+  {
+    "id": "focus-management",
+    "title": "Focus management",
+    "facets": { "kind": "technique", "helps": "keyboard", "level": "wcag-a" },
+    "summary": "Move focus on purpose when the UI changes, and give it back when you're done.",
+    "description": "Open a dialog: focus inside it. Close it: back to the trigger. Delete a row: focus the next one. SPA route change: focus the new `h1`. Never leave focus on a removed element, or it drops to `<body>` and the user loses their place.",
+    "aliases": ["SC 2.4.3"],
+    "platforms": {
+      "ios": "@AccessibilityFocusState",
+      "android": "FocusRequester.requestFocus()"
+    }
+  },
+  {
+    "id": "inert",
+    "title": "inert",
+    "facets": { "kind": "technique", "helps": "keyboard", "level": "wcag-a" },
+    "summary": "Makes a subtree unfocusable, unclickable and hidden from assistive tech.",
+    "description": "Set `inert` on the page behind a custom drawer or modal instead of trapping Tab with scripts; `showModal()` does it for you. Unlike `aria-hidden`, it also blocks focus and clicks, so hidden content can't be reached by keyboard."
+  },
+  {
+    "id": "skip-link",
+    "title": "Skip link",
+    "facets": { "kind": "technique", "helps": "keyboard", "level": "wcag-a" },
+    "summary": "The first link in the tab order, jumping past repeated navigation to the content.",
+    "description": "Visually hidden until focused, then shown at the top. Its target (`<main id=\"main\" tabindex=\"-1\">`) must take focus so the next Tab carries on from there. With landmarks and headings it meets 2.4.1 Bypass Blocks.",
+    "aliases": ["Skip to content", "SC 2.4.1"]
+  },
+  {
+    "id": "visually-hidden",
+    "title": "Visually hidden",
+    "facets": { "kind": "technique", "helps": "screen-reader", "level": "wcag-a" },
+    "summary": "Hides text on screen but keeps it in the accessibility tree.",
+    "description": "The clip and 1px pattern (`.sr-only`) adds context, like 'Edit <span>profile</span>'. `display:none`, `visibility:hidden` and `hidden` remove text for screen readers too. Don't hide focusable elements this way unless they appear on focus.",
+    "aliases": ["sr-only", "Screen reader only"]
+  },
+  {
+    "id": "focus-indicator",
+    "title": "Focus indicator",
+    "facets": { "kind": "technique", "helps": "keyboard", "level": "wcag-aa" },
+    "summary": ":focus-visible shows a clear ring for keyboards without flashing on mouse clicks.",
+    "description": "Never `outline: none` without a replacement (2.4.7 Focus Visible). A 2px solid outline with 3:1 contrast against the background, offset from the control, works everywhere. Forced-colours mode drops box-shadow, so use outline.",
+    "aliases": [":focus-visible", "Focus ring", "SC 2.4.7"]
+  },
+  {
+    "id": "reduced-motion",
+    "title": "Reduced motion",
+    "facets": { "kind": "technique", "helps": "vestibular", "level": "wcag-aaa" },
+    "summary": "Honour prefers-reduced-motion: swap big movement for fades, or for nothing.",
+    "description": "Parallax, zooms and sliding pages can trigger vestibular disorders. Put motion inside `@media (prefers-reduced-motion: no-preference)` so it's opt-in (2.3.3, AAA). Anything moving for over 5s needs a pause control (2.2.2, A).",
+    "aliases": ["prefers-reduced-motion", "SC 2.3.3"],
+    "platforms": {
+      "ios": "@Environment(\\.accessibilityReduceMotion)",
+      "android": "Settings.Global.ANIMATOR_DURATION_SCALE"
+    }
+  },
+  {
+    "id": "alt-text",
+    "title": "Alt text",
+    "facets": { "kind": "technique", "helps": "screen-reader", "level": "wcag-a" },
+    "summary": "Describe what an image means in context; use an empty alt for pure decoration.",
+    "description": "`alt=\"\"` skips decorative images; a missing alt makes some screen readers read the file name. Say what matters ('Sales up 20% in May'), not 'image of'. A linked image's alt names the destination. Charts also need a text or table version.",
+    "aliases": ["Text alternative", "SC 1.1.1"],
+    "platforms": {
+      "ios": "Image(decorative:) or .accessibilityLabel",
+      "android": "contentDescription = null when decorative"
+    }
+  },
+  {
+    "id": "form-labels",
+    "title": "Form labels",
+    "facets": { "kind": "technique", "helps": "screen-reader", "level": "wcag-a" },
+    "summary": "Every input gets a visible <label> that stays put while the user types.",
+    "description": "A `<label for>` names the field and enlarges its click target. A placeholder is no label: it vanishes, often fails contrast and isn't reliably announced. Group radios and checkboxes in a `<fieldset>` whose `<legend>` asks the question.",
+    "aliases": ["fieldset", "legend", "SC 3.3.2"],
+    "platforms": {
+      "ios": "TextField(\"Email\", text:) title",
+      "android": "OutlinedTextField(label = { Text(…) })"
+    }
+  },
+  {
+    "id": "captions",
+    "title": "Captions",
+    "facets": { "kind": "technique", "helps": "hearing", "level": "wcag-a" },
+    "summary": "Synchronised text for the speech and meaningful sounds in a video.",
+    "description": "Prerecorded video needs captions (1.2.2, A); live video needs them at AA. Name speakers and include sounds like [door slams]. Auto-generated captions are a draft, not a pass. A transcript also helps deafblind people and skimmers.",
+    "aliases": ["Subtitles", "SC 1.2.2"]
+  },
+  {
+    "id": "contrast-minimum",
+    "title": "Contrast (Minimum)",
+    "facets": { "kind": "criterion", "helps": "low-vision", "level": "wcag-aa" },
+    "summary": "Text needs 4.5:1 contrast with its background; large text needs 3:1.",
+    "description": "Large means 24px regular or about 18.7px bold. Disabled controls and logos are exempt. Check every state: hover, placeholder, text over images. Brand colours often fail on white, so ship a darker text token instead of fixing it page by page.",
+    "aliases": ["SC 1.4.3", "Colour contrast"]
+  },
+  {
+    "id": "contrast-enhanced",
+    "title": "Contrast (Enhanced)",
+    "facets": { "kind": "criterion", "helps": "low-vision", "level": "wcag-aaa" },
+    "summary": "AAA raises text contrast to 7:1, and 4.5:1 for large text.",
+    "description": "Rarely required by law but worth hitting for body copy, long reading and dense data. Make it the target for your default text token, so only secondary and accent text sits between 4.5:1 and 7:1.",
+    "aliases": ["SC 1.4.6"]
+  },
+  {
+    "id": "non-text-contrast",
+    "title": "Non-text Contrast",
+    "facets": { "kind": "criterion", "helps": "low-vision", "level": "wcag-aa" },
+    "summary": "Input borders, icons, focus rings and chart parts need 3:1 against their neighbours.",
+    "description": "If you need to see it to use the control, it needs 3:1: a text field's border, a checkbox's box, a switch's thumb, a focus ring. A light grey field border on white is the classic failure.",
+    "aliases": ["SC 1.4.11"]
+  },
+  {
+    "id": "use-of-color",
+    "title": "Use of Colour",
+    "facets": { "kind": "criterion", "helps": "low-vision", "level": "wcag-a" },
+    "summary": "Colour is never the only way information is shown.",
+    "description": "Error fields need an icon or text, not only red. Links in body text need an underline, or 3:1 against the text plus a hover cue. Chart series need patterns or direct labels. Check in greyscale: if the meaning disappears, add a second cue.",
+    "aliases": ["SC 1.4.1", "Colour blindness"]
+  },
+  {
+    "id": "reflow",
+    "title": "Reflow",
+    "facets": { "kind": "criterion", "helps": "low-vision", "level": "wcag-aa" },
+    "summary": "Content works 320 CSS px wide (400% zoom) without scrolling both ways.",
+    "description": "A 1280px window zoomed to 400% is 320px wide: basically a phone layout, so responsive design mostly passes. Data tables, maps and diagrams are exempt. Size with rem and avoid fixed heights that clip text as it grows.",
+    "aliases": ["SC 1.4.10", "Zoom"]
+  },
+  {
+    "id": "target-size-minimum",
+    "title": "Target Size (Minimum)",
+    "facets": { "kind": "criterion", "helps": "motor", "level": "wcag-aa" },
+    "summary": "Pointer targets are at least 24×24 CSS px, or spaced so a 24px circle fits.",
+    "description": "New in WCAG 2.2; links inside a sentence are exempt. For touch, the 44×44 AAA target (2.5.5), Apple's 44pt and Material's 48dp are better defaults. Grow the hit area with padding or a pseudo-element rather than the icon.",
+    "aliases": ["SC 2.5.8", "Touch target"],
+    "platforms": {
+      "ios": "44×44 pt minimum (HIG)",
+      "android": "48dp: minimumInteractiveComponentSize()"
+    }
+  },
+  {
+    "id": "keyboard",
+    "title": "Keyboard",
+    "facets": { "kind": "criterion", "helps": "keyboard", "level": "wcag-a" },
+    "summary": "Everything a mouse can do, a keyboard can do, with no timing required.",
+    "description": "Unplug the mouse and Tab through: every control reachable, usable with Enter, Space or arrows, and never stuck (2.1.2 No Keyboard Trap). Click handlers on divs are the usual failure. Single-key shortcuts need a way to turn them off (2.1.4).",
+    "aliases": ["SC 2.1.1", "SC 2.1.2"],
+    "platforms": {
+      "ios": "Full Keyboard Access",
+      "android": "Modifier.focusable() + onKeyEvent"
+    }
+  },
+  {
+    "id": "focus-order",
+    "title": "Focus Order",
+    "facets": { "kind": "criterion", "helps": "keyboard", "level": "wcag-a" },
+    "summary": "The Tab order follows the visual reading order.",
+    "description": "DOM order is focus order, so write the DOM in reading order and keep CSS reordering (flex `order`, grid placement) cosmetic. A positive `tabindex` jumps ahead of everything: never use one. Closed off-screen menus must leave the order.",
+    "aliases": ["SC 2.4.3", "tabindex"]
+  },
+  {
+    "id": "focus-not-obscured",
+    "title": "Focus Not Obscured",
+    "facets": { "kind": "criterion", "helps": "keyboard", "level": "wcag-aa" },
+    "summary": "A focused control is never fully hidden by sticky headers, banners or chat widgets.",
+    "description": "New in WCAG 2.2. The usual failure: Tab moves under a sticky footer or a cookie banner. Setting `scroll-padding` to the sticky bar's height keeps focus in view. AAA (2.4.12) asks that no part of it is hidden.",
+    "aliases": ["SC 2.4.11"]
+  },
+  {
+    "id": "name-role-value",
+    "title": "Name, Role, Value",
+    "facets": { "kind": "criterion", "helps": "screen-reader", "level": "wcag-a" },
+    "summary": "Every control exposes its name, role and state to assistive tech, and updates them.",
+    "description": "Native HTML does it for you. A custom widget must set a role, an accessible name and states such as `aria-checked` or `aria-expanded`, and change them as it changes. Most ARIA attributes exist to satisfy this criterion.",
+    "aliases": ["SC 4.1.2"],
+    "platforms": {
+      "ios": "accessibilityLabel, Traits and Value",
+      "android": "Modifier.semantics { … }"
+    }
+  },
+  {
+    "id": "info-and-relationships",
+    "title": "Info and Relationships",
+    "facets": { "kind": "criterion", "helps": "screen-reader", "level": "wcag-a" },
+    "summary": "Structure you can see is also in the markup: headings, lists, tables and labels.",
+    "description": "If it looks like a heading it's an `<h2>`; if it looks like a list it's a `<ul>`. Data tables use `<th>` with `scope`, and fields are tied to their labels. Bold text and line breaks tell a screen reader nothing.",
+    "aliases": ["SC 1.3.1", "Semantic HTML"],
+    "platforms": {
+      "ios": ".accessibilityAddTraits(.isHeader)",
+      "android": "Modifier.semantics { heading() }"
+    }
+  },
+  {
+    "id": "dragging-movements",
+    "title": "Dragging Movements",
+    "facets": { "kind": "criterion", "helps": "motor", "level": "wcag-aa" },
+    "summary": "Anything done by dragging also works with a single tap or click.",
+    "description": "New in WCAG 2.2. Sortable lists get up/down buttons or a 'Move to' menu, sliders accept a click on the track, maps have pan buttons. People using a head pointer or with a tremor can't press, hold and move. Freehand drawing is exempt.",
+    "aliases": ["SC 2.5.7", "Drag and drop"],
+    "platforms": {
+      "ios": ".accessibilityAction(named:)",
+      "android": "semantics { customActions = … }"
+    }
+  },
+  {
+    "id": "accessible-authentication",
+    "title": "Accessible Authentication",
+    "facets": { "kind": "criterion", "helps": "cognitive", "level": "wcag-aa" },
+    "summary": "Logging in never depends on remembering, transcribing or solving a puzzle.",
+    "description": "New in WCAG 2.2. Allow paste and password managers, offer passkeys or email links, and don't split one-time codes into boxes that block paste. Object-recognition CAPTCHAs pass at AA but not at AAA (3.3.9).",
+    "aliases": ["SC 3.3.8", "Login", "CAPTCHA"]
+  },
+  {
+    "id": "redundant-entry",
+    "title": "Redundant Entry",
+    "facets": { "kind": "criterion", "helps": "cognitive", "level": "wcag-a" },
+    "summary": "Don't make people type again what they already entered in the same process.",
+    "description": "New in WCAG 2.2. Pre-fill billing from shipping or offer 'Same as above'. Re-entering a password for security is exempt. Add `autocomplete` attributes (1.3.5) so browsers can fill in the rest.",
+    "aliases": ["SC 3.3.7", "autocomplete"]
+  },
+  {
+    "id": "language-of-page",
+    "title": "Language of Page",
+    "facets": { "kind": "criterion", "helps": "screen-reader", "level": "wcag-a" },
+    "summary": "Set <html lang> so screen readers read the text with the right voice and rules.",
+    "description": "Without it, a Spanish page may be read with English pronunciation. Mark passages in another language with `lang` on their element (3.1.2, AA). Use a BCP 47 tag such as `en`, `es` or `pt-BR`; it also drives hyphenation and spell-check.",
+    "aliases": ["SC 3.1.1", "lang"]
+  }
+]

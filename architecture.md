@@ -57,7 +57,7 @@ flowchart LR
 2. **Pick:** `App` reads the deck id from the hash. No (or an unknown) deck shows
    `DeckPicker`; choosing a deck pushes `#/<deck>` and mounts `DeckView` with a new key,
    so every visit starts on the first card with no filters. The back arrow pushes the
-   picker route. Legacy links (`#card/<id>`, `#browse`) open the first deck.
+   picker route. Legacy links (`#card/<id>`, `#browse`) open the design-system deck, which they were made for.
 3. **Filter:** `DeckView` keeps `FilterState` (`facet key → value | null`). Cards are first
    sorted into the order of the grouping facet (the first one with a filter row), so study
    order matches the browse list. `studyCards` apply every filter; `browseCards` apply all

@@ -13,6 +13,14 @@ item, and add a dated line at the top of **Done**.
 - [ ] **Bundle size.** Inlined SVGs push the JS to ~750 kB (~175 kB gzipped) — consider
       `build.assetsInlineLimit` or lazy-loading images.
 - [ ] **Review Proposed ADRs 0006–0007** (GitHub Pages on `v*` tags; Vitest and CI).
+- [ ] **Review the accessibility deck** (51 cards, ADR-0008 Proposed): check the content and
+      the SwiftUI/Compose names in `src/decks/accessibility/cards.json` against current
+      WAI-ARIA APG, WCAG 2.2 and platform docs; written from memory.
+- [ ] **Branding with two decks.** The page title, OG tags, `og.webp` and `document.title`
+      in `DeckPicker` still say "Design System Flashcards" and "155 components" — decide
+      whether the site becomes plain "Flashcards".
+- [ ] **Generalise native equivalents** before a deck whose equivalents aren't iOS/Android
+      (e.g. a system-design deck with AWS/GCP names): let `deck.json` declare its columns.
 
 ### Advertising readiness
 
@@ -27,6 +35,7 @@ item, and add a dated line at the top of **Done**.
 
 ## Done
 
+- [x] 2026-10-20: Accessibility deck: 51 cards (10 patterns, 5 roles, 10 ARIA attributes, 11 techniques, 15 WCAG 2.2 criteria) with a drawing each, `kind`/`helps` filters and a WCAG level badge. Legacy links (`#card/<id>`) stay on the design-system deck now that it isn't first alphabetically.
 - [x] 2026-10-16: Released v0.3.0.
 - [x] 2026-10-16: Reviewed the facets of all 155 design-system cards; recategorised 23 (e.g. Link → navigation, Label → forms, Avatar/Tag/Timeline/Carousel → content, Picker/FilterBar → pattern).
 - [x] 2026-10-16: Compact phone study screen: one-row header, tighter filters, card sized to the leftover height; everything fits one viewport and the page no longer bounces while swiping.

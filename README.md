@@ -8,6 +8,8 @@
 
 A mobile-first flashcard deck for learning design system components: 155 components, each tagged three ways: its purpose (forms, navigation, overlays…), its layer (primitive, component, pattern) and its atomic design level (atom, molecule, organism, template). Each card has wireframe drawings and, for most, the iOS and Android equivalents.
 
+A second deck, **Accessibility**, covers 51 ARIA patterns, roles and attributes, techniques and WCAG 2.2 criteria, filtered by kind and by who they help most (screen reader, keyboard, low vision, motor, cognitive, hearing, vestibular), with the WCAG level as a badge and the SwiftUI and Compose equivalents.
+
 **Try it: [flashcards.pearpages.com](https://flashcards.pearpages.com)** — works on phones and desktop, no sign-up.
 
 <img src="./docs/static/demo.png" alt="Two phone screens: the Sheet card in study mode with desktop and mobile drawings, and the browse list grouped by purpose" width="500" />
@@ -49,6 +51,7 @@ Each deck is a folder in `src/decks/` and owns all of its data. The app discover
 
 ```
 src/decks/
+  accessibility/       # same layout as design-system
   design-system/
     deck.json          # title, description and the filters (facets) this deck offers
     cards.json         # the cards
@@ -103,6 +106,8 @@ Create `src/decks/<deck-id>/` with a `deck.json` (its `id` must match the folder
 ```
 
 Add `"filter": false` to a facet to show it as a badge on each card without a filter row (the design-system deck does this for `atomic`).
+
+In the accessibility deck, `kind` (pattern, role, attribute, technique, criterion) groups the list, `helps` filters by who benefits most, and `level` (WCAG A/AA/AAA of the main success criterion) is a badge; criteria list their `SC x.y.z` number in `aliases`, so search finds them.
 
 In the design-system deck, `layer` means `primitive` (unopinionated building block), `component` or `pattern` (a composition that solves a recurring problem).
 

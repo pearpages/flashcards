@@ -7,7 +7,9 @@ import DeckPicker from "./components/DeckPicker";
 import DeckView from "./components/DeckView";
 import "./App.css";
 
-const defaultDeckId = decks[0]?.id;
+// Legacy links (#card/<id>, #browse) predate decks, so they all point at design-system cards.
+const LEGACY_DECK_ID = "design-system";
+const defaultDeckId = decks.some((d) => d.id === LEGACY_DECK_ID) ? LEGACY_DECK_ID : decks[0]?.id;
 const readRoute = () => parseRoute(defaultDeckId);
 
 /** Chooses between the deck picker and a deck, following the URL. */
