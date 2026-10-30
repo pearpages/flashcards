@@ -97,6 +97,54 @@
   margin: 0;
 }
 
+/* Must-know cards are painted gold on both faces; the colour is the marker */
+.flashcard--essential .flashcard-face {
+  box-shadow:
+    inset 0 0 0 1.5px rgba(214, 168, 20, 0.55),
+    0 4px 24px rgba(0, 0, 0, 0.08),
+    0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+.flashcard--essential .flashcard-face--front {
+  background: linear-gradient(160deg, #fffaea 0%, #fdf1c8 100%);
+}
+
+.flashcard--essential .flashcard-face--back {
+  background-color: #fdf5da;
+  background-image:
+    repeating-linear-gradient(45deg, rgba(183, 134, 11, 0.12) 0 1px, transparent 1px 14px),
+    repeating-linear-gradient(-45deg, rgba(183, 134, 11, 0.12) 0 1px, transparent 1px 14px);
+}
+
+.flashcard--essential .flashcard-face--back::before {
+  border-color: rgba(183, 134, 11, 0.3);
+}
+
+.flashcard--essential .flashcard-back {
+  background: rgba(255, 251, 236, 0.92);
+}
+
+.flashcard--essential .flashcard-image {
+  background: rgba(255, 255, 255, 0.65);
+}
+
+.flashcard-star {
+  color: #b7860b;
+}
+
+.flashcard-hidden {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  white-space: nowrap;
+  background: transparent;
+  color: #55556a;
+  box-shadow: inset 0 0 0 1px #b4b4c8;
+}
+
 .flashcard-tags {
   display: flex;
   flex-wrap: wrap;

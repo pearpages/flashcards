@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useReducedMotion, type PanInfo } from "framer-motion";
 import type { Deck, Flashcard } from "../types";
 import FlashCard from "./FlashCard";
@@ -11,7 +11,19 @@ interface CardStackProps {
   /** Card to open first; falls back to the first card when it isn't in `cards`. */
   startCardId?: string;
   onCardChange?: (cardId: string) => void;
+  hiddenIds: ReadonlySet<string>;
+  /** True when hidden cards are out of study: hiding a card then takes it out of the stack. */
+  dropHidden: boolean;
+  onHiddenChange: (cardId: string, hidden: boolean) => void;
 }
+
+/** The card just hidden, and where it was, so Undo can put it back. */
+interface Undo {
+  card: Flashcard;
+  index: number;
+}
+
+const UNDO_MS = 5000;
 
 const SWIPE_THRESHOLD = 50;
 
@@ -62,7 +74,15 @@ function shuffleArray<T>(array: T[]): T[] {
   return shuffled;
 }
 
-export default function CardStack({ deck, cards, startCardId, onCardChange }: CardStackProps) {
+export default function CardStack({
+  deck,
+  cards,
+  startCardId,
+  onCardChange,
+  hiddenIds,
+  dropHidden,
+  onHiddenChange,
+}: CardStackProps) {
   const [stack, setStack] = useState(cards);
   const [[currentIndex, direction], setPage] = useState(() => [
     Math.max(0, cards.findIndex((card) => card.id === startCardId)),
@@ -97,13 +117,45 @@ export default function CardStack({ deck, cards, startCardId, onCardChange }: Ca
     });
   }, [stack, currentIndex]);
 
+  const [undo, setUndo] = useState<Undo | null>(null);
+  const undoTimer = useRef<number | undefined>(undefined);
+  useEffect(() => () => window.clearTimeout(undoTimer.current), []);
+
+  const toggleHidden = useCallback(() => {
+    const card = stack[currentIndex];
+    if (!card) return;
+    if (hiddenIds.has(card.id)) {
+      onHiddenChange(card.id, false);
+      return;
+    }
+    onHiddenChange(card.id, true);
+    if (!dropHidden) return;
+    // Take the card out and slide the next one in (or the previous one, at the end).
+    setStack((prev) => prev.filter((c) => c.id !== card.id));
+    const atEnd = currentIndex >= stack.length - 1;
+    setPage([Math.max(0, atEnd ? currentIndex - 1 : currentIndex), atEnd ? -1 : 1]);
+    setUndo({ card, index: currentIndex });
+    window.clearTimeout(undoTimer.current);
+    undoTimer.current = window.setTimeout(() => setUndo(null), UNDO_MS);
+  }, [stack, currentIndex, hiddenIds, dropHidden, onHiddenChange]);
+
+  const handleUndo = () => {
+    if (!undo) return;
+    window.clearTimeout(undoTimer.current);
+    onHiddenChange(undo.card.id, false);
+    setStack((prev) => [...prev.slice(0, undo.index), undo.card, ...prev.slice(undo.index)]);
+    setPage([undo.index, -1]);
+    setUndo(null);
+  };
+
   const handleShuffle = () => {
-    setStack(shuffleArray(cards));
+    // The current stack, so cards hidden since it mounted stay out.
+    setStack(shuffleArray(stack));
     setPage([0, 0]);
     setRevealedIds(new Set());
   };
 
-  useKeyboardNav(goPrev, goNext, toggleReveal);
+  useKeyboardNav(goPrev, goNext, toggleReveal, toggleHidden);
 
   const currentCardId = stack[currentIndex]?.id;
   useEffect(() => {
@@ -118,9 +170,31 @@ export default function CardStack({ deck, cards, startCardId, onCardChange }: Ca
     }
   };
 
+  const undoBar = (
+    <div className="card-stack__undo-region" aria-live="polite">
+      {undo && (
+        <div className="card-stack__undo">
+          <span>Card hidden</span>
+          <button type="button" className="card-stack__undo-button" onClick={handleUndo}>
+            Undo
+          </button>
+        </div>
+      )}
+    </div>
+  );
+
   if (stack.length === 0) {
-    return <div className="card-stack-empty">No cards match these filters.</div>;
+    return (
+      <div className="card-stack card-stack--empty">
+        <div className="card-stack-empty">
+          {cards.length > 0 ? "You've hidden every card here." : "No cards match these filters."}
+        </div>
+        {undoBar}
+      </div>
+    );
   }
+
+  const currentHidden = hiddenIds.has(stack[currentIndex].id);
 
   return (
     <div className="card-stack">
@@ -152,6 +226,7 @@ export default function CardStack({ deck, cards, startCardId, onCardChange }: Ca
               deck={deck}
               card={stack[currentIndex]}
               revealed={revealedIds.has(stack[currentIndex].id)}
+              hidden={currentHidden}
               onReveal={toggleReveal}
             />
           </motion.div>
@@ -185,7 +260,16 @@ export default function CardStack({ deck, cards, startCardId, onCardChange }: Ca
         >
           ⟳
         </button>
+        <button
+          className="hide-button"
+          onClick={toggleHidden}
+          title={currentHidden ? "Put this card back in study (H)" : "I know this: hide it from study (H)"}
+        >
+          <span aria-hidden="true">{currentHidden ? "↺" : "✓"}</span> {currentHidden ? "Unhide" : "Hide"}
+        </button>
       </div>
+
+      {undoBar}
     </div>
   );
 }

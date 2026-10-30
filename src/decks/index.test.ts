@@ -67,6 +67,26 @@ describe("decks", () => {
   });
 });
 
+describe("essential cards", () => {
+  it("stars about a fifth of every deck", () => {
+    for (const deck of decks) {
+      const share = deck.cards.filter((card) => card.essential).length / deck.cards.length;
+      expect(share, deck.id).toBeGreaterThanOrEqual(0.1);
+      expect(share, deck.id).toBeLessThanOrEqual(0.3);
+    }
+  });
+});
+
+describe("nextjs deck", () => {
+  it("discovers the nextjs deck with a drawing for every card", () => {
+    const deck = decks.find((d) => d.id === "nextjs");
+    expect(deck).toBeDefined();
+    expect(deck!.cards.length).toBeGreaterThanOrEqual(90);
+    expect(deck!.platforms).toBeUndefined();
+    for (const card of deck!.cards) expect(getCardImages(deck!.id, card.id).desktop).toBeTruthy();
+  });
+});
+
 describe("getCardImages", () => {
   it("groups desktop and mobile drawings by card", () => {
     const images = getCardImages("design-system", "action-bar");

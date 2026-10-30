@@ -21,6 +21,11 @@ interface BrowseViewProps {
   visible: boolean;
   onSelect: (card: Flashcard) => void;
   onClearFilter: (facetKey: string) => void;
+  essentialOnly: boolean;
+  onClearEssential: () => void;
+  /** Cards the learner hid; listed faded with an Unhide button. */
+  hiddenIds: ReadonlySet<string>;
+  onUnhide: (cardId: string) => void;
 }
 
 type Block = "start" | "center" | "nearest";
@@ -70,6 +75,10 @@ export default function BrowseView({
   visible,
   onSelect,
   onClearFilter,
+  essentialOnly,
+  onClearEssential,
+  hiddenIds,
+  onUnhide,
 }: BrowseViewProps) {
   const [search, setSearch] = useState("");
   const [activeGroup, setActiveGroup] = useState<string | null>(null);
@@ -143,9 +152,19 @@ export default function BrowseView({
           onChange={(e) => setSearch(e.target.value)}
         />
 
-        {activeFilters.length > 0 && (
+        {(activeFilters.length > 0 || essentialOnly) && (
           <div className="browse__filters">
             <span className="browse__filters-label">Filtered by</span>
+            {essentialOnly && (
+              <button
+                type="button"
+                className="browse__filter-chip"
+                onClick={onClearEssential}
+                aria-label="Remove Essentials filter"
+              >
+                ★ Essentials <span aria-hidden="true">✕</span>
+              </button>
+            )}
             {activeFilters.map(({ facet, value }) => (
               <button
                 key={facet.key}
@@ -185,11 +204,12 @@ export default function BrowseView({
             <ul className="browse__items">
               {group.cards.map((card) => {
                 const thumb = getCardImages(deck.id, card.id).desktop;
+                const isHidden = hiddenIds.has(card.id);
                 return (
-                  <li key={card.id}>
+                  <li key={card.id} className="browse__row">
                     <button
                       type="button"
-                      className="browse__item"
+                      className={`browse__item ${isHidden ? "browse__item--hidden" : ""}`}
                       data-card-id={card.id}
                       aria-current={card.id === activeCardId ? "true" : undefined}
                       onClick={() => onSelect(card)}
@@ -200,7 +220,16 @@ export default function BrowseView({
                         <span className="browse__thumb browse__thumb--empty">?</span>
                       )}
                       <span className="browse__item-text">
-                        <span className="browse__item-title">{card.title}</span>
+                        <span className="browse__item-title">
+                          {card.essential && (
+                            <span className="browse__star" aria-hidden="true">
+                              ★{" "}
+                            </span>
+                          )}
+                          {card.title}
+                          {card.essential && <span className="visually-hidden">, essential</span>}
+                          {isHidden && <span className="visually-hidden">, hidden</span>}
+                        </span>
                         <span className="browse__item-summary">{card.summary}</span>
                       </span>
                       <span className="browse__item-tags">
@@ -209,6 +238,16 @@ export default function BrowseView({
                         )}
                       </span>
                     </button>
+                    {isHidden && (
+                      <button
+                        type="button"
+                        className="browse__unhide"
+                        onClick={() => onUnhide(card.id)}
+                        aria-label={`Unhide ${card.title}`}
+                      >
+                        Unhide
+                      </button>
+                    )}
                   </li>
                 );
               })}

@@ -6,6 +6,8 @@ interface DeckFiltersProps {
   filters: FilterState;
   count: number;
   onChange: (filters: FilterState) => void;
+  /** Hidden cards left out of the count. */
+  hiddenCount: number;
 }
 
 interface ChipRowProps {
@@ -42,7 +44,7 @@ function ChipRow({ label, options, value, onChange }: ChipRowProps) {
   );
 }
 
-export default function DeckFilters({ facets, filters, count, onChange }: DeckFiltersProps) {
+export default function DeckFilters({ facets, filters, count, onChange, hiddenCount }: DeckFiltersProps) {
   return (
     <div className="deck-filters">
       {facets
@@ -58,6 +60,7 @@ export default function DeckFilters({ facets, filters, count, onChange }: DeckFi
         ))}
       <p className="deck-filters__count" aria-live="polite">
         {count} {count === 1 ? "card" : "cards"}
+        {hiddenCount > 0 && ` · ${hiddenCount} hidden`}
       </p>
     </div>
   );

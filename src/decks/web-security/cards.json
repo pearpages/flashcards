@@ -2,6 +2,7 @@
   {
     "id": "sql-injection",
     "title": "SQL Injection",
+    "essential": true,
     "facets": {
       "area": "injection",
       "kind": "attack",
@@ -17,6 +18,7 @@
   {
     "id": "parameterized-queries",
     "title": "Parameterised Queries",
+    "essential": true,
     "facets": {
       "area": "injection",
       "kind": "defence",
@@ -166,6 +168,7 @@
   {
     "id": "input-validation",
     "title": "Input Validation",
+    "essential": true,
     "facets": {
       "area": "injection",
       "kind": "defence",
@@ -226,6 +229,7 @@
   {
     "id": "cors",
     "title": "CORS",
+    "essential": true,
     "facets": {
       "area": "browser",
       "kind": "mechanism",
@@ -241,6 +245,7 @@
   {
     "id": "stored-xss",
     "title": "Stored XSS",
+    "essential": true,
     "facets": {
       "area": "browser",
       "kind": "attack",
@@ -287,6 +292,7 @@
   {
     "id": "output-encoding",
     "title": "Output Encoding",
+    "essential": true,
     "facets": {
       "area": "browser",
       "kind": "defence",
@@ -317,6 +323,7 @@
   {
     "id": "content-security-policy",
     "title": "Content Security Policy",
+    "essential": true,
     "facets": {
       "area": "browser",
       "kind": "defence",
@@ -376,6 +383,7 @@
   {
     "id": "csrf",
     "title": "CSRF",
+    "essential": true,
     "facets": {
       "area": "browser",
       "kind": "attack",
@@ -511,6 +519,7 @@
   {
     "id": "password-hashing",
     "title": "Password Hashing",
+    "essential": true,
     "facets": {
       "area": "auth",
       "kind": "defence",
@@ -574,6 +583,7 @@
   {
     "id": "mfa",
     "title": "Multi-factor Authentication",
+    "essential": true,
     "facets": {
       "area": "auth",
       "kind": "defence",
@@ -669,6 +679,7 @@
   {
     "id": "authn-vs-authz",
     "title": "Authentication vs Authorisation",
+    "essential": true,
     "facets": {
       "area": "auth",
       "kind": "mechanism",
@@ -747,6 +758,7 @@
   {
     "id": "idor",
     "title": "IDOR",
+    "essential": true,
     "facets": {
       "area": "auth",
       "kind": "attack",
@@ -779,6 +791,7 @@
   {
     "id": "cookie-flags",
     "title": "Cookie Flags",
+    "essential": true,
     "facets": {
       "area": "sessions",
       "kind": "defence",
@@ -856,6 +869,7 @@
   {
     "id": "jwt",
     "title": "JWT",
+    "essential": true,
     "facets": {
       "area": "sessions",
       "kind": "mechanism",
@@ -933,6 +947,7 @@
   {
     "id": "tls",
     "title": "TLS",
+    "essential": true,
     "facets": {
       "area": "transport",
       "kind": "mechanism",
@@ -1038,6 +1053,7 @@
   {
     "id": "hashing-vs-encryption",
     "title": "Hashing vs Encryption",
+    "essential": true,
     "facets": {
       "area": "data",
       "kind": "mechanism",
@@ -1115,6 +1131,7 @@
   {
     "id": "secrets-management",
     "title": "Secrets Management",
+    "essential": true,
     "facets": {
       "area": "data",
       "kind": "defence",
@@ -1268,6 +1285,7 @@
   {
     "id": "dependency-scanning",
     "title": "Dependency Scanning",
+    "essential": true,
     "facets": {
       "area": "supply-chain",
       "kind": "defence",
@@ -1344,6 +1362,7 @@
   {
     "id": "ssrf",
     "title": "SSRF",
+    "essential": true,
     "facets": {
       "area": "infrastructure",
       "kind": "attack",
@@ -1375,6 +1394,7 @@
   {
     "id": "least-privilege",
     "title": "Least Privilege",
+    "essential": true,
     "facets": {
       "area": "infrastructure",
       "kind": "defence",

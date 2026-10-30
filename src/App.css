@@ -66,6 +66,79 @@
   }
 }
 
+.app-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+/* Essentials toggle: ★ alone on phones, ★ Essentials on desktop */
+.app-header__essentials {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: none;
+  border-radius: 999px;
+  padding: 0.45rem 1rem;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  background: #ffffff;
+  color: #1a1a2e;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.app-header__essentials span:first-child {
+  color: #b7860b;
+}
+
+.app-header__essentials[aria-pressed="true"] {
+  background: #f5c518;
+}
+
+.app-header__essentials[aria-pressed="true"] span:first-child {
+  color: #1a1a2e;
+}
+
+.app-header__hidden {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  border: none;
+  border-radius: 999px;
+  padding: 0.45rem 0.9rem;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  background: #ffffff;
+  color: #1a1a2e;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.app-header__hidden[aria-pressed="true"] {
+  background: #1a1a2e;
+  color: #ffffff;
+}
+
+.app-header__hidden-icon {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.app-header__hidden:focus-visible,
+.app-header__essentials:focus-visible {
+  outline: 2px solid #5b5bd6;
+  outline-offset: 2px;
+}
+
 /* Study / Browse switch (mobile only; desktop shows both side by side) */
 .app-header__views {
   display: flex;
@@ -131,8 +204,8 @@
   .app-header {
     flex-direction: row;
     justify-content: space-between;
-    gap: 0.5rem;
-    padding: 0.75rem 1rem 0.6rem;
+    gap: 0.35rem;
+    padding: 0.6rem 0.75rem 0.5rem;
   }
 
   .app-header h1 {
@@ -149,8 +222,32 @@
   }
 
   .app-header__view {
-    padding: 0.35rem 0.85rem;
+    padding: 0.3rem 0.65rem;
     font-size: 0.8rem;
+  }
+
+  .app-header__actions {
+    gap: 0.3rem;
+  }
+
+  .app-header__essentials {
+    width: 32px;
+    height: 32px;
+    justify-content: center;
+    padding: 0;
+    font-size: 0.95rem;
+  }
+
+  .app-header__hidden {
+    height: 32px;
+    padding: 0 0.55rem;
+    gap: 0.2rem;
+    font-size: 0.8rem;
+  }
+
+  .app-header__essentials-label,
+  .app-header__hidden-label {
+    display: none;
   }
 
   /* Study fills exactly one screen (with the credit) and never scrolls or bounces:
@@ -158,12 +255,19 @@
   #root:has(.app--view-study) {
     height: 100dvh;
     min-height: 0;
-    overflow: hidden;
+    overflow-x: hidden;
+    /* Only scrolls on screens too short for the card's minimum height */
+    overflow-y: auto;
   }
 
+  /* The credit gives its height to the card; it still shows on the picker and in browse */
+  #root:has(.app--view-study) .sk-author {
+    display: none;
+  }
+
+  /* Fills the screen, but grows past it (and the page scrolls) when the card hits its minimum */
   .app--view-study {
-    flex: 1 1 auto;
-    min-height: 0;
+    flex: 1 0 auto;
   }
 
   .app--view-study .app__study {

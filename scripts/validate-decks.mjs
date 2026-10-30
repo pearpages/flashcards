@@ -9,6 +9,8 @@ const MAX_DESCRIPTION = 280;
 const ID_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const VARIANTS = ["mobile", "ios", "android"];
 const MAX_PLATFORM = 60;
+// The essential (20/80) cards should be about a fifth of a deck.
+const ESSENTIAL_SHARE = [0.1, 0.3];
 
 const errors = [];
 const warnings = [];
@@ -88,6 +90,9 @@ for (const folder of deckFolders) {
     }
     if (card.summary?.length > MAX_SUMMARY) errors.push(`${at}: summary is ${card.summary.length} chars (max ${MAX_SUMMARY})`);
     if (card.description?.length > MAX_DESCRIPTION) errors.push(`${at}: description is ${card.description.length} chars (max ${MAX_DESCRIPTION})`);
+    if (card.essential !== undefined && card.essential !== true) {
+      errors.push(`${at}: essential must be true (or left out)`);
+    }
     if (card.aliases !== undefined && (!Array.isArray(card.aliases) || !card.aliases.every(isNonEmptyString))) {
       errors.push(`${at}: aliases must be an array of strings`);
     }
@@ -143,9 +148,18 @@ for (const folder of deckFolders) {
     }
   }
 
+  const essentials = cards.filter((card) => card.essential === true).length;
+  const share = cards.length > 0 ? essentials / cards.length : 0;
+  if (cards.length > 0 && (share < ESSENTIAL_SHARE[0] || share > ESSENTIAL_SHARE[1])) {
+    warnings.push(
+      `${where("cards.json")}: ${essentials} of ${cards.length} cards are essential ` +
+        `(aim for ${ESSENTIAL_SHARE[0] * 100}–${ESSENTIAL_SHARE[1] * 100}%)`,
+    );
+  }
+
   const withPlatforms = cards.filter((card) => card.platforms).length;
   console.log(
-    `✓ ${folder}: ${cards.length} cards, ${deck.facets.length} facets; images: ${variants.mobile.size} mobile, ` +
+    `✓ ${folder}: ${cards.length} cards (${essentials} essential), ${deck.facets.length} facets; images: ${variants.mobile.size} mobile, ` +
       `${variants.ios.size} iOS/Android pairs; ${withPlatforms} with platform equivalents`,
   );
 }

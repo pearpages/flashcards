@@ -1,0 +1,46 @@
+{
+  "id": "nextjs",
+  "title": "Next.js",
+  "description": "The questions Next.js interviews and code reviews keep asking: routing, Server and Client Components, data fetching, caching, Server Actions, proxy, images, metadata, config and deploys, answered for the App Router.",
+  "facets": [
+    {
+      "key": "area",
+      "label": "Area",
+      "values": [
+        "routing",
+        "rendering",
+        "data",
+        "caching",
+        "mutations",
+        "proxy",
+        "assets",
+        "metadata",
+        "config",
+        "deploy"
+      ]
+    },
+    {
+      "key": "kind",
+      "label": "Kind",
+      "values": [
+        "concept",
+        "api",
+        "file-convention",
+        "practice",
+        "pitfall"
+      ]
+    },
+    {
+      "key": "runs",
+      "label": "Runs on",
+      "filter": false,
+      "values": [
+        "server",
+        "client",
+        "edge",
+        "build",
+        "any"
+      ]
+    }
+  ]
+}

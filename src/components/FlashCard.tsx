@@ -8,6 +8,8 @@ interface FlashCardProps {
   deck: Deck;
   card: Flashcard;
   revealed: boolean;
+  /** Hidden by the learner but shown anyway ("Show hidden" is on). */
+  hidden?: boolean;
   onReveal: () => void;
 }
 
@@ -31,13 +33,13 @@ function imageVariants(images: CardImages): ImageVariant[] {
   return variants;
 }
 
-export default function FlashCard({ deck, card, revealed, onReveal }: FlashCardProps) {
+export default function FlashCard({ deck, card, revealed, hidden = false, onReveal }: FlashCardProps) {
   const variants = imageVariants(getCardImages(deck.id, card.id));
   const platforms = (deck.platforms ?? []).filter(({ key }) => card.platforms?.[key]);
   const reduceMotion = useReducedMotion();
 
   return (
-    <div className="flashcard" onClick={onReveal}>
+    <div className={`flashcard ${card.essential ? "flashcard--essential" : ""}`} onClick={onReveal}>
       <motion.div
         className="flashcard-inner"
         initial={false}
@@ -46,12 +48,21 @@ export default function FlashCard({ deck, card, revealed, onReveal }: FlashCardP
       >
         <div className="flashcard-face flashcard-face--front" aria-hidden={revealed}>
           <div className="flashcard-tags">
+            {card.essential && <span className="visually-hidden">Essential card</span>}
+            {hidden && <span className="flashcard-hidden">Hidden</span>}
             {deck.facets.map(({ key }) =>
               card.facets[key] ? <Tag key={key} value={card.facets[key]} /> : null,
             )}
           </div>
 
-          <h2 className="flashcard-title">{card.title}</h2>
+          <h2 className="flashcard-title">
+            {card.essential && (
+              <span className="flashcard-star" aria-hidden="true">
+                ★{" "}
+              </span>
+            )}
+            {card.title}
+          </h2>
 
           <div className="flashcard-body">
             {variants.length > 1 ? (
@@ -86,7 +97,14 @@ export default function FlashCard({ deck, card, revealed, onReveal }: FlashCardP
 
         <div className="flashcard-face flashcard-face--back" aria-hidden={!revealed}>
           <div className="flashcard-back">
-            <h2 className="flashcard-back__title">{card.title}</h2>
+            <h2 className="flashcard-back__title">
+              {card.essential && (
+                <span className="flashcard-star" aria-hidden="true">
+                  ★{" "}
+                </span>
+              )}
+              {card.title}
+            </h2>
             <p className="flashcard-back__description">{card.description}</p>
             {card.aliases && card.aliases.length > 0 && (
               <p className="flashcard-back__aliases">Also known as: {card.aliases.join(", ")}</p>

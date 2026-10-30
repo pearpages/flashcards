@@ -2,6 +2,7 @@
   {
     "id": "heading",
     "title": "Heading",
+    "essential": true,
     "facets": {
       "purpose": "typography",
       "layer": "primitive",
@@ -17,6 +18,7 @@
   {
     "id": "text",
     "title": "Text",
+    "essential": true,
     "facets": {
       "purpose": "typography",
       "layer": "primitive",
@@ -36,6 +38,7 @@
   {
     "id": "link",
     "title": "Link",
+    "essential": true,
     "facets": {
       "purpose": "navigation",
       "layer": "component",
@@ -222,6 +225,7 @@
   {
     "id": "stack",
     "title": "Stack",
+    "essential": true,
     "facets": {
       "purpose": "layout",
       "layer": "primitive",
@@ -261,6 +265,7 @@
   {
     "id": "grid",
     "title": "Grid",
+    "essential": true,
     "facets": {
       "purpose": "layout",
       "layer": "primitive",
@@ -299,6 +304,7 @@
   {
     "id": "container",
     "title": "Container",
+    "essential": true,
     "facets": {
       "purpose": "layout",
       "layer": "primitive",
@@ -385,6 +391,7 @@
   {
     "id": "card",
     "title": "Card",
+    "essential": true,
     "facets": {
       "purpose": "content",
       "layer": "component",
@@ -512,6 +519,7 @@
   {
     "id": "button",
     "title": "Button",
+    "essential": true,
     "facets": {
       "purpose": "actions",
       "layer": "component",
@@ -527,6 +535,7 @@
   {
     "id": "icon-button",
     "title": "IconButton",
+    "essential": true,
     "facets": {
       "purpose": "actions",
       "layer": "component",
@@ -739,6 +748,7 @@
   {
     "id": "field",
     "title": "Field",
+    "essential": true,
     "facets": {
       "purpose": "forms",
       "layer": "component",
@@ -758,6 +768,7 @@
   {
     "id": "text-field",
     "title": "TextField",
+    "essential": true,
     "facets": {
       "purpose": "forms",
       "layer": "component",
@@ -812,6 +823,7 @@
   {
     "id": "checkbox",
     "title": "Checkbox",
+    "essential": true,
     "facets": {
       "purpose": "forms",
       "layer": "component",
@@ -845,6 +857,7 @@
   {
     "id": "radio-group",
     "title": "Radio / RadioGroup",
+    "essential": true,
     "facets": {
       "purpose": "forms",
       "layer": "component",
@@ -881,6 +894,7 @@
   {
     "id": "select",
     "title": "Select",
+    "essential": true,
     "facets": {
       "purpose": "forms",
       "layer": "component",
@@ -899,6 +913,7 @@
   {
     "id": "combobox",
     "title": "Combobox",
+    "essential": true,
     "facets": {
       "purpose": "forms",
       "layer": "component",
@@ -1289,6 +1304,7 @@
   {
     "id": "form",
     "title": "Form",
+    "essential": true,
     "facets": {
       "purpose": "forms",
       "layer": "pattern",
@@ -1391,6 +1407,7 @@
   {
     "id": "tabs",
     "title": "Tabs",
+    "essential": true,
     "facets": {
       "purpose": "navigation",
       "layer": "component",
@@ -1406,6 +1423,7 @@
   {
     "id": "accordion",
     "title": "Accordion",
+    "essential": true,
     "facets": {
       "purpose": "content",
       "layer": "component",
@@ -1482,6 +1500,7 @@
   {
     "id": "breadcrumbs",
     "title": "Breadcrumbs",
+    "essential": true,
     "facets": {
       "purpose": "navigation",
       "layer": "component",
@@ -1684,6 +1703,7 @@
   {
     "id": "skip-link",
     "title": "SkipLink",
+    "essential": true,
     "facets": {
       "purpose": "navigation",
       "layer": "component",
@@ -1714,6 +1734,7 @@
   {
     "id": "dialog",
     "title": "Dialog",
+    "essential": true,
     "facets": {
       "purpose": "overlays",
       "layer": "component",
@@ -1786,6 +1807,7 @@
   {
     "id": "popover",
     "title": "Popover",
+    "essential": true,
     "facets": {
       "purpose": "overlays",
       "layer": "component",
@@ -1801,6 +1823,7 @@
   {
     "id": "menu",
     "title": "Menu",
+    "essential": true,
     "facets": {
       "purpose": "overlays",
       "layer": "component",
@@ -1875,6 +1898,7 @@
   {
     "id": "tooltip",
     "title": "Tooltip",
+    "essential": true,
     "facets": {
       "purpose": "overlays",
       "layer": "component",
@@ -1948,6 +1972,7 @@
   {
     "id": "alert",
     "title": "Alert",
+    "essential": true,
     "facets": {
       "purpose": "feedback",
       "layer": "component",
@@ -1978,6 +2003,7 @@
   {
     "id": "badge",
     "title": "Badge",
+    "essential": true,
     "facets": {
       "purpose": "feedback",
       "layer": "component",
@@ -2092,6 +2118,7 @@
   {
     "id": "skeleton",
     "title": "Skeleton",
+    "essential": true,
     "facets": {
       "purpose": "feedback",
       "layer": "component",
@@ -2111,6 +2138,7 @@
   {
     "id": "toast",
     "title": "Toast",
+    "essential": true,
     "facets": {
       "purpose": "feedback",
       "layer": "component",
@@ -2256,6 +2284,7 @@
   {
     "id": "table",
     "title": "Table",
+    "essential": true,
     "facets": {
       "purpose": "data",
       "layer": "component",
@@ -2622,6 +2651,7 @@
   {
     "id": "visually-hidden",
     "title": "VisuallyHidden",
+    "essential": true,
     "facets": {
       "purpose": "utilities",
       "layer": "primitive",
@@ -2656,6 +2686,7 @@
   {
     "id": "focus-trap",
     "title": "FocusTrap",
+    "essential": true,
     "facets": {
       "purpose": "utilities",
       "layer": "primitive",

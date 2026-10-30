@@ -2,6 +2,7 @@
   {
     "id": "testing-pyramid",
     "title": "Testing Pyramid",
+    "essential": true,
     "facets": {
       "area": "strategy",
       "kind": "concept",
@@ -31,6 +32,7 @@
   {
     "id": "behaviour-not-implementation",
     "title": "Test Behaviour, Not Implementation",
+    "essential": true,
     "facets": {
       "area": "strategy",
       "kind": "practice",
@@ -46,6 +48,7 @@
   {
     "id": "arrange-act-assert",
     "title": "Arrange–Act–Assert",
+    "essential": true,
     "facets": {
       "area": "strategy",
       "kind": "practice",
@@ -106,6 +109,7 @@
   {
     "id": "regression-test",
     "title": "Regression Test",
+    "essential": true,
     "facets": {
       "area": "strategy",
       "kind": "practice",
@@ -191,6 +195,7 @@
   {
     "id": "unit-test",
     "title": "Unit Test",
+    "essential": true,
     "facets": {
       "area": "unit",
       "kind": "concept",
@@ -279,6 +284,7 @@
   {
     "id": "testing-async",
     "title": "Testing Async Code",
+    "essential": true,
     "facets": {
       "area": "unit",
       "kind": "technique",
@@ -353,6 +359,7 @@
   {
     "id": "test-double",
     "title": "Test Double",
+    "essential": true,
     "facets": {
       "area": "doubles",
       "kind": "concept",
@@ -451,6 +458,7 @@
   {
     "id": "mock-at-the-boundary",
     "title": "Mock at the Boundary",
+    "essential": true,
     "facets": {
       "area": "doubles",
       "kind": "practice",
@@ -466,6 +474,7 @@
   {
     "id": "over-mocking",
     "title": "Over-mocking",
+    "essential": true,
     "facets": {
       "area": "doubles",
       "kind": "anti-pattern",
@@ -515,6 +524,7 @@
   {
     "id": "integration-test",
     "title": "Integration Test",
+    "essential": true,
     "facets": {
       "area": "integration",
       "kind": "concept",
@@ -595,6 +605,7 @@
   {
     "id": "network-mocking",
     "title": "Network Mocking",
+    "essential": true,
     "facets": {
       "area": "integration",
       "kind": "technique",
@@ -643,6 +654,7 @@
   {
     "id": "api-test",
     "title": "API Test",
+    "essential": true,
     "facets": {
       "area": "api",
       "kind": "concept",
@@ -809,6 +821,7 @@
   {
     "id": "get-by-role",
     "title": "getByRole",
+    "essential": true,
     "facets": {
       "area": "ui",
       "kind": "technique",
@@ -983,6 +996,7 @@
   {
     "id": "e2e-test",
     "title": "End-to-end Test",
+    "essential": true,
     "facets": {
       "area": "e2e",
       "kind": "practice",
@@ -1036,6 +1050,7 @@
   {
     "id": "fixed-sleeps",
     "title": "Fixed Sleeps",
+    "essential": true,
     "facets": {
       "area": "e2e",
       "kind": "anti-pattern",
@@ -1190,6 +1205,7 @@
   {
     "id": "automated-accessibility-checks",
     "title": "Automated Accessibility Checks",
+    "essential": true,
     "facets": {
       "area": "non-functional",
       "kind": "practice",
@@ -1370,6 +1386,7 @@
   {
     "id": "tests-in-ci",
     "title": "Tests in CI",
+    "essential": true,
     "facets": {
       "area": "ci",
       "kind": "practice",
@@ -1495,6 +1512,7 @@
   {
     "id": "coverage-as-target",
     "title": "Coverage as a Target",
+    "essential": true,
     "facets": {
       "area": "ci",
       "kind": "anti-pattern",
@@ -1510,6 +1528,7 @@
   {
     "id": "flaky-tests",
     "title": "Flaky Tests",
+    "essential": true,
     "facets": {
       "area": "maintenance",
       "kind": "concept",
@@ -1599,6 +1618,7 @@
   {
     "id": "brittle-tests",
     "title": "Brittle Tests",
+    "essential": true,
     "facets": {
       "area": "maintenance",
       "kind": "anti-pattern",

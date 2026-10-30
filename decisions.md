@@ -25,6 +25,8 @@ accepted.
 | [0012](docs/adr/0012-card-drawings-as-separate-files.md) | Card drawings are separate files, not inlined as data URIs | Proposed | 2026-10-20 |
 | [0013](docs/adr/0013-css-deck-facets.md) | CSS deck: area and kind filters, Baseline status as a badge | Proposed | 2026-10-20 |
 | [0014](docs/adr/0014-testing-deck-facets.md) | Testing deck: area and kind filters, test level as a badge | Proposed | 2026-10-20 |
+| [0015](docs/adr/0015-essential-cards-and-local-hidden-cards.md) | Essential cards as a card field, hidden cards in localStorage | Proposed | 2026-10-30 |
+| [0016](docs/adr/0016-nextjs-deck-facets.md) | Next.js deck: area and kind filters, where it runs as a badge | Proposed | 2026-10-30 |
 
 ## Format
 

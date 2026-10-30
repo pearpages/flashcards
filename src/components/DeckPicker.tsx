@@ -38,6 +38,7 @@ export default function DeckPicker({ decks, onSelect }: DeckPickerProps) {
         <ul className="deck-picker__list">
           {decks.map((deck) => {
             const previews = previewImages(deck);
+            const essentials = deck.cards.filter((card) => card.essential).length;
             return (
               <li key={deck.id}>
                 <button type="button" className="deck-tile" onClick={() => onSelect(deck.id)}>
@@ -55,6 +56,15 @@ export default function DeckPicker({ decks, onSelect }: DeckPickerProps) {
                   <span className="deck-tile__footer">
                     <span className="deck-tile__count">
                       {deck.cards.length} {deck.cards.length === 1 ? "card" : "cards"}
+                      {essentials > 0 && (
+                        <>
+                          {" · "}
+                          <span className="deck-tile__star" aria-hidden="true">
+                            ★
+                          </span>{" "}
+                          {essentials} essential
+                        </>
+                      )}
                     </span>
                     <span className="deck-tile__arrow" aria-hidden="true">
                       →

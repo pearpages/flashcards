@@ -10,10 +10,22 @@ item, and add a dated line at the top of **Done**.
 - [ ] **Review native-platform names.** Newer Material 3 Expressive names (ButtonGroup,
       SplitButtonLayout, FloatingToolbar) and some iOS approximations (TipKit for Tour) were
       written from memory — check against current docs in `cards.json`.
-- [ ] **Split card text per deck** if the bundle grows again: the JS is ~790 kB (~250 kB
-      gzipped) after ADR-0012, about a third of it card text for all seven decks. Loading a
+- [ ] **Split card text per deck** if the bundle grows again: the JS is ~865 kB (~273 kB
+      gzipped) after ADR-0012, about a third of it card text for all eight decks. Loading a
       deck's cards on entry needs async loading in `decks/index.ts`, `App` and `DeckView`.
 - [ ] **Review Proposed ADRs 0006–0007** (GitHub Pages on `v*` tags; Vitest and CI).
+- [ ] **Review Proposed ADR-0015 and the essential picks** (about 20% of each deck, chosen by
+      judgement). Open questions: css has no essential card in colour or architecture
+      (candidates: `color-scheme`, `currentcolor`, `design-tokens`).
+- [ ] **Review the Next.js deck** (104 cards, ADR-0016 Proposed): check against current
+      nextjs.org docs; written from memory with spot checks. Least sure: Cache Components
+      replacing `dynamic`/`revalidate` segment config and failing the build on uncached reads
+      outside Suspense, `dynamicParams` under Cache Components, `staleTimes.dynamic` default,
+      prefetching only in production, `after()` in proxy, the CVE-2025-29927 mechanism,
+      `metadataBase` build error vs warning, ImageResponse 500 KB cap, env load order with
+      `NODE_ENV=test`, what `output: "export"` loses, `next/script` `worker`.
+- [ ] **Social card still says six decks.** `public/og.webp` predates the testing and
+      Next.js decks; regenerate it with eight.
 - [ ] **Review the accessibility deck** (100 cards, ADR-0008 Proposed): check the content and
       the SwiftUI/Compose names in `src/decks/accessibility/cards.json` against current
       WAI-ARIA APG, WCAG 2.2 and platform docs; written from memory. Least sure:
@@ -67,6 +79,10 @@ item, and add a dated line at the top of **Done**.
 
 ## Done
 
+- [x] 2026-10-30: Next.js deck: 104 interview-style App Router cards (routing, rendering, data, caching, mutations, proxy, assets, metadata, config, deploy) with a drawing each and a "runs on" badge (ADR-0016).
+- [x] 2026-10-30: Essential cards: about a fifth of every deck marked `"essential": true`, painted gold on both faces with a ★ before the title, a ★ toggle in the header (★ Essentials on desktop), stars in the list and counts on the deck picker; the validator checks the flag and the share (ADR-0015).
+- [x] 2026-10-30: Hide cards you know: ✓ button or `H` with Undo, remembered per deck in localStorage, faded with Unhide in browse, a hidden-cards counter in the header to study them again (ADR-0015).
+- [x] 2026-10-30: Taller phone card: packed one-row header, no credit on the study screen, card 380–680px (the page scrolls below the minimum).
 - [x] 2026-10-20: Released v0.4.0.
 - [x] 2026-10-20: Testing deck: 100 cards (strategy, unit, doubles, integration, APIs, UI, e2e, non-functional, CI, maintenance) with a drawing each, a test-level badge and JavaScript/Python equivalents (ADR-0014).
 - [x] 2026-10-20: Rebranded to plain "Flashcards": page title, meta and Open Graph/Twitter tags, a new `og.webp` ("Learn the web, one card at a time", six decks), `document.title` on the picker, package.json, README and the knowledge files.

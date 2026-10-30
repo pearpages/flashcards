@@ -1,7 +1,7 @@
 # Flashcards
 
-A mobile-first flashcard app with seven decks (design system, CSS, accessibility, web
-performance, web security, system design, testing). Each deck is a data folder in
+A mobile-first flashcard app with eight decks (design system, CSS, accessibility, web
+performance, web security, system design, testing, Next.js). Each deck is a data folder in
 `src/decks/` with its own filters, badges, drawings and, where it declares them, platform
 equivalents (iOS/Android, SwiftUI/Compose, AWS/GCP/Azure, JavaScript/Python); all decks
 share one browse view and study stack. It is a static React + Vite site; the source is public on GitHub, and

@@ -1,0 +1,1611 @@
+[
+  {
+    "id": "app-router-file-system",
+    "title": "App Router Folders and page.tsx",
+    "facets": {
+      "area": "routing",
+      "kind": "file-convention",
+      "runs": "server"
+    },
+    "summary": "Each folder in `app/` is a URL segment; only a `page.tsx` makes that segment public.",
+    "description": "Other files in the folder (components, utils, tests) are never routable, so colocating them is safe. `_private` folders opt out of routing entirely. A folder with a `layout.tsx` but no `page.tsx` still returns 404 at its own URL.",
+    "aliases": [
+      "Pages Router: pages/ directory",
+      "app directory",
+      "Colocation"
+    ]
+  },
+  {
+    "id": "layouts",
+    "title": "Layouts",
+    "essential": true,
+    "facets": {
+      "area": "routing",
+      "kind": "file-convention",
+      "runs": "server"
+    },
+    "summary": "`layout.tsx` wraps its segment and everything below it, and stays mounted on navigation.",
+    "description": "State, scroll position and inputs in a layout survive moving between sibling pages, and it doesn't re-render. The root layout is required and must render `<html>` and `<body>`. Trap: a layout can't read the current page's `searchParams`; do that in the page.",
+    "aliases": [
+      "Pages Router: _app.tsx",
+      "_document.tsx",
+      "Root layout"
+    ]
+  },
+  {
+    "id": "templates",
+    "title": "Templates vs Layouts",
+    "facets": {
+      "area": "routing",
+      "kind": "file-convention",
+      "runs": "server"
+    },
+    "summary": "`template.tsx` wraps like a layout but remounts on every navigation, resetting state.",
+    "description": "Reach for it when each visit should start over: an enter animation, a `useEffect` that logs a page view, a form that must clear. Default to a layout; remounting throws away client state and DOM, and costs a re-render on every navigation.",
+    "aliases": [
+      "template.js"
+    ]
+  },
+  {
+    "id": "dynamic-segments",
+    "title": "Dynamic Segments",
+    "essential": true,
+    "facets": {
+      "area": "routing",
+      "kind": "file-convention",
+      "runs": "server"
+    },
+    "summary": "A `[slug]` folder captures part of the URL; `params` is a Promise you must `await`.",
+    "description": "`app/blog/[slug]/page.tsx` matches `/blog/hello`: read it with `const { slug } = await params`. `params` became async in v15 and v16 removed sync access. Values are untrusted strings, so validate and parse them. Prerender known values with `generateStaticParams`.",
+    "aliases": [
+      "Pages Router: pages/blog/[slug].tsx",
+      "useParams"
+    ]
+  },
+  {
+    "id": "catch-all-segments",
+    "title": "Catch-all Segments",
+    "facets": {
+      "area": "routing",
+      "kind": "file-convention",
+      "runs": "server"
+    },
+    "summary": "`[...slug]` matches one or more parts as an array; `[[...slug]]` also matches none.",
+    "description": "`docs/[...slug]` matches `/docs/a/b` with `slug = ['a', 'b']` but not `/docs`; the optional `[[...slug]]` matches `/docs` too, with `slug` undefined. Good for docs trees and CMS pages. A more specific route always wins over a catch-all.",
+    "aliases": [
+      "Optional catch-all",
+      "Splat route"
+    ]
+  },
+  {
+    "id": "route-groups",
+    "title": "Route Groups",
+    "facets": {
+      "area": "routing",
+      "kind": "file-convention",
+      "runs": "server"
+    },
+    "summary": "`(folder)` names organise routes and share layouts without adding a URL segment.",
+    "description": "`app/(marketing)/about/page.tsx` serves `/about`. Use groups to give sections different layouts, or several root layouts with their own `<html>`. Traps: two groups resolving to the same URL is a build error, and moving between root layouts is a full page load.",
+    "aliases": [
+      "Multiple root layouts"
+    ]
+  },
+  {
+    "id": "parallel-routes",
+    "title": "Parallel Routes",
+    "facets": {
+      "area": "routing",
+      "kind": "file-convention",
+      "runs": "server"
+    },
+    "summary": "`@slot` folders render several pages in one layout, each navigating on its own.",
+    "description": "Slots arrive as layout props (`{ children, team, analytics }`), each with its own loading and error states. Slots aren't URL segments. Add a `default.tsx` per slot: on a hard reload an unmatched slot renders it, or a 404 without one. Pairs with intercepting routes for modals.",
+    "aliases": [
+      "Named slots",
+      "default.js"
+    ]
+  },
+  {
+    "id": "intercepting-routes",
+    "title": "Intercepting Routes",
+    "facets": {
+      "area": "routing",
+      "kind": "file-convention",
+      "runs": "server"
+    },
+    "summary": "`(.)photo` renders a route inside the current page, like a modal, on client navigation.",
+    "description": "Clicking `/photo/1` in a feed opens it as a modal over the feed; a reload or shared link shows the full page. `(.)` matches the same level, `(..)` one up, `(...)` from `app`, counting route segments, not folders. Usually lives in an `@modal` slot.",
+    "aliases": [
+      "Route modals",
+      "(..) convention"
+    ]
+  },
+  {
+    "id": "link-prefetching",
+    "title": "Link and Prefetching",
+    "facets": {
+      "area": "routing",
+      "kind": "api",
+      "runs": "client"
+    },
+    "summary": "`<Link>` navigates on the client and prefetches routes as they scroll into view.",
+    "description": "Shared layouts stay mounted and only changed segments load. By default it prefetches the static shell, down to the nearest Suspense fallback; `prefetch={true}` fetches more, `prefetch={false}` nothing. Prefetching only runs in production builds. Use `<a>` for external links.",
+    "aliases": [
+      "next/link",
+      "Soft navigation"
+    ]
+  },
+  {
+    "id": "programmatic-navigation",
+    "title": "useRouter vs redirect",
+    "facets": {
+      "area": "routing",
+      "kind": "api",
+      "runs": "any"
+    },
+    "summary": "`useRouter()` navigates from Client Components; `redirect()` from server code and actions.",
+    "description": "Import `useRouter` from `next/navigation`, not `next/router` (Pages Router). `redirect()` throws to stop rendering, so call it outside `try/catch`; `permanentRedirect()` sends a 308. `router.refresh()` re-fetches Server Components but keeps client state.",
+    "aliases": [
+      "next/router",
+      "router.push",
+      "permanentRedirect"
+    ]
+  },
+  {
+    "id": "error-boundaries",
+    "title": "error.tsx and global-error",
+    "facets": {
+      "area": "routing",
+      "kind": "file-convention",
+      "runs": "client"
+    },
+    "summary": "`error.tsx` is a Client Component boundary that catches errors in its segment's children.",
+    "description": "It receives `error` and `retry()`, which re-fetches and re-renders. It doesn't catch errors in the same segment's layout; put one in the parent. Root layout errors need `app/global-error.tsx` with its own `<html>` and `<body>`. Production hides server messages: log `digest`.",
+    "aliases": [
+      "Pages Router: _error.tsx",
+      "reset",
+      "Error boundary"
+    ]
+  },
+  {
+    "id": "not-found",
+    "title": "not-found.tsx and notFound()",
+    "facets": {
+      "area": "routing",
+      "kind": "api",
+      "runs": "server"
+    },
+    "summary": "Call `notFound()` to stop rendering and show the nearest `not-found.tsx` with a 404.",
+    "description": "Use it when a record doesn't exist: `if (!post) notFound()`. It throws, so TypeScript narrows `post` afterwards. `app/not-found.tsx` also handles unmatched URLs. Prefer it to rendering an empty page, which returns 200 and gets indexed by search engines.",
+    "aliases": [
+      "Pages Router: 404.tsx",
+      "notFound: true"
+    ]
+  },
+  {
+    "id": "server-components",
+    "title": "Server Components",
+    "essential": true,
+    "facets": {
+      "area": "rendering",
+      "kind": "concept",
+      "runs": "server"
+    },
+    "summary": "In `app/`, components run on the server by default and ship no JavaScript to the browser.",
+    "description": "They can be `async`, read databases and secrets directly, and keep heavy libraries out of the bundle. They can't use state, effects, event handlers or browser APIs. Keep most of the tree here and push interactivity down into small Client Components.",
+    "aliases": [
+      "RSC",
+      "React Server Components"
+    ]
+  },
+  {
+    "id": "use-client-boundary",
+    "title": "The \"use client\" Boundary",
+    "essential": true,
+    "facets": {
+      "area": "rendering",
+      "kind": "concept",
+      "runs": "client"
+    },
+    "summary": "`'use client'` at the top of a file marks where the client bundle starts.",
+    "description": "Everything that file imports becomes client code too, so put it on leaves like a button or a chart, not on a layout. Add it only where hooks, handlers or browser APIs are used. Server Components passed in as `children` stay on the server.",
+    "aliases": [
+      "Client Components",
+      "Client boundary"
+    ]
+  },
+  {
+    "id": "client-components-ssr",
+    "title": "Client Components Render on the Server Too",
+    "facets": {
+      "area": "rendering",
+      "kind": "pitfall",
+      "runs": "any"
+    },
+    "summary": "Client Components are prerendered to HTML on the server, then hydrated in the browser.",
+    "description": "`'use client'` doesn't mean browser-only. Touching `window` or `localStorage` during render crashes the server render or causes a mismatch. Read them in `useEffect`, or load truly browser-only widgets with `next/dynamic` and `ssr: false` from a Client Component.",
+    "aliases": [
+      "SSR",
+      "window is not defined"
+    ]
+  },
+  {
+    "id": "server-components-as-children",
+    "title": "Server Components as Children",
+    "facets": {
+      "area": "rendering",
+      "kind": "practice",
+      "runs": "server"
+    },
+    "summary": "Pass Server Components into Client Components as `children` or props, not as imports.",
+    "description": "A Client Component that imports a Server Component turns it into client code. Instead, a Server Component renders `<Modal><Cart /></Modal>`: `Cart` renders on the server and is slotted in. Wrappers and providers stay client-side without dragging the tree with them.",
+    "aliases": [
+      "Interleaving",
+      "Composition pattern"
+    ]
+  },
+  {
+    "id": "serializable-props",
+    "title": "Serializable Props",
+    "facets": {
+      "area": "rendering",
+      "kind": "pitfall",
+      "runs": "server"
+    },
+    "summary": "Props from Server to Client Components must be serializable: no functions or classes.",
+    "description": "Plain objects, arrays, strings, numbers, Dates, Maps, Sets, promises and JSX cross the boundary; event handlers and class instances don't. The exception is a Server Action, which arrives as a callable reference. Pass only the fields the client needs, not whole DB rows.",
+    "aliases": [
+      "Functions cannot be passed directly to Client Components"
+    ]
+  },
+  {
+    "id": "static-vs-dynamic-rendering",
+    "title": "Static vs Dynamic Rendering",
+    "essential": true,
+    "facets": {
+      "area": "rendering",
+      "kind": "concept",
+      "runs": "any"
+    },
+    "summary": "Static renders once at build and serves from a CDN; dynamic renders on every request.",
+    "description": "A route goes dynamic when it reads `cookies()`, `headers()`, `searchParams`, uncached data or `connection()`. With Cache Components the line moves inside the page: cached parts join the static shell, request-time parts stream. `next build` lists how each route rendered.",
+    "aliases": [
+      "SSG",
+      "SSR",
+      "getStaticProps",
+      "getServerSideProps"
+    ]
+  },
+  {
+    "id": "partial-prerendering",
+    "title": "Partial Prerendering",
+    "facets": {
+      "area": "rendering",
+      "kind": "concept",
+      "runs": "any"
+    },
+    "summary": "One route mixes a static shell, served instantly, with dynamic holes streamed per request.",
+    "description": "With `cacheComponents: true` it's the default: everything that can finish at build goes in the shell, and each `<Suspense>` around request-time data becomes a hole that streams in. Read request data as deep in the tree as you can to keep the shell big.",
+    "aliases": [
+      "PPR",
+      "experimental.ppr",
+      "Static shell"
+    ]
+  },
+  {
+    "id": "streaming-loading",
+    "title": "Streaming with loading.tsx and Suspense",
+    "essential": true,
+    "facets": {
+      "area": "rendering",
+      "kind": "file-convention",
+      "runs": "server"
+    },
+    "summary": "`loading.tsx` wraps a page in Suspense, so its fallback shows while the page streams in.",
+    "description": "The layout and fallback are sent at once and the page follows when its data is ready, so slow data doesn't block the first paint. For finer control, wrap slow components in `<Suspense>` yourself. Navigation feels instant because the fallback is prefetched.",
+    "aliases": [
+      "Loading UI",
+      "Suspense",
+      "Streaming SSR"
+    ]
+  },
+  {
+    "id": "hydration-errors",
+    "title": "Hydration Errors",
+    "essential": true,
+    "facets": {
+      "area": "rendering",
+      "kind": "pitfall",
+      "runs": "client"
+    },
+    "summary": "The browser's first render must match the server HTML, or React reports a mismatch.",
+    "description": "Usual causes: `Date.now()`, `Math.random()`, locale formatting, `typeof window` branches, invalid nesting like `<div>` inside `<p>`, and browser extensions. Move client-only values into `useEffect`; keep `suppressHydrationWarning` for one-off text like a timestamp.",
+    "aliases": [
+      "Hydration mismatch",
+      "Text content does not match server-rendered HTML"
+    ]
+  },
+  {
+    "id": "context-providers",
+    "title": "Context Providers",
+    "facets": {
+      "area": "rendering",
+      "kind": "practice",
+      "runs": "client"
+    },
+    "summary": "Context only works in Client Components: wrap providers in a `'use client'` file.",
+    "description": "Create `providers.tsx` with `'use client'` and render it in the root layout around `{children}`; the pages below stay Server Components. Render providers as deep as you can. Server Components can't read context: pass props, or share per-request data with `cache()`.",
+    "aliases": [
+      "createContext",
+      "Theme provider"
+    ]
+  },
+  {
+    "id": "generate-static-params",
+    "title": "generateStaticParams",
+    "facets": {
+      "area": "rendering",
+      "kind": "api",
+      "runs": "build"
+    },
+    "summary": "Return the dynamic segment values to prerender at build time.",
+    "description": "`generateStaticParams()` returns e.g. `[{ slug: 'hello' }]` for `[slug]`. Unlisted values render on first visit and are cached for the next one; `dynamicParams = false` makes them 404. Return the popular few, not 100,000 products, to keep builds fast.",
+    "aliases": [
+      "getStaticPaths",
+      "dynamicParams"
+    ]
+  },
+  {
+    "id": "fetch-in-server-components",
+    "title": "Fetching in Server Components",
+    "essential": true,
+    "facets": {
+      "area": "data",
+      "kind": "practice",
+      "runs": "server"
+    },
+    "summary": "Make the component `async` and `await` fetch or the database directly; no `useEffect`.",
+    "description": "Data loads on the server next to its source, with no client waterfall and no API route in between, and secrets stay server-side. Fetch where the data is used. Trap: calling your own Route Handler from a Server Component adds a pointless HTTP hop; call the function.",
+    "aliases": [
+      "getServerSideProps",
+      "getStaticProps",
+      "getInitialProps"
+    ]
+  },
+  {
+    "id": "async-request-apis",
+    "title": "Async Request APIs",
+    "facets": {
+      "area": "data",
+      "kind": "api",
+      "runs": "server"
+    },
+    "summary": "`params`, `searchParams`, `cookies()`, `headers()` and `draftMode()` return Promises.",
+    "description": "`const { id } = await params`, `(await cookies()).get('theme')`. They became async in v15 so Next.js can prerender up to the point you read them; v16 removed sync access. Await them as late and as deep as you can. In Client Components, unwrap a `params` prop with `use()`.",
+    "aliases": [
+      "next/headers",
+      "Sync dynamic APIs"
+    ]
+  },
+  {
+    "id": "request-memoization",
+    "title": "Request Memoization and React cache()",
+    "facets": {
+      "area": "data",
+      "kind": "concept",
+      "runs": "server"
+    },
+    "summary": "Identical `fetch` GETs in one render run once; wrap other reads in React `cache()`.",
+    "description": "So a layout and a page can both call `getUser()` without prop drilling. It lasts one server request and is never shared between users. `fetch` is memoized automatically; ORMs and SDKs aren't, so export `const getUser = cache(async (id) => …)` from a data module.",
+    "aliases": [
+      "Deduplication",
+      "React.cache"
+    ]
+  },
+  {
+    "id": "parallel-data-fetching",
+    "title": "Parallel vs Sequential Fetching",
+    "facets": {
+      "area": "data",
+      "kind": "pitfall",
+      "runs": "server"
+    },
+    "summary": "Awaiting one fetch before starting the next creates a waterfall; start them together.",
+    "description": "`await a(); await b()` costs both latencies in a row. Start both, then `await Promise.all([a, b])`, or split them into sibling components behind their own `<Suspense>` so each streams when ready. Stay sequential only when one request needs the other's result.",
+    "aliases": [
+      "Waterfall",
+      "Promise.all"
+    ]
+  },
+  {
+    "id": "use-hook-promises",
+    "title": "Passing Promises to Client Components",
+    "facets": {
+      "area": "data",
+      "kind": "api",
+      "runs": "any"
+    },
+    "summary": "Start a fetch on the server, pass the Promise as a prop, and unwrap it with React `use()`.",
+    "description": "The server doesn't block on the data, and the Client Component suspends until it resolves, showing the nearest `<Suspense>` fallback. Don't create the promise inside a Client Component's render: it's recreated every time. A rejected promise reaches the error boundary.",
+    "aliases": [
+      "use()",
+      "React 19 use"
+    ]
+  },
+  {
+    "id": "route-handlers",
+    "title": "Route Handlers",
+    "facets": {
+      "area": "data",
+      "kind": "file-convention",
+      "runs": "server"
+    },
+    "summary": "`route.ts` exports `GET`, `POST`… taking a Web `Request` and returning a `Response`.",
+    "description": "Use them for webhooks, public APIs, feeds, OAuth callbacks and non-React clients. A folder can't hold both `page.tsx` and `route.ts`. They're public URLs, so validate input and check auth. For your own UI, read in Server Components and write with Server Actions.",
+    "aliases": [
+      "API routes",
+      "pages/api",
+      "route.js"
+    ]
+  },
+  {
+    "id": "data-access-layer",
+    "title": "Data Access Layer",
+    "facets": {
+      "area": "data",
+      "kind": "practice",
+      "runs": "server"
+    },
+    "summary": "Keep all data reads in one `server-only` module that checks auth and returns safe DTOs.",
+    "description": "Pages, layouts and actions all go through functions like `getProfile()` that verify the session and return only the fields the UI needs. Safer than auth checks in a layout, which doesn't re-run on every navigation, or in proxy alone.",
+    "aliases": [
+      "DAL",
+      "DTO"
+    ]
+  },
+  {
+    "id": "client-side-fetching",
+    "title": "Client-side Fetching",
+    "facets": {
+      "area": "data",
+      "kind": "practice",
+      "runs": "client"
+    },
+    "summary": "Fetch in the browser only for data that changes after load, like polling or live search.",
+    "description": "Use SWR or TanStack Query, which add caching, dedup and revalidation. Hand-rolled `useEffect` fetching means loading flags, race conditions and a waterfall after hydration. Load the initial data in a Server Component and pass it in as the fallback.",
+    "aliases": [
+      "SWR",
+      "TanStack Query",
+      "useEffect fetch"
+    ]
+  },
+  {
+    "id": "use-search-params-suspense",
+    "title": "useSearchParams Needs Suspense",
+    "facets": {
+      "area": "data",
+      "kind": "pitfall",
+      "runs": "client"
+    },
+    "summary": "A Client Component calling `useSearchParams()` must sit inside a `<Suspense>` boundary.",
+    "description": "The query string isn't known at build time, so without a boundary everything up to the nearest Suspense renders only in the browser, and `next build` fails on prerendered routes. Wrap the component in `<Suspense>`, or read `searchParams` in the page and pass it down.",
+    "aliases": [
+      "Missing Suspense boundary with useSearchParams",
+      "usePathname"
+    ]
+  },
+  {
+    "id": "connection-api",
+    "title": "connection()",
+    "facets": {
+      "area": "data",
+      "kind": "api",
+      "runs": "server"
+    },
+    "summary": "`await connection()` defers the rest of a component to request time.",
+    "description": "Use it before `Math.random()`, `Date.now()` or a query that must be fresh per request when nothing else reads request data. With Cache Components, wrap that component in `<Suspense>` so the rest of the page stays in the static shell. It replaces `unstable_noStore()`.",
+    "aliases": [
+      "unstable_noStore",
+      "next/server"
+    ]
+  },
+  {
+    "id": "layout-search-params",
+    "title": "Layouts Don't Get searchParams",
+    "facets": {
+      "area": "data",
+      "kind": "pitfall",
+      "runs": "server"
+    },
+    "summary": "Layouts receive `params` but not `searchParams`, and don't re-render on navigation.",
+    "description": "A `?q=` filter read in a layout would go stale while the URL changes. Read `searchParams` in the page and pass it down, or call `useSearchParams()` in a Client Component. Same for the path: highlight active links with `usePathname()` in a client nav.",
+    "aliases": [
+      "usePathname",
+      "Active link"
+    ]
+  },
+  {
+    "id": "cache-components",
+    "title": "Cache Components",
+    "facets": {
+      "area": "caching",
+      "kind": "concept",
+      "runs": "build"
+    },
+    "summary": "`cacheComponents: true` leaves data uncached by default; you opt in with `'use cache'`.",
+    "description": "The v16 model. It replaces implicit `fetch` caching and segment configs like `revalidate` and `dynamic`. Every async read must be cached or inside `<Suspense>`, or Next.js errors and names the route, so nothing goes static or dynamic by accident. It enables Partial Prerendering.",
+    "aliases": [
+      "dynamicIO",
+      "experimental.useCache"
+    ]
+  },
+  {
+    "id": "use-cache-directive",
+    "title": "The \"use cache\" Directive",
+    "essential": true,
+    "facets": {
+      "area": "caching",
+      "kind": "api",
+      "runs": "server"
+    },
+    "summary": "`'use cache'` caches a function's or component's result across requests.",
+    "description": "Put it at the top of a function, component or file. Arguments and closed-over values form the cache key, so they must be serializable. Pair it with `cacheLife` and `cacheTag`. Trap: `cookies()` and `headers()` can't be read inside; read them outside and pass the values in.",
+    "aliases": [
+      "unstable_cache",
+      "force-cache"
+    ]
+  },
+  {
+    "id": "cache-life",
+    "title": "cacheLife",
+    "facets": {
+      "area": "caching",
+      "kind": "api",
+      "runs": "server"
+    },
+    "summary": "Set how long a `'use cache'` entry lives: `cacheLife('hours')` or your own timings.",
+    "description": "Profiles (`seconds`, `minutes`, `hours`, `days`, `weeks`, `max`) set `stale` (browser reuse), `revalidate` (refresh in the background) and `expire` (hard limit). Without one, the `default` profile applies. Very short lives keep an entry out of the static shell.",
+    "aliases": [
+      "revalidate",
+      "next.revalidate",
+      "unstable_cacheLife"
+    ]
+  },
+  {
+    "id": "cache-tag",
+    "title": "cacheTag",
+    "facets": {
+      "area": "caching",
+      "kind": "api",
+      "runs": "server"
+    },
+    "summary": "Label a cached entry, e.g. `cacheTag('posts', 'post-1')`, so you can invalidate it later.",
+    "description": "Tag by type and by id: the list with `posts`, each item with `post-${id}`. After a write, call `updateTag` or `revalidateTag` with that tag and every page using the data refreshes. For a cached `fetch`, use `next: { tags: [...] }` instead.",
+    "aliases": [
+      "next.tags",
+      "unstable_cacheTag"
+    ]
+  },
+  {
+    "id": "time-based-revalidation",
+    "title": "Time-based Revalidation",
+    "essential": true,
+    "facets": {
+      "area": "caching",
+      "kind": "concept",
+      "runs": "server"
+    },
+    "summary": "Serve cached content and rebuild it in the background once its revalidate time passes.",
+    "description": "Stale-while-revalidate: the first request after the window still gets the old page and triggers a rebuild; the next sees new data. Set it with `cacheLife`, or `fetch(url, { next: { revalidate: 60 } })` without Cache Components. Use it when slightly stale content is fine.",
+    "aliases": [
+      "ISR",
+      "Incremental Static Regeneration",
+      "export const revalidate"
+    ]
+  },
+  {
+    "id": "caching-defaults-changed",
+    "title": "Caching Defaults Since v15",
+    "facets": {
+      "area": "caching",
+      "kind": "concept",
+      "runs": "any"
+    },
+    "summary": "v15 made `fetch`, `GET` handlers and client page navigations uncached by default.",
+    "description": "v13 and v14 cached aggressively and surprised people with stale data. v15 flipped the defaults: opt in with `cache: 'force-cache'`. v16's Cache Components swaps those flags for `'use cache'`. In an interview, say which version and which model you mean.",
+    "aliases": [
+      "force-cache",
+      "no-store",
+      "fetchCache"
+    ]
+  },
+  {
+    "id": "caching-layers",
+    "title": "The Four Caching Layers",
+    "facets": {
+      "area": "caching",
+      "kind": "concept",
+      "runs": "any"
+    },
+    "summary": "Request memoization, the Data Cache, the Full Route Cache and the client Router Cache.",
+    "description": "Memoization dedups calls within one render; the Data Cache keeps fetch results across requests; the Full Route Cache stores prerendered HTML and RSC payloads; the Router Cache keeps visited segments in the browser. Debug stale data by asking which layer held it.",
+    "aliases": [
+      "Data Cache",
+      "Full Route Cache",
+      "Router Cache"
+    ]
+  },
+  {
+    "id": "router-cache",
+    "title": "Client Router Cache",
+    "facets": {
+      "area": "caching",
+      "kind": "concept",
+      "runs": "client"
+    },
+    "summary": "The browser keeps RSC payloads of visited and prefetched routes for instant navigation.",
+    "description": "Layouts and loading states are reused across navigations. Since v15 pages aren't reused by default (`staleTimes.dynamic` is 0); with Cache Components, `cacheLife`'s `stale` decides. Actions calling `updateTag`, `revalidatePath` or `refresh()` clear it, as does `router.refresh()`.",
+    "aliases": [
+      "staleTimes",
+      "router.refresh",
+      "Client cache"
+    ]
+  },
+  {
+    "id": "use-cache-runtime-apis",
+    "title": "Request Data Inside \"use cache\"",
+    "facets": {
+      "area": "caching",
+      "kind": "pitfall",
+      "runs": "server"
+    },
+    "summary": "`cookies()`, `headers()` and `searchParams` can't be read inside a `'use cache'` scope.",
+    "description": "A shared entry would leak one user's data to the next. Read the value outside and pass it in as an argument, which becomes part of the key. For per-user results you still want cached, use `'use cache: private'`; for a durable store shared by instances, `'use cache: remote'`.",
+    "aliases": [
+      "use cache: private",
+      "use cache: remote"
+    ]
+  },
+  {
+    "id": "react-cache-vs-use-cache",
+    "title": "React cache() vs \"use cache\"",
+    "facets": {
+      "area": "caching",
+      "kind": "pitfall",
+      "runs": "server"
+    },
+    "summary": "React `cache()` dedupes within one request; `'use cache'` keeps results across requests.",
+    "description": "Use `cache()` to share a per-request read, like the current user, between layout and page; it never outlives the request. Use `'use cache'` for data that's the same for everyone and worth keeping. Mixing them up means either no caching or caching too much.",
+    "aliases": [
+      "React.cache",
+      "Memoization vs caching"
+    ]
+  },
+  {
+    "id": "test-caching-in-production",
+    "title": "Check Caching in a Production Build",
+    "facets": {
+      "area": "caching",
+      "kind": "pitfall",
+      "runs": "build"
+    },
+    "summary": "`next dev` renders on every request; check caching with `next build && next start`.",
+    "description": "In dev, pages are never prerendered and prefetching is off, so a page that looks fresh may be static in production, or the other way round. Read the route list `next build` prints, then test the built app. Many \"stale data\" bugs only appear there.",
+    "aliases": [
+      "next build output",
+      "Dev vs prod"
+    ]
+  },
+  {
+    "id": "server-actions",
+    "title": "Server Actions",
+    "essential": true,
+    "facets": {
+      "area": "mutations",
+      "kind": "concept",
+      "runs": "server"
+    },
+    "summary": "Async functions marked `'use server'` that the client calls like functions, over POST.",
+    "description": "Pass one to `<form action>` or call it from an event handler. Next.js sends one request, runs it on the server, and returns the result with the refreshed UI. Use them for mutations from your own UI; they run one at a time, so don't use them to fetch data.",
+    "aliases": [
+      "Server Functions",
+      "Pages Router: API routes"
+    ]
+  },
+  {
+    "id": "use-server-directive",
+    "title": "\"use server\" Is Not for Server Components",
+    "facets": {
+      "area": "mutations",
+      "kind": "pitfall",
+      "runs": "server"
+    },
+    "summary": "`'use server'` marks functions the client may call; it doesn't make a Server Component.",
+    "description": "Server Components need no directive. `'use server'` at the top of a file exposes every export as an endpoint, so keep it to action files. Put it inside a function for a one-off inline action. To keep a module off the client, use `import 'server-only'` instead.",
+    "aliases": [
+      "Server Functions"
+    ]
+  },
+  {
+    "id": "actions-public-endpoints",
+    "title": "Server Actions Are Public Endpoints",
+    "essential": true,
+    "facets": {
+      "area": "mutations",
+      "kind": "pitfall",
+      "runs": "server"
+    },
+    "summary": "Anyone can call an action with any payload: validate input and check auth inside it.",
+    "description": "Hiding a button doesn't stop a crafted POST. In every action, verify the session and permission, parse `FormData` with a schema such as Zod, and return field errors instead of throwing. Next.js adds origin checks and unguessable IDs, but that isn't authorization.",
+    "aliases": [
+      "Zod",
+      "Authorization",
+      "IDOR"
+    ]
+  },
+  {
+    "id": "progressive-enhancement",
+    "title": "Progressive Enhancement",
+    "facets": {
+      "area": "mutations",
+      "kind": "concept",
+      "runs": "any"
+    },
+    "summary": "A `<form action={serverAction}>` in a Server Component submits before JavaScript loads.",
+    "description": "The form posts natively, so it works on slow connections and before hydration; once JavaScript loads, Next.js takes over without a full reload. Keep it by reading values from `FormData`, not client state. An action wired only to `onClick` loses it.",
+    "aliases": [
+      "No-JS forms",
+      "Works without JavaScript"
+    ]
+  },
+  {
+    "id": "use-action-state",
+    "title": "useActionState",
+    "facets": {
+      "area": "mutations",
+      "kind": "api",
+      "runs": "client"
+    },
+    "summary": "Wraps an action to give you its last returned state and a pending flag.",
+    "description": "`const [state, formAction, pending] = useActionState(save, initial)`. The action gets `(prevState, formData)` and returns errors or a message to render, like field errors under inputs. It's from `react` and replaced the canary `useFormState` from `react-dom`.",
+    "aliases": [
+      "useFormState"
+    ]
+  },
+  {
+    "id": "use-form-status",
+    "title": "useFormStatus",
+    "facets": {
+      "area": "mutations",
+      "kind": "api",
+      "runs": "client"
+    },
+    "summary": "`useFormStatus()` reads the pending state of the parent `<form>` from a child component.",
+    "description": "Made for a reusable submit button: `const { pending } = useFormStatus()`. Trap: it only works in a component rendered inside the `<form>`, not in the component that renders the form, where it always reports not pending. Import it from `react-dom`.",
+    "aliases": [
+      "Submit button pending state"
+    ]
+  },
+  {
+    "id": "use-optimistic",
+    "title": "useOptimistic",
+    "facets": {
+      "area": "mutations",
+      "kind": "api",
+      "runs": "client"
+    },
+    "summary": "Show the expected result instantly while the action runs, then reconcile with the server.",
+    "description": "`const [items, addOptimistic] = useOptimistic(serverItems, reducer)`; call `addOptimistic` inside the action or a transition. When the action finishes, the real data replaces the guess, and on failure it rolls back by itself. Use it for likes, todos and chat messages.",
+    "aliases": [
+      "Optimistic UI"
+    ]
+  },
+  {
+    "id": "update-tag-vs-revalidate-tag",
+    "title": "updateTag vs revalidateTag",
+    "essential": true,
+    "facets": {
+      "area": "mutations",
+      "kind": "api",
+      "runs": "server"
+    },
+    "summary": "`updateTag`: see your own write now. `revalidateTag(tag, 'max')`: refresh in background.",
+    "description": "`updateTag` works only in Server Actions: the next read waits for fresh data. `revalidateTag(tag, 'max')` also works in Route Handlers and webhooks; visitors get stale content while it refreshes. The one-argument `revalidateTag(tag)` is deprecated.",
+    "aliases": [
+      "On-demand revalidation",
+      "Read-your-own-writes"
+    ]
+  },
+  {
+    "id": "revalidate-path",
+    "title": "revalidatePath and refresh()",
+    "facets": {
+      "area": "mutations",
+      "kind": "api",
+      "runs": "server"
+    },
+    "summary": "`revalidatePath('/blog')` invalidates a route; `refresh()` re-renders the current page.",
+    "description": "Use `revalidatePath` when you don't have tags; pass `'layout'` to include nested pages. Tags are more precise, since the same data shows on many paths. `refresh()` from `next/cache` updates the client router from an action without touching cached data.",
+    "aliases": [
+      "router.refresh"
+    ]
+  },
+  {
+    "id": "redirect-in-actions",
+    "title": "redirect in Server Actions",
+    "facets": {
+      "area": "mutations",
+      "kind": "pitfall",
+      "runs": "server"
+    },
+    "summary": "`redirect()` works by throwing, so call it after your `try/catch`, not inside it.",
+    "description": "A `catch` block swallows the redirect and the user stays put. Do the write in `try`, return an error from `catch`, then invalidate and `redirect()` last. Invalidate first, or the next page may show stale data. `notFound()` throws the same way.",
+    "aliases": [
+      "NEXT_REDIRECT",
+      "unstable_rethrow"
+    ]
+  },
+  {
+    "id": "route-handlers-vs-actions",
+    "title": "Route Handlers vs Server Actions",
+    "facets": {
+      "area": "mutations",
+      "kind": "practice",
+      "runs": "server"
+    },
+    "summary": "Server Actions for your own UI's mutations; Route Handlers for every other HTTP caller.",
+    "description": "Actions give typed calls, forms that work without JavaScript and refreshed UI in the same round trip, but their URLs are internal. Pick a Route Handler for webhooks, mobile apps, third-party clients and file downloads, or when you need a stable URL, method and status code.",
+    "aliases": [
+      "API routes vs actions"
+    ]
+  },
+  {
+    "id": "proxy-ts",
+    "title": "proxy.ts",
+    "essential": true,
+    "facets": {
+      "area": "proxy",
+      "kind": "file-convention",
+      "runs": "server"
+    },
+    "summary": "One root file that runs before every matched request: redirect, rewrite, set headers.",
+    "description": "Next.js 16 renamed middleware.ts to proxy.ts and the export to `proxy`; it runs on Node.js. Put it next to `app/`. Use it for request-level routing (locale, A/B, auth redirects), not as your only security layer or for slow data work.",
+    "aliases": [
+      "middleware.ts",
+      "Middleware"
+    ]
+  },
+  {
+    "id": "proxy-matcher",
+    "title": "Proxy matcher",
+    "facets": {
+      "area": "proxy",
+      "kind": "api",
+      "runs": "server"
+    },
+    "summary": "`export const config = { matcher }` limits which paths proxy runs on.",
+    "description": "Without a matcher, proxy runs on every request, including `_next/static`, `_next/image` and `public/` files, so an auth redirect can block your CSS. Exclude them with a negative lookahead. Matchers must be constants: variables are ignored at build.",
+    "aliases": [
+      "config.matcher",
+      "Negative matcher"
+    ]
+  },
+  {
+    "id": "nextresponse",
+    "title": "NextResponse",
+    "facets": {
+      "area": "proxy",
+      "kind": "api",
+      "runs": "server"
+    },
+    "summary": "`next()` continues, `redirect()` changes the URL, `rewrite()` serves another path.",
+    "description": "A rewrite keeps the address bar and renders a different route or external URL; a redirect sends the browser elsewhere. You can also return `Response.json()` directly, e.g. a 401 for an API path. Set cookies on the response with `response.cookies.set`.",
+    "aliases": [
+      "NextResponse.rewrite",
+      "NextResponse.redirect",
+      "NextRequest"
+    ]
+  },
+  {
+    "id": "proxy-request-headers",
+    "title": "Passing Data From Proxy",
+    "facets": {
+      "area": "proxy",
+      "kind": "pitfall",
+      "runs": "server"
+    },
+    "summary": "Use `NextResponse.next({ request: { headers } })` to pass headers to the app.",
+    "description": "Proxy can't share globals with your render code; pass data through request headers, cookies or the URL. `NextResponse.next({ headers })` without `request:` sets response headers, so an internal user id ends up in the browser. Keep the headers small to avoid 431 errors.",
+    "aliases": [
+      "x-nonce",
+      "Request headers"
+    ]
+  },
+  {
+    "id": "proxy-auth-bypass",
+    "title": "Proxy Is Not the Auth Boundary",
+    "essential": true,
+    "facets": {
+      "area": "proxy",
+      "kind": "pitfall",
+      "runs": "server"
+    },
+    "summary": "Check auth again where data is read and mutated; a proxy redirect is only a first gate.",
+    "description": "CVE-2025-29927 let one `x-middleware-subrequest` header skip middleware entirely. Matchers also drift: a Server Function is a POST to its page, so an excluded path skips proxy. Verify the session in a data access layer, each Server Action and Route Handler.",
+    "aliases": [
+      "CVE-2025-29927",
+      "x-middleware-subrequest",
+      "Data access layer"
+    ]
+  },
+  {
+    "id": "proxy-optimistic-checks",
+    "title": "Keep Proxy Light",
+    "facets": {
+      "area": "proxy",
+      "kind": "practice",
+      "runs": "server"
+    },
+    "summary": "Only read the cookie or header in proxy; no database queries or slow fetches.",
+    "description": "Proxy runs before every matched request, including prefetches, so its latency lands on every navigation. Do an optimistic check (is there a session cookie?) and redirect; leave real session lookups and permissions to the server code that renders the data.",
+    "aliases": [
+      "Optimistic auth check"
+    ]
+  },
+  {
+    "id": "proxy-ab-locale",
+    "title": "A/B Tests and Locales in Proxy",
+    "facets": {
+      "area": "proxy",
+      "kind": "practice",
+      "runs": "server"
+    },
+    "summary": "Pick a variant or locale from cookies and headers, then rewrite to that route.",
+    "description": "Read `Accept-Language` or a bucket cookie, set the cookie if missing, and `rewrite` to `/en/...` or `/variant-b/...` so the URL stays clean and each variant can still be prerendered. Fixed redirects with no request logic belong in `next.config` instead.",
+    "aliases": [
+      "i18n routing",
+      "Feature flags",
+      "Experiments"
+    ]
+  },
+  {
+    "id": "csp-nonce",
+    "title": "CSP With Nonces",
+    "facets": {
+      "area": "proxy",
+      "kind": "practice",
+      "runs": "server"
+    },
+    "summary": "Generate a nonce per request in proxy and put it in the Content-Security-Policy header.",
+    "description": "Next.js reads the nonce from the CSP request header and adds it to its own scripts; pass it to `<Script nonce>` via `x-nonce`. The cost: every page must render dynamically, so no static pages, ISR or CDN caching. Static sites can use a header in config or SRI.",
+    "aliases": [
+      "Content Security Policy",
+      "strict-dynamic",
+      "SRI"
+    ]
+  },
+  {
+    "id": "proxy-edge-middleware",
+    "title": "Proxy Runs on Node, Not Edge",
+    "facets": {
+      "area": "proxy",
+      "kind": "pitfall",
+      "runs": "edge"
+    },
+    "summary": "proxy.ts always uses Node.js; keep the deprecated middleware.ts if you need Edge.",
+    "description": "Setting `runtime` in proxy throws. Blindly renaming an Edge middleware moves it to Node: you gain `fs` and npm packages but lose the Edge deploy target. Run the `middleware-to-proxy` codemod, then check the runtime and renamed flags like `skipProxyUrlNormalize`.",
+    "aliases": [
+      "middleware-to-proxy codemod",
+      "Edge middleware"
+    ]
+  },
+  {
+    "id": "next-image",
+    "title": "next/image",
+    "essential": true,
+    "facets": {
+      "area": "assets",
+      "kind": "api",
+      "runs": "any"
+    },
+    "summary": "`<Image>` resizes, serves WebP/AVIF, lazy-loads and reserves space to stop layout shift.",
+    "description": "It needs `alt` plus `width`/`height`, a static import, or `fill`. It serves a `srcset` from `/_next/image`, so users download only the size they need. Prefer it over `<img>` for photos; for icons or already-optimised SVGs, `unoptimized` or plain `<img>` is fine.",
+    "aliases": [
+      "Image component",
+      "Image optimization"
+    ]
+  },
+  {
+    "id": "image-remote-patterns",
+    "title": "images.remotePatterns",
+    "facets": {
+      "area": "assets",
+      "kind": "api",
+      "runs": "server"
+    },
+    "summary": "Allow-list the hosts and paths that next/image may fetch and optimise.",
+    "description": "Without it, remote URLs fail with a 400, which stops strangers using your optimiser as a free image proxy. Match protocol, hostname and pathname as tightly as you can. `images.domains` is deprecated; `localPatterns` does the same for local paths.",
+    "aliases": [
+      "images.domains",
+      "localPatterns"
+    ]
+  },
+  {
+    "id": "image-preload-lcp",
+    "title": "Preloading the LCP Image",
+    "facets": {
+      "area": "assets",
+      "kind": "api",
+      "runs": "any"
+    },
+    "summary": "Mark the hero image `preload` (formerly `priority`) so it isn't lazy-loaded.",
+    "description": "Every next/image lazy-loads by default, which delays the Largest Contentful Paint if the hero waits too. Next.js 16 deprecated `priority` for `preload`; often `loading=\"eager\"` or `fetchPriority=\"high\"` is enough. Mark one image per page, not all of them.",
+    "aliases": [
+      "priority",
+      "fetchPriority",
+      "LCP"
+    ]
+  },
+  {
+    "id": "image-fill-sizes",
+    "title": "fill and sizes",
+    "facets": {
+      "area": "assets",
+      "kind": "pitfall",
+      "runs": "any"
+    },
+    "summary": "`fill` sizes the image to a positioned parent; `sizes` tells the browser its real width.",
+    "description": "With `fill`, the parent needs `position: relative`, `fixed` or `absolute` and a height. Without `sizes`, the browser assumes 100vw and fetches a full-width file for a small card thumbnail. Write it like `(max-width: 768px) 100vw, 33vw`, and use `object-fit` for cropping.",
+    "aliases": [
+      "Responsive images",
+      "srcset"
+    ]
+  },
+  {
+    "id": "image-v16-defaults",
+    "title": "next/image v16 Defaults",
+    "facets": {
+      "area": "assets",
+      "kind": "pitfall",
+      "runs": "server"
+    },
+    "summary": "Only quality 75, a 4-hour minimum cache, no 16px size and local IPs blocked by default.",
+    "description": "Other `quality` values snap to the closest entry in `images.qualities`. `minimumCacheTTL` rose from 60 s to 4 h, so updated images change later. Local images with query strings need `localPatterns.search`, and remote fetches follow at most 3 redirects.",
+    "aliases": [
+      "images.qualities",
+      "minimumCacheTTL",
+      "dangerouslyAllowLocalIP"
+    ]
+  },
+  {
+    "id": "static-image-import",
+    "title": "Static Image Imports",
+    "facets": {
+      "area": "assets",
+      "kind": "concept",
+      "runs": "build"
+    },
+    "summary": "`import hero from './hero.jpg'` gives width, height and a blur placeholder at build time.",
+    "description": "No need to type dimensions, and `placeholder=\"blur\"` works with no extra setup. The file gets a hashed name with an immutable cache header, so a new version busts the cache. Remote images need explicit sizes and their own `blurDataURL`.",
+    "aliases": [
+      "placeholder blur",
+      "blurDataURL"
+    ]
+  },
+  {
+    "id": "public-folder",
+    "title": "The public Folder",
+    "facets": {
+      "area": "assets",
+      "kind": "file-convention",
+      "runs": "any"
+    },
+    "summary": "Files in `public/` are served as-is from the root: `public/logo.png` is `/logo.png`.",
+    "description": "They aren't hashed, so a changed file keeps its URL and may stay stale in caches; imports get hashed names. Only files present at build are served, a file can't share a path with a route, and anything there is public: never drop secrets or source maps in it.",
+    "aliases": [
+      "Static files"
+    ]
+  },
+  {
+    "id": "next-font",
+    "title": "next/font",
+    "essential": true,
+    "facets": {
+      "area": "assets",
+      "kind": "api",
+      "runs": "build"
+    },
+    "summary": "Fetches Google or local fonts at build, self-hosts them, sizes fallbacks to stop shift.",
+    "description": "The browser never calls Google, which helps privacy and skips a connection. A size-adjusted fallback keeps text from jumping when the font loads. Call the loader at module scope in a shared file and expose it with `variable` as a CSS custom property.",
+    "aliases": [
+      "next/font/google",
+      "next/font/local",
+      "Font optimization"
+    ]
+  },
+  {
+    "id": "next-script",
+    "title": "next/script Strategies",
+    "facets": {
+      "area": "assets",
+      "kind": "api",
+      "runs": "client"
+    },
+    "summary": "`beforeInteractive`, `afterInteractive` (default), `lazyOnload`, or experimental `worker`.",
+    "description": "Use `lazyOnload` for chat widgets and other non-urgent third parties, `afterInteractive` for analytics, `beforeInteractive` only for must-run-first code in the root layout. The script loads once across navigations; `onLoad` needs a Client Component.",
+    "aliases": [
+      "<Script>",
+      "Third-party scripts",
+      "@next/third-parties"
+    ]
+  },
+  {
+    "id": "metadata-api",
+    "title": "Metadata API",
+    "essential": true,
+    "facets": {
+      "area": "metadata",
+      "kind": "api",
+      "runs": "server"
+    },
+    "summary": "Export a `metadata` object from a layout or page to set title, description and Open Graph.",
+    "description": "Next.js turns it into `<head>` tags, so don't hand-write `<title>` or `<meta>`. It works only in Server Components; a `'use client'` page must move its interactive part into a child. Use `title.template` in the layout, e.g. `%s | Acme`, for consistent titles.",
+    "aliases": [
+      "export const metadata",
+      "title.template",
+      "SEO"
+    ]
+  },
+  {
+    "id": "generate-metadata",
+    "title": "generateMetadata",
+    "facets": {
+      "area": "metadata",
+      "kind": "api",
+      "runs": "server"
+    },
+    "summary": "An async export that builds metadata from route params or fetched data.",
+    "description": "Use it when the title depends on the product or post. Await `params`; `fetch` calls are memoised with the page, so loading the same record twice costs one request (or wrap a DB call in React `cache`). You can't export it and `metadata` from the same segment.",
+    "aliases": [
+      "Dynamic metadata",
+      "ResolvingMetadata"
+    ]
+  },
+  {
+    "id": "metadata-merging",
+    "title": "Metadata Merges Shallowly",
+    "facets": {
+      "area": "metadata",
+      "kind": "pitfall",
+      "runs": "server"
+    },
+    "summary": "A child that sets `openGraph` replaces the parent's whole `openGraph`, not one field.",
+    "description": "Segments merge from root to page, key by key. Setting only `openGraph.title` in a page drops the layout's OG description and image. Share common fields through a spread object, or read and extend them via the `parent` argument of generateMetadata.",
+    "aliases": [
+      "Metadata inheritance"
+    ]
+  },
+  {
+    "id": "metadata-base",
+    "title": "metadataBase",
+    "facets": {
+      "area": "metadata",
+      "kind": "pitfall",
+      "runs": "server"
+    },
+    "summary": "Set `metadataBase` in the root layout so relative OG and canonical URLs become absolute.",
+    "description": "Open Graph images and canonical links need full URLs, or crawlers can't fetch them. With `metadataBase: new URL('https://acme.com')`, `/og.png` resolves correctly; using relative URLs without it is a build error. Read the origin from an env var per environment.",
+    "aliases": [
+      "Canonical URL",
+      "alternates"
+    ]
+  },
+  {
+    "id": "viewport-export",
+    "title": "viewport Export",
+    "facets": {
+      "area": "metadata",
+      "kind": "api",
+      "runs": "server"
+    },
+    "summary": "`themeColor`, `colorScheme` and viewport settings go in `viewport`, not `metadata`.",
+    "description": "They moved out of `metadata` in Next.js 14 and are deprecated there. Export `viewport` or `generateViewport` from a layout or page. Next.js already adds `width=device-width, initial-scale=1`, so only add one to change theme colours or zoom.",
+    "aliases": [
+      "generateViewport",
+      "themeColor"
+    ]
+  },
+  {
+    "id": "opengraph-image",
+    "title": "opengraph-image File",
+    "facets": {
+      "area": "metadata",
+      "kind": "file-convention",
+      "runs": "build"
+    },
+    "summary": "Drop `opengraph-image.png` (or `.tsx`) in a route folder to set its social preview image.",
+    "description": "Next.js adds the `og:image` tags with type and size for you, and child routes inherit it. A `.tsx` version generates the image with ImageResponse, prerendered at build unless it reads request data. `twitter-image` and an `.alt.txt` file work the same way.",
+    "aliases": [
+      "twitter-image",
+      "Social card"
+    ]
+  },
+  {
+    "id": "image-response",
+    "title": "ImageResponse",
+    "facets": {
+      "area": "metadata",
+      "kind": "api",
+      "runs": "server"
+    },
+    "summary": "`new ImageResponse(<jsx/>)` from `next/og` renders JSX to a PNG, e.g. per-post OG cards.",
+    "description": "It uses Satori, which supports flexbox and a subset of CSS: no grid, no CSS files. Load fonts as ttf, otf or woff data. The bundle including fonts and images is capped at 500 KB, so keep assets small and fetch big ones at runtime.",
+    "aliases": [
+      "next/og",
+      "Satori",
+      "Dynamic OG image"
+    ]
+  },
+  {
+    "id": "app-icons",
+    "title": "icon and apple-icon Files",
+    "facets": {
+      "area": "metadata",
+      "kind": "file-convention",
+      "runs": "build"
+    },
+    "summary": "`favicon.ico`, `icon.png` and `apple-icon.png` in `app/` become the right `<link>` tags.",
+    "description": "`favicon.ico` only works at the root of `app/`; `icon` and `apple-icon` can sit in any segment and be generated with `.tsx`. Add `manifest.ts` for the PWA name and icons. File-based metadata beats the `icons` field, so don't define both.",
+    "aliases": [
+      "favicon.ico",
+      "manifest.ts",
+      "Web app manifest"
+    ]
+  },
+  {
+    "id": "sitemap-ts",
+    "title": "sitemap.ts",
+    "facets": {
+      "area": "metadata",
+      "kind": "file-convention",
+      "runs": "build"
+    },
+    "summary": "Return an array of `{ url, lastModified }` from `app/sitemap.ts` to serve `/sitemap.xml`.",
+    "description": "Type it with `MetadataRoute.Sitemap` and build URLs from your data. It is prerendered at build unless it uses request data, so new posts appear only after a rebuild or revalidation. Past 50,000 URLs, split it with `generateSitemaps`.",
+    "aliases": [
+      "sitemap.xml",
+      "generateSitemaps",
+      "MetadataRoute"
+    ]
+  },
+  {
+    "id": "robots-ts",
+    "title": "robots.ts",
+    "facets": {
+      "area": "metadata",
+      "kind": "file-convention",
+      "runs": "build"
+    },
+    "summary": "`app/robots.ts` returns rules and the sitemap URL to serve `/robots.txt`.",
+    "description": "Generate it in code to block indexing on staging from an env var. `Disallow` is a polite request, not access control: the paths stay public and are even advertised. Protect private pages with auth, and use `robots: { index: false }` metadata to keep pages out of results.",
+    "aliases": [
+      "robots.txt",
+      "noindex"
+    ]
+  },
+  {
+    "id": "next-config-ts",
+    "title": "next.config.ts",
+    "facets": {
+      "area": "config",
+      "kind": "file-convention",
+      "runs": "build"
+    },
+    "summary": "The project config, typed with `NextConfig`; read at build and when the server starts.",
+    "description": "TypeScript config is supported natively, so typos in option names fail type checks. Export an object, or a function of `phase` for dev-only settings. It runs in Node, not in the browser; `next dev` no longer shows `dev` in `process.argv`, so check `phase` or NODE_ENV.",
+    "aliases": [
+      "next.config.js",
+      "next.config.mjs",
+      "NextConfig"
+    ]
+  },
+  {
+    "id": "next-public-env",
+    "title": "NEXT_PUBLIC_ Variables",
+    "essential": true,
+    "facets": {
+      "area": "config",
+      "kind": "pitfall",
+      "runs": "build"
+    },
+    "summary": "Only `NEXT_PUBLIC_` env vars reach the browser, and their values are frozen at build time.",
+    "description": "`next build` replaces `process.env.NEXT_PUBLIC_X` with its literal value, so changing it on the server later does nothing until you rebuild. Dynamic lookups like `process.env[name]` aren't inlined. Anything with the prefix is public: never prefix a secret.",
+    "aliases": [
+      "Environment variables",
+      "process.env",
+      "Build-time inlining"
+    ]
+  },
+  {
+    "id": "env-load-order",
+    "title": ".env File Order",
+    "facets": {
+      "area": "config",
+      "kind": "concept",
+      "runs": "build"
+    },
+    "summary": "Real env vars win, then `.env.$NODE_ENV.local`, `.env.local`, `.env.$NODE_ENV`, `.env`.",
+    "description": "Commit `.env` and `.env.production` with safe defaults; keep secrets in `.env*.local`, which is gitignored. `.env.local` is skipped when NODE_ENV is test, so tests see the same values everywhere. Vars without the public prefix exist only on the server.",
+    "aliases": [
+      ".env.local",
+      "@next/env"
+    ]
+  },
+  {
+    "id": "runtime-env-vars",
+    "title": "Runtime Env Vars",
+    "facets": {
+      "area": "config",
+      "kind": "practice",
+      "runs": "server"
+    },
+    "summary": "Read server env vars during a request (after `await connection()`) to reuse one build.",
+    "description": "A prerendered page bakes in the env values present at build. Reading them at request time lets one Docker image run in staging and production. Pass client values down as props. Next.js 16 removed `publicRuntimeConfig` and `serverRuntimeConfig`.",
+    "aliases": [
+      "publicRuntimeConfig",
+      "serverRuntimeConfig",
+      "Build once, deploy many"
+    ]
+  },
+  {
+    "id": "server-only",
+    "title": "server-only",
+    "essential": true,
+    "facets": {
+      "area": "config",
+      "kind": "practice",
+      "runs": "server"
+    },
+    "summary": "`import 'server-only'` makes the build fail if a client module imports the file.",
+    "description": "Put it at the top of modules that hold DB clients, API keys or the data access layer, so a stray import from a `'use client'` file is caught at build, not in production. Its twin `client-only` guards browser code; React's taint APIs block passing secrets as props.",
+    "aliases": [
+      "client-only",
+      "experimental.taint",
+      "Secrets"
+    ]
+  },
+  {
+    "id": "config-redirects-rewrites",
+    "title": "redirects and rewrites",
+    "facets": {
+      "area": "config",
+      "kind": "api",
+      "runs": "server"
+    },
+    "summary": "Static URL rules in next.config: redirects change the URL, rewrites map it in place.",
+    "description": "Prefer them over proxy for fixed mappings like old blog slugs. `permanent: true` sends 308 and `false` 307, which keep the method (not 301/302). Redirects run before proxy; rewrites can be `beforeFiles`, `afterFiles` or `fallback`, and can proxy to an external API.",
+    "aliases": [
+      "redirects()",
+      "rewrites()",
+      "308"
+    ]
+  },
+  {
+    "id": "config-headers",
+    "title": "headers() in Config",
+    "facets": {
+      "area": "config",
+      "kind": "api",
+      "runs": "server"
+    },
+    "summary": "Attach response headers by path pattern, e.g. security headers on every route.",
+    "description": "Set HSTS, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy` and a static CSP with `frame-ancestors`. It runs first, before redirects and proxy. Add `poweredByHeader: false` to drop `X-Powered-By`. A per-request nonce CSP needs proxy instead.",
+    "aliases": [
+      "Security headers",
+      "poweredByHeader"
+    ]
+  },
+  {
+    "id": "turbopack",
+    "title": "Turbopack",
+    "facets": {
+      "area": "config",
+      "kind": "concept",
+      "runs": "build"
+    },
+    "summary": "The Rust bundler that is the default for `next dev` and `next build` since Next.js 16.",
+    "description": "No flag needed; it caches to disk for fast restarts. A custom `webpack()` config, even one added by a plugin, now fails the build: port it to the top-level `turbopack` option (`rules`, `resolveAlias`) or build with `--webpack` until you can.",
+    "aliases": [
+      "--webpack",
+      "turbopack.rules"
+    ]
+  },
+  {
+    "id": "react-compiler",
+    "title": "React Compiler",
+    "facets": {
+      "area": "config",
+      "kind": "api",
+      "runs": "build"
+    },
+    "summary": "`reactCompiler: true` auto-memoises components, so most manual useMemo is unnecessary.",
+    "description": "Stable since Next.js 16 but off by default; install `babel-plugin-react-compiler`. It runs through Babel, so builds get slower. It only helps code that follows the Rules of React; use `'use no memo'` to opt a component out while you fix it.",
+    "aliases": [
+      "babel-plugin-react-compiler",
+      "Auto memoization"
+    ]
+  },
+  {
+    "id": "base-path",
+    "title": "basePath",
+    "facets": {
+      "area": "config",
+      "kind": "pitfall",
+      "runs": "build"
+    },
+    "summary": "Serve the app under a sub-path like `/docs`; set at build time.",
+    "description": "`next/link` and `useRouter` add the prefix for you, but raw `<a>`, `fetch('/api/x')` and string `src` on next/image don't, and they 404 in production. `assetPrefix` is different: it only moves `_next/static` files to a CDN host.",
+    "aliases": [
+      "assetPrefix",
+      "Sub-path hosting"
+    ]
+  },
+  {
+    "id": "bundle-analysis",
+    "title": "Bundle Analysis",
+    "facets": {
+      "area": "config",
+      "kind": "practice",
+      "runs": "build"
+    },
+    "summary": "Run `next analyze` (Turbopack) or `@next/bundle-analyzer` (webpack) to see what ships.",
+    "description": "Next.js 16 dropped First Load JS sizes from build output, so measure on purpose. Trace why a big module lands on the client, then move the work into a Server Component, lazy-load it, or list icon libraries in `optimizePackageImports`.",
+    "aliases": [
+      "@next/bundle-analyzer",
+      "next analyze",
+      "optimizePackageImports"
+    ]
+  },
+  {
+    "id": "output-standalone",
+    "title": "output: \"standalone\"",
+    "facets": {
+      "area": "deploy",
+      "kind": "api",
+      "runs": "build"
+    },
+    "summary": "Builds a minimal `server.js` with only the node_modules it needs, for small Docker images.",
+    "description": "Run `node .next/standalone/server.js`, with PORT and HOSTNAME set by env vars. The trap: `public/` and `.next/static` aren't copied, so copy them in the Dockerfile or serve them from a CDN, or the site loads with no CSS, JS or images.",
+    "aliases": [
+      "Docker",
+      "Output file tracing"
+    ]
+  },
+  {
+    "id": "static-export",
+    "title": "Static Export",
+    "facets": {
+      "area": "deploy",
+      "kind": "api",
+      "runs": "build"
+    },
+    "summary": "`output: \"export\"` writes plain HTML, CSS and JS to `out/`, hostable on any static server.",
+    "description": "With no server you lose proxy, ISR, Server Actions, cookies and headers, config redirects and rewrites, draft mode and default image optimisation (use a custom loader). Dynamic routes need `generateStaticParams`. Server Components still run, at build.",
+    "aliases": [
+      "output: export",
+      "SPA",
+      "next export"
+    ]
+  },
+  {
+    "id": "self-hosting",
+    "title": "Self-Hosting vs Vercel",
+    "facets": {
+      "area": "deploy",
+      "kind": "concept",
+      "runs": "server"
+    },
+    "summary": "`next start` supports every feature; Vercel adds a managed CDN, skew protection, scaling.",
+    "description": "Self-hosted, you run a Node server behind a reverse proxy like nginx (turn off buffering so streaming works) and own caching, CDN and scaling. Serverless hosts use adapters such as OpenNext. Static export fits only apps that need no server.",
+    "aliases": [
+      "next start",
+      "OpenNext",
+      "Build adapters"
+    ]
+  },
+  {
+    "id": "self-host-isr",
+    "title": "ISR on Several Instances",
+    "facets": {
+      "area": "deploy",
+      "kind": "pitfall",
+      "runs": "server"
+    },
+    "summary": "Each instance keeps its own disk and memory cache; share it with a custom cache handler.",
+    "description": "Behind a load balancer, pods regenerate pages separately and `revalidateTag` on one leaves the others stale. Point `cacheHandler` at Redis or S3 and set `cacheMaxMemorySize: 0`; `use cache` stores use `cacheHandlers` instead. One `next start` with a disk needs nothing.",
+    "aliases": [
+      "cacheHandler",
+      "cacheHandlers",
+      "Kubernetes"
+    ]
+  },
+  {
+    "id": "multi-instance-deploys",
+    "title": "Version Skew Across Instances",
+    "facets": {
+      "area": "deploy",
+      "kind": "pitfall",
+      "runs": "server"
+    },
+    "summary": "Share one build, one Server Action key and a `deploymentId` across all instances.",
+    "description": "Each build gets its own Server Action encryption key, so mixed builds give \"Failed to find Server Action\"; set `NEXT_SERVER_ACTIONS_ENCRYPTION_KEY`. During rolling deploys, `deploymentId` makes old clients reload instead of requesting chunks that no longer exist.",
+    "aliases": [
+      "deploymentId",
+      "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY",
+      "generateBuildId"
+    ]
+  },
+  {
+    "id": "edge-runtime",
+    "title": "Edge vs Node.js Runtime",
+    "facets": {
+      "area": "deploy",
+      "kind": "concept",
+      "runs": "edge"
+    },
+    "summary": "Node.js is the default; `runtime = 'edge'` trades Node APIs for fast, nearby cold starts.",
+    "description": "Edge has only Web APIs: no `fs`, no native modules, many npm packages break, and code size is capped. Running near the user doesn't help if every request goes back to one database. Stay on Node unless a route is light and latency-critical.",
+    "aliases": [
+      "export const runtime",
+      "Edge functions"
+    ]
+  },
+  {
+    "id": "instrumentation-ts",
+    "title": "instrumentation.ts",
+    "facets": {
+      "area": "deploy",
+      "kind": "file-convention",
+      "runs": "server"
+    },
+    "summary": "`register()` runs once as a server starts; `onRequestError` reports server errors.",
+    "description": "Set up OpenTelemetry (e.g. `@vercel/otel`) or an error tracker here, before any request is served. Import Node-only SDKs inside a check on `NEXT_RUNTIME`. For browser monitoring, `instrumentation-client.ts` runs before the app hydrates.",
+    "aliases": [
+      "OpenTelemetry",
+      "onRequestError",
+      "instrumentation-client.ts"
+    ]
+  },
+  {
+    "id": "after-response",
+    "title": "after()",
+    "facets": {
+      "area": "deploy",
+      "kind": "api",
+      "runs": "server"
+    },
+    "summary": "`after(fn)` from `next/server` runs work once the response has been sent.",
+    "description": "Use it for logging, analytics or cache warming so users don't wait. It works in Server Components, Server Actions, Route Handlers and proxy, and serverless hosts keep the function alive with `waitUntil`. Self-hosted, shut down gracefully so pending callbacks run.",
+    "aliases": [
+      "waitUntil",
+      "unstable_after"
+    ]
+  },
+  {
+    "id": "draft-mode",
+    "title": "Draft Mode",
+    "facets": {
+      "area": "deploy",
+      "kind": "api",
+      "runs": "server"
+    },
+    "summary": "`(await draftMode()).enable()` lets editors see unpublished CMS content on static pages.",
+    "description": "A Route Handler checks a secret from the CMS, enables draft mode (it sets a bypass cookie) and redirects to the page, which then renders at request time with draft data. Check `isEnabled` to switch to the preview API. Validate the secret, or anyone can preview.",
+    "aliases": [
+      "Preview mode",
+      "draftMode",
+      "CMS preview"
+    ]
+  }
+]

@@ -4,6 +4,7 @@ export function useKeyboardNav(
   onLeft: () => void,
   onRight: () => void,
   onReveal: () => void,
+  onHide?: () => void,
 ) {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -20,10 +21,13 @@ export function useKeyboardNav(
       } else if (e.key === "ArrowDown" || e.key === "ArrowUp") {
         e.preventDefault();
         onReveal();
+      } else if ((e.key === "h" || e.key === "H") && onHide && !e.metaKey && !e.ctrlKey && !e.altKey) {
+        e.preventDefault();
+        onHide();
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [onLeft, onRight, onReveal]);
+  }, [onLeft, onRight, onReveal, onHide]);
 }

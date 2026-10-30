@@ -163,6 +163,10 @@
   color: #888;
 }
 
+.deck-tile__star {
+  color: #b7860b;
+}
+
 .deck-tile__arrow {
   font-size: 1.1rem;
   color: #5b5bd6;

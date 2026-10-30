@@ -6,7 +6,7 @@
 [![Release](https://img.shields.io/github/v/release/pearpages/flashcards)](https://github.com/pearpages/flashcards/releases)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-A mobile-first flashcard app with seven decks: design systems, CSS, accessibility, web performance, web security, system design and testing. Every card has a wireframe drawing, and each deck brings its own filters and badges.
+A mobile-first flashcard app with eight decks: design systems, CSS, accessibility, web performance, web security, system design, testing and Next.js. Every card has a wireframe drawing, and each deck brings its own filters and badges. About a fifth of every deck is starred ★ as the essentials you must know, and you can hide the cards you already know.
 
 The first deck, **Design System**, has 155 components, each tagged three ways: its purpose (forms, navigation, overlays…), its layer (primitive, component, pattern) and its atomic design level (atom, molecule, organism, template). Each card has wireframe drawings and, for most, the iOS and Android equivalents.
 
@@ -21,6 +21,8 @@ A fifth deck, **Web Performance**, has 100 metrics, mechanisms, techniques and a
 A sixth deck, **CSS**, has 100 cards from the cascade and selectors through flexbox, grid, positioning, responsive design, typography, colour and motion to architecture, each with its Baseline status and, for layout, the SwiftUI and Compose equivalent.
 
 A seventh deck, **Testing**, has 100 cards on strategy, test doubles, unit to end-to-end, APIs, non-functional checks, CI and suite maintenance, each with its test level and, where an API maps exactly, the JavaScript (Vitest, Testing Library, Playwright) and Python (pytest) way to do it.
+
+An eighth deck, **Next.js**, has 104 interview-style questions on the App Router: routing, Server and Client Components, data fetching, caching, Server Actions, proxy, images and fonts, metadata, config and deploys, each tagged with where its code runs (server, client, edge, build).
 
 **Try it: [flashcards.pearpages.com](https://flashcards.pearpages.com)** — works on phones and desktop, no sign-up.
 
@@ -47,6 +49,8 @@ A seventh deck, **Testing**, has 100 cards on strategy, test doubles, unit to en
 - **Shareable links** — the URL follows the deck and card you're on (`#/design-system/card/sheet`) or the list (`#/design-system/browse`), and the Back button works
 - **Component deck** — name, purpose, layer, atomic level, wireframe illustration and one-line purpose on the front
 - **Tap to flip** — tap/click (or arrow up/down) to show when to use it, nearest alternatives, accessibility notes and native equivalents; tap again to go back to the front
+- **Essentials ★** — the must-know fifth of every deck is painted gold and starred in the list; the ★ toggle next to Study/Browse studies only those
+- **Hide what you know** — the "✓ Hide" button under the card (or `H`) takes it out of study, with Undo; hidden cards are remembered per deck in this browser only, stay in the list faded with an Unhide button, and the hidden counter in the header brings them back into study
 - **Filters** — narrow the deck by purpose and/or layer (each deck declares its own filters); the atomic design level is shown as a badge
 - **Desktop + mobile** — components that change shape on small screens show both versions side by side, or desktop · iOS · Android when the platforms differ
 - **Platform equivalents** — revealing a card shows its counterparts on the platforms its deck declares: iOS (SwiftUI/UIKit) and Android (Compose Material 3) for the UI decks, AWS, GCP and Azure for system design; search finds them too
@@ -71,6 +75,7 @@ src/decks/
   web-performance/     # same layout, no platform columns
   css/                 # same layout, with SwiftUI / Compose as its platforms
   testing/             # same layout, with JavaScript / Python as its platforms
+  nextjs/              # same layout, no platform columns
     cards.json         # the cards
     images/<id>.svg    # one illustration per card (optional)
 ```
@@ -83,6 +88,7 @@ Add an entry to `src/decks/<deck>/cards.json`:
 {
   "id": "icon-button",
   "title": "IconButton",
+  "essential": true,
   "facets": { "purpose": "actions", "layer": "component", "atomic": "atom" },
   "summary": "A compact button that shows only an icon.",
   "description": "When to use it, how it differs from its siblings, accessibility notes.",
@@ -98,6 +104,7 @@ Add an entry to `src/decks/<deck>/cards.json`:
 | `facets`      | Yes      | A value for every facet declared in `deck.json`                      |
 | `summary`     | Yes      | One line, shown on the front (≤ 90 chars)                            |
 | `description` | Yes      | Revealed on tap (≤ 280 chars to fit the card)                        |
+| `essential`   | No       | `true` for the deck's must-know cards (about a fifth of the deck): starred, kept by the ★ Essentials toggle |
 | `aliases`     | No       | Other names for the same thing                                       |
 | `platforms`   | No       | Equivalents keyed by the deck's declared platforms (e.g. `ios`, `android`; `aws`, `gcp`, `azure`; or `swiftui`, `compose`; `javascript`, `python`), ≤ 60 chars each |
 

@@ -2,6 +2,7 @@
   {
     "id": "core-web-vitals",
     "title": "Core Web Vitals",
+    "essential": true,
     "facets": {
       "area": "metrics",
       "kind": "metric",
@@ -17,6 +18,7 @@
   {
     "id": "lcp",
     "title": "Largest Contentful Paint",
+    "essential": true,
     "facets": {
       "area": "metrics",
       "kind": "metric",
@@ -31,6 +33,7 @@
   {
     "id": "inp",
     "title": "Interaction to Next Paint",
+    "essential": true,
     "facets": {
       "area": "metrics",
       "kind": "metric",
@@ -46,6 +49,7 @@
   {
     "id": "cls",
     "title": "Cumulative Layout Shift",
+    "essential": true,
     "facets": {
       "area": "metrics",
       "kind": "metric",
@@ -75,6 +79,7 @@
   {
     "id": "ttfb",
     "title": "Time to First Byte",
+    "essential": true,
     "facets": {
       "area": "metrics",
       "kind": "metric",
@@ -134,6 +139,7 @@
   {
     "id": "field-vs-lab",
     "title": "Field vs Lab Data",
+    "essential": true,
     "facets": {
       "area": "measurement",
       "kind": "mechanism",
@@ -177,6 +183,7 @@
   {
     "id": "lighthouse",
     "title": "Lighthouse",
+    "essential": true,
     "facets": {
       "area": "measurement",
       "kind": "technique",
@@ -356,6 +363,7 @@
   {
     "id": "brotli",
     "title": "Brotli Compression",
+    "essential": true,
     "facets": {
       "area": "network",
       "kind": "technique",
@@ -458,6 +466,7 @@
   {
     "id": "cdn",
     "title": "CDN",
+    "essential": true,
     "facets": {
       "area": "network",
       "kind": "technique",
@@ -581,6 +590,7 @@
   {
     "id": "immutable-assets",
     "title": "Immutable Assets",
+    "essential": true,
     "facets": {
       "area": "caching",
       "kind": "technique",
@@ -687,6 +697,7 @@
   {
     "id": "render-blocking-resources",
     "title": "Render-blocking Resources",
+    "essential": true,
     "facets": {
       "area": "loading",
       "kind": "anti-pattern",
@@ -717,6 +728,7 @@
   {
     "id": "defer-async",
     "title": "defer vs async",
+    "essential": true,
     "facets": {
       "area": "loading",
       "kind": "technique",
@@ -807,6 +819,7 @@
   {
     "id": "lazy-loading",
     "title": "Lazy Loading",
+    "essential": true,
     "facets": {
       "area": "loading",
       "kind": "technique",
@@ -884,6 +897,7 @@
   {
     "id": "responsive-images",
     "title": "Responsive Images",
+    "essential": true,
     "facets": {
       "area": "assets",
       "kind": "technique",
@@ -900,6 +914,7 @@
   {
     "id": "modern-image-formats",
     "title": "Modern Image Formats",
+    "essential": true,
     "facets": {
       "area": "assets",
       "kind": "technique",
@@ -962,6 +977,7 @@
   {
     "id": "lazy-loaded-lcp-image",
     "title": "Lazy-loaded LCP Image",
+    "essential": true,
     "facets": {
       "area": "assets",
       "kind": "anti-pattern",
@@ -1147,6 +1163,7 @@
   {
     "id": "long-tasks",
     "title": "Long Tasks",
+    "essential": true,
     "facets": {
       "area": "javascript",
       "kind": "mechanism",
@@ -1195,6 +1212,7 @@
   {
     "id": "code-splitting",
     "title": "Code Splitting",
+    "essential": true,
     "facets": {
       "area": "javascript",
       "kind": "technique",
@@ -1289,6 +1307,7 @@
   {
     "id": "third-party-scripts",
     "title": "Third-party Scripts",
+    "essential": true,
     "facets": {
       "area": "javascript",
       "kind": "anti-pattern",
@@ -1367,6 +1386,7 @@
   {
     "id": "layout-thrashing",
     "title": "Layout Thrashing",
+    "essential": true,
     "facets": {
       "area": "rendering",
       "kind": "anti-pattern",

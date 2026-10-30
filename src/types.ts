@@ -15,6 +15,8 @@ export interface Platform {
 export interface Flashcard {
   id: string;
   title: string;
+  /** One of the deck's must-know (20/80) cards: starred and kept by the Essentials filter. */
+  essential?: boolean;
   facets: Record<string, string>;
   summary: string;
   description: string;

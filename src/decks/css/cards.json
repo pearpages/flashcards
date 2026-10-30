@@ -2,6 +2,7 @@
   {
     "id": "cascade",
     "title": "The Cascade",
+    "essential": true,
     "facets": {
       "area": "cascade",
       "kind": "concept",
@@ -17,6 +18,7 @@
   {
     "id": "specificity",
     "title": "Specificity",
+    "essential": true,
     "facets": {
       "area": "cascade",
       "kind": "concept",
@@ -107,6 +109,7 @@
   {
     "id": "custom-properties",
     "title": "Custom Properties",
+    "essential": true,
     "facets": {
       "area": "cascade",
       "kind": "concept",
@@ -166,6 +169,7 @@
   {
     "id": "pseudo-classes",
     "title": "Pseudo-classes",
+    "essential": true,
     "facets": {
       "area": "selectors",
       "kind": "selector",
@@ -303,6 +307,7 @@
   {
     "id": "box-model",
     "title": "Box Model",
+    "essential": true,
     "facets": {
       "area": "box-model",
       "kind": "concept",
@@ -323,6 +328,7 @@
   {
     "id": "box-sizing",
     "title": "box-sizing",
+    "essential": true,
     "facets": {
       "area": "box-model",
       "kind": "property",
@@ -338,6 +344,7 @@
   {
     "id": "display",
     "title": "display",
+    "essential": true,
     "facets": {
       "area": "box-model",
       "kind": "property",
@@ -399,6 +406,7 @@
   {
     "id": "overflow",
     "title": "overflow",
+    "essential": true,
     "facets": {
       "area": "box-model",
       "kind": "property",
@@ -455,6 +463,7 @@
   {
     "id": "flexbox",
     "title": "Flexbox",
+    "essential": true,
     "facets": {
       "area": "flexbox",
       "kind": "concept",
@@ -494,6 +503,7 @@
   {
     "id": "justify-vs-align",
     "title": "justify-content vs align-items",
+    "essential": true,
     "facets": {
       "area": "flexbox",
       "kind": "property",
@@ -530,6 +540,7 @@
   {
     "id": "gap",
     "title": "gap",
+    "essential": true,
     "facets": {
       "area": "flexbox",
       "kind": "property",
@@ -597,6 +608,7 @@
   {
     "id": "grid",
     "title": "CSS Grid",
+    "essential": true,
     "facets": {
       "area": "grid",
       "kind": "concept",
@@ -752,6 +764,7 @@
   {
     "id": "grid-vs-flexbox",
     "title": "Grid vs Flexbox",
+    "essential": true,
     "facets": {
       "area": "grid",
       "kind": "pattern",
@@ -782,6 +795,7 @@
   {
     "id": "position",
     "title": "position",
+    "essential": true,
     "facets": {
       "area": "positioning",
       "kind": "property",
@@ -834,6 +848,7 @@
   {
     "id": "stacking-context",
     "title": "Stacking context",
+    "essential": true,
     "facets": {
       "area": "positioning",
       "kind": "concept",
@@ -929,6 +944,7 @@
   {
     "id": "media-queries",
     "title": "@media",
+    "essential": true,
     "facets": {
       "area": "responsive",
       "kind": "at-rule",
@@ -1011,6 +1027,7 @@
   {
     "id": "relative-units",
     "title": "rem, em and px",
+    "essential": true,
     "facets": {
       "area": "responsive",
       "kind": "concept",
@@ -1031,6 +1048,7 @@
   {
     "id": "clamp",
     "title": "clamp()",
+    "essential": true,
     "facets": {
       "area": "responsive",
       "kind": "function",
@@ -1096,6 +1114,7 @@
   {
     "id": "line-height",
     "title": "line-height",
+    "essential": true,
     "facets": {
       "area": "typography",
       "kind": "property",
@@ -1387,6 +1406,7 @@
   {
     "id": "transitions",
     "title": "transition",
+    "essential": true,
     "facets": {
       "area": "motion",
       "kind": "property",

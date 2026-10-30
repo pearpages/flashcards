@@ -2,6 +2,7 @@
   {
     "id": "read-replica",
     "title": "Read Replica",
+    "essential": true,
     "facets": { "concern": "data", "kind": "building-block", "scale": "growing" },
     "summary": "A copy of the database that serves reads, fed asynchronously from the primary.",
     "description": "Scales reads, not writes. Replication lag means a user may not see what they just wrote: route read-your-own-writes to the primary for a few seconds. Pick it over sharding while writes still fit on one machine.",
@@ -15,6 +16,7 @@
   {
     "id": "sharding",
     "title": "Sharding",
+    "essential": true,
     "facets": { "concern": "data", "kind": "pattern", "scale": "large-scale" },
     "summary": "Split the data across databases by a key, so each holds and writes only a part.",
     "description": "Scales writes and storage. The shard key decides everything: pick one that spreads load evenly and keeps a request on one shard. Cross-shard joins, transactions and resharding are the price, so replicas and caching come first.",
@@ -36,6 +38,7 @@
   {
     "id": "database-index",
     "title": "Database Index",
+    "essential": true,
     "facets": { "concern": "data", "kind": "building-block", "scale": "day-one" },
     "summary": "A sorted lookup structure that turns a full table scan into a few page reads.",
     "description": "B-trees serve equality and range queries; column order in a composite index matters (leftmost prefix). Every index slows writes and takes space. Read the query plan (`EXPLAIN`) before adding one, and before blaming the database.",
@@ -204,6 +207,7 @@
   {
     "id": "cache-aside",
     "title": "Cache-aside",
+    "essential": true,
     "facets": { "concern": "caching", "kind": "pattern", "scale": "growing" },
     "summary": "The app checks the cache, and on a miss reads the database and fills the cache.",
     "description": "The default caching pattern: only requested data is cached, and a cache outage just slows things down. Stale data is the risk, so set a TTL and delete the key on write. Pick it over write-through when reads dominate.",
@@ -233,6 +237,7 @@
   {
     "id": "cache-invalidation",
     "title": "Cache Invalidation",
+    "essential": true,
     "facets": { "concern": "caching", "kind": "principle", "scale": "growing" },
     "summary": "Deciding when cached data stops being true: TTLs, deletes on write, or versioned keys.",
     "description": "A TTL bounds staleness but serves old data until it expires. Deleting on write is fresher but races with concurrent reads. Versioned keys (`user:42:v7`) never need deleting. Choose per data type by how stale it may be.",
@@ -249,6 +254,7 @@
   {
     "id": "cdn",
     "title": "CDN",
+    "essential": true,
     "facets": { "concern": "caching", "kind": "building-block", "scale": "day-one" },
     "summary": "Edge servers near users that cache and serve static files and cacheable responses.",
     "description": "Cuts latency and origin load, and absorbs traffic spikes and DDoS. Fingerprint asset names (`app.3f9a.js`) and cache them for a year; keep HTML short-lived. Purging is slow, so version rather than purge.",
@@ -294,6 +300,7 @@
   {
     "id": "message-queue",
     "title": "Message Queue",
+    "essential": true,
     "facets": { "concern": "messaging", "kind": "building-block", "scale": "growing" },
     "summary": "Holds tasks until a worker takes one; each message is handled by one consumer.",
     "description": "Decouples producers from slow work (emails, image resizing) and smooths spikes. A message is deleted once acknowledged. Pick it over a stream when work is per-task and order mostly doesn't matter.",
@@ -354,6 +361,7 @@
   {
     "id": "idempotent-consumer",
     "title": "Idempotent Consumer",
+    "essential": true,
     "facets": { "concern": "messaging", "kind": "pattern", "scale": "growing" },
     "summary": "Handling the same message twice has the same effect as handling it once.",
     "description": "Queues redeliver after timeouts and crashes, so duplicates are normal. Record processed message ids in the same transaction as the effect, or make the effect naturally repeatable (set status = paid, not balance += 10).",
@@ -362,6 +370,7 @@
   {
     "id": "delivery-guarantees",
     "title": "Delivery Guarantees",
+    "essential": true,
     "facets": { "concern": "messaging", "kind": "principle", "scale": "growing" },
     "summary": "At-most-once may lose messages, at-least-once may repeat them; exactly-once is costly.",
     "description": "Most brokers give at-least-once: acknowledge after processing and expect duplicates. 'Exactly-once' in practice means at-least-once delivery plus idempotent processing, or a broker transaction within one system such as Kafka.",
@@ -425,6 +434,7 @@
   {
     "id": "horizontal-scaling",
     "title": "Horizontal Scaling",
+    "essential": true,
     "facets": { "concern": "scaling", "kind": "principle", "scale": "growing" },
     "summary": "Add more machines rather than a bigger one; needs stateless servers behind a balancer.",
     "description": "Vertical scaling (a bigger box) is simpler and goes surprisingly far, but has a ceiling and a single point of failure. Horizontal scales almost without limit, once state lives in the database, cache or object store, not on the server.",
@@ -433,6 +443,7 @@
   {
     "id": "stateless-service",
     "title": "Stateless Service",
+    "essential": true,
     "facets": { "concern": "scaling", "kind": "principle", "scale": "day-one" },
     "summary": "Any instance can serve any request because nothing lives in its memory or disk.",
     "description": "Sessions go in a store or a signed token, uploads go to object storage, jobs go to a queue. Then instances can be added, replaced or killed at any time, which is what autoscaling and rolling deploys assume.",
@@ -441,6 +452,7 @@
   {
     "id": "load-balancer",
     "title": "Load Balancer",
+    "essential": true,
     "facets": { "concern": "scaling", "kind": "building-block", "scale": "day-one" },
     "summary": "Spreads requests across healthy instances; L4 routes connections, L7 routes requests.",
     "description": "L4 (TCP) is fast and protocol-agnostic. L7 (HTTP) can route by path or header, terminate TLS and retry. It removes instances that fail health checks. Sticky sessions are a smell: they mean the service holds state.",
@@ -467,6 +479,7 @@
   {
     "id": "rate-limiter",
     "title": "Rate Limiter",
+    "essential": true,
     "facets": { "concern": "scaling", "kind": "building-block", "scale": "growing" },
     "summary": "Caps how many requests a client may make per time window; extra ones get a 429.",
     "description": "Token bucket allows short bursts at a steady average; sliding window is stricter. Limit per user or API key, not just per IP. Return `Retry-After` so clients back off. Across instances the counters need a shared store like Redis.",
@@ -561,6 +574,7 @@
   {
     "id": "timeout",
     "title": "Timeout",
+    "essential": true,
     "facets": { "concern": "reliability", "kind": "pattern", "scale": "day-one" },
     "summary": "Every network call gives up after a set time instead of waiting forever.",
     "description": "Many clients default to no timeout, so one hung dependency ties up every thread. Set connect and request timeouts from the dependency's p99, and pass a deadline down the chain so inner calls don't outlive the outer request.",
@@ -569,6 +583,7 @@
   {
     "id": "retry-with-backoff",
     "title": "Retry with Backoff",
+    "essential": true,
     "facets": { "concern": "reliability", "kind": "pattern", "scale": "day-one" },
     "summary": "Retry transient failures after growing, randomised delays: 100ms, 200ms, 400ms…",
     "description": "Jitter stops clients retrying in lockstep. Retry only idempotent requests and transient errors (timeouts, 503), never 4xx. Cap attempts, and retry at one layer only: three layers of three retries is 27 calls.",
@@ -577,6 +592,7 @@
   {
     "id": "circuit-breaker",
     "title": "Circuit Breaker",
+    "essential": true,
     "facets": { "concern": "reliability", "kind": "pattern", "scale": "growing" },
     "summary": "After repeated failures, stop calling a dependency for a while and fail fast.",
     "description": "Closed: calls pass. Open: calls fail immediately (or use a fallback), giving the dependency room to recover. Half-open: a few trial calls decide whether to close again. Pair it with timeouts; retries alone make outages worse.",
@@ -593,6 +609,7 @@
   {
     "id": "idempotency-key",
     "title": "Idempotency Key",
+    "essential": true,
     "facets": { "concern": "reliability", "kind": "pattern", "scale": "day-one" },
     "summary": "A client-generated id that lets a POST be retried safely without doing it twice.",
     "description": "The client sends `Idempotency-Key: <uuid>`; the server stores the key with the result and returns the stored result for a repeat. Essential for payments, where a timeout doesn't tell you whether the charge happened.",
@@ -705,6 +722,7 @@
   {
     "id": "cap-theorem",
     "title": "CAP Theorem",
+    "essential": true,
     "facets": { "concern": "consistency", "kind": "principle", "scale": "large-scale" },
     "summary": "During a network partition, a distributed store must choose consistency or availability.",
     "description": "Partitions happen, so the real choice is C or A while one lasts. PACELC adds the everyday trade-off: else (no partition) choose latency or consistency. Most systems pick per operation, not once.",
@@ -713,6 +731,7 @@
   {
     "id": "eventual-consistency",
     "title": "Eventual Consistency",
+    "essential": true,
     "facets": { "concern": "consistency", "kind": "principle", "scale": "growing" },
     "summary": "Replicas may disagree for a while but converge if writes stop.",
     "description": "The price of replicas, caches and async events. Design the UI for it: show the user their own write optimistically, and avoid reading straight back from a replica. Strong consistency is simpler to reason about but slower and less available.",
@@ -872,6 +891,7 @@
   {
     "id": "dns",
     "title": "DNS",
+    "essential": true,
     "facets": { "concern": "networking", "kind": "building-block", "scale": "day-one" },
     "summary": "Turns names into addresses; also a cheap tool for failover and geo-routing.",
     "description": "Answers are cached for their TTL, so a change takes up to the TTL to spread, and some resolvers ignore it. Lower the TTL days before a migration. Latency- or geo-based records send users to the nearest region.",
@@ -965,6 +985,7 @@
   {
     "id": "slo",
     "title": "SLI, SLO, SLA",
+    "essential": true,
     "facets": { "concern": "observability", "kind": "principle", "scale": "growing" },
     "summary": "A measured indicator, the target you aim for, and the promise with penalties.",
     "description": "SLI: % of requests under 300ms. SLO: 99.9% over 30 days. SLA: the contract, set looser than the SLO. The error budget (0.1%) decides when to ship features and when to fix reliability.",

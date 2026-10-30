@@ -14,14 +14,18 @@ reporting is enabled, and the issue form links to it.
 
 ## Surface
 
-A static single-page app with no backend, accounts, cookies, storage or network calls of
-its own. Everything it shows is bundled at build time from `src/decks/`.
+A static single-page app with no backend, accounts, cookies or network calls of its own.
+Its only storage is the list of cards a learner hid, in `localStorage`. Everything it shows is bundled at build time from `src/decks/`.
 
 - **URL hash** (`#/<deck>/card/<id>`, `#/<deck>/browse`, legacy `#card/<id>`): untrusted
   input. Deck and card ids are looked up among the bundled decks; unknown decks show the
   picker, unknown cards fall back to the first card, and ids are escaped with
   `CSS.escape` before reaching a selector.
 - **Search field and filters:** local only; the query filters an in-memory list.
+- **localStorage** (`flashcards:hidden:<deckId>`): card ids only, nothing personal. Read
+  as untrusted: invalid JSON, non-arrays and ids that aren't bundled cards are dropped, and
+  blocked or full storage is caught (nothing is hidden, the app still works). The ids are
+  only compared with card ids, never rendered or put in a selector.
 - **Rendering:** all card text is rendered as React text (escaped); there is no
   `dangerouslySetInnerHTML`. SVG drawings are loaded through `<img>`, so scripts inside an
   SVG would not run.

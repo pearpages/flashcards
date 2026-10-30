@@ -2,6 +2,7 @@
   {
     "id": "modal-dialog",
     "title": "Modal Dialog",
+    "essential": true,
     "facets": { "kind": "pattern", "helps": "keyboard", "level": "wcag-a" },
     "summary": "An overlay that takes focus, keeps Tab inside and makes the page behind inert.",
     "description": "Use `<dialog>` with `showModal()`: it makes the rest of the page inert and closes on Esc. Move focus inside on open, return it to the trigger on close, and name the dialog with `aria-labelledby` pointing at its title.",
@@ -14,6 +15,7 @@
   {
     "id": "disclosure",
     "title": "Disclosure",
+    "essential": true,
     "facets": { "kind": "pattern", "helps": "screen-reader", "level": "wcag-a" },
     "summary": "A button that shows and hides a region, with aria-expanded telling its state.",
     "description": "The simplest show/hide: a `<button aria-expanded>` next to the content, or native `<details>`/`<summary>`. Pick it over Accordion when the sections are independent and don't need headings.",
@@ -37,6 +39,7 @@
   {
     "id": "tabs",
     "title": "Tabs",
+    "essential": true,
     "facets": { "kind": "pattern", "helps": "keyboard", "level": "wcag-a" },
     "summary": "A tablist of tabs with one visible tabpanel; arrow keys move between tabs.",
     "description": "Only the selected tab is in the Tab order (roving tabindex); ←/→ move and Home/End jump. `aria-selected` marks the active tab and `aria-controls` links its panel. Activate on Enter instead of on focus when panels are slow to load.",
@@ -258,6 +261,7 @@
   {
     "id": "landmarks",
     "title": "Landmarks",
+    "essential": true,
     "facets": { "kind": "role", "helps": "screen-reader", "level": "wcag-a" },
     "summary": "header, nav, main, aside and footer: regions screen reader users jump between.",
     "description": "They map to banner, navigation, main, complementary and contentinfo. Use one `<main>` per page and label repeated landmarks (two navs) with `aria-label`. A `<section>` only becomes a region landmark once it has an accessible name.",
@@ -266,6 +270,7 @@
   {
     "id": "button-role",
     "title": "Button role",
+    "essential": true,
     "facets": { "kind": "role", "helps": "keyboard", "level": "wcag-a" },
     "summary": "Native <button> gives you the role, focus, Enter and Space for free.",
     "description": "`role=button` on a div only changes what is announced: you still owe `tabindex=0`, Enter and Space handlers and disabled behaviour. Use `<button type=\"button\">` and style it however you like.",
@@ -322,6 +327,7 @@
   {
     "id": "aria-label",
     "title": "aria-label",
+    "essential": true,
     "facets": { "kind": "attribute", "helps": "screen-reader", "level": "wcag-a" },
     "summary": "Names an element with a string when there is no visible label.",
     "description": "Good for icon buttons and repeated landmarks. It replaces the content as the name, page translators often skip it, and voice control users can't see it, so prefer a visible label. It's ignored on plain divs and spans.",
@@ -350,6 +356,7 @@
   {
     "id": "aria-hidden",
     "title": "aria-hidden",
+    "essential": true,
     "facets": { "kind": "attribute", "helps": "screen-reader", "level": "wcag-a" },
     "summary": "Removes an element and its children from the accessibility tree.",
     "description": "For decorative icons and duplicated content. It doesn't stop focus: an `aria-hidden` button can still be tabbed to and is announced as nothing. To take a region away from everyone, keyboards included, use `inert` or `hidden`.",
@@ -361,6 +368,7 @@
   {
     "id": "aria-expanded",
     "title": "aria-expanded",
+    "essential": true,
     "facets": { "kind": "attribute", "helps": "screen-reader", "level": "wcag-a" },
     "summary": "Says whether what a control opens is open: 'collapsed' or 'expanded'.",
     "description": "It goes on the button, not the panel. Use it for disclosures, accordions, menu buttons and comboboxes, and update it on every toggle: a stale value is worse than none.",
@@ -394,6 +402,7 @@
   {
     "id": "aria-live",
     "title": "aria-live",
+    "essential": true,
     "facets": { "kind": "attribute", "helps": "screen-reader", "level": "wcag-aa" },
     "summary": "Asks screen readers to announce changes inside a region without moving focus.",
     "description": "`polite` waits for a pause, `assertive` interrupts. The region must exist before its text changes. `aria-atomic=true` reads the whole region instead of just what changed. Prefer `role=status` or `role=alert`, which set it for you.",
@@ -508,6 +517,7 @@
   {
     "id": "accessible-name",
     "title": "Accessible name",
+    "essential": true,
     "facets": { "kind": "technique", "helps": "screen-reader", "level": "wcag-a" },
     "summary": "What a screen reader announces for an element, computed from several sources.",
     "description": "Precedence: `aria-labelledby`, `aria-label`, the native label (`<label>`, `alt`, `<caption>`), the content for buttons and links, then `title`. Voice users say the name, so it must contain the visible label (2.5.3 Label in Name).",
@@ -523,6 +533,7 @@
   {
     "id": "focus-management",
     "title": "Focus management",
+    "essential": true,
     "facets": { "kind": "technique", "helps": "keyboard", "level": "wcag-a" },
     "summary": "Move focus on purpose when the UI changes, and give it back when you're done.",
     "description": "Open a dialog: focus inside it. Close it: back to the trigger. Delete a row: focus the next one. SPA route change: focus the new `h1`. Never leave focus on a removed element, or it drops to `<body>` and the user loses their place.",
@@ -558,6 +569,7 @@
   {
     "id": "focus-indicator",
     "title": "Focus indicator",
+    "essential": true,
     "facets": { "kind": "technique", "helps": "keyboard", "level": "wcag-aa" },
     "summary": ":focus-visible shows a clear ring for keyboards without flashing on mouse clicks.",
     "description": "Never `outline: none` without a replacement (2.4.7 Focus Visible). A 2px solid outline with 3:1 contrast against the background, offset from the control, works everywhere. Forced-colours mode drops box-shadow, so use outline.",
@@ -578,6 +590,7 @@
   {
     "id": "alt-text",
     "title": "Alt text",
+    "essential": true,
     "facets": { "kind": "technique", "helps": "screen-reader", "level": "wcag-a" },
     "summary": "Describe what an image means in context; use an empty alt for pure decoration.",
     "description": "`alt=\"\"` skips decorative images; a missing alt makes some screen readers read the file name. Say what matters ('Sales up 20% in May'), not 'image of'. A linked image's alt names the destination. Charts also need a text or table version.",
@@ -590,6 +603,7 @@
   {
     "id": "form-labels",
     "title": "Form labels",
+    "essential": true,
     "facets": { "kind": "technique", "helps": "screen-reader", "level": "wcag-a" },
     "summary": "Every input gets a visible <label> that stays put while the user types.",
     "description": "A `<label for>` names the field and enlarges its click target. A placeholder is no label: it vanishes, often fails contrast and isn't reliably announced. Group radios and checkboxes in a `<fieldset>` whose `<legend>` asks the question.",
@@ -610,6 +624,7 @@
   {
     "id": "contrast-minimum",
     "title": "Contrast (Minimum)",
+    "essential": true,
     "facets": { "kind": "criterion", "helps": "low-vision", "level": "wcag-aa" },
     "summary": "Text needs 4.5:1 contrast with its background; large text needs 3:1.",
     "description": "Large means 24px regular or about 18.7px bold. Disabled controls and logos are exempt. Check every state: hover, placeholder, text over images. Brand colours often fail on white, so ship a darker text token instead of fixing it page by page.",
@@ -634,6 +649,7 @@
   {
     "id": "use-of-color",
     "title": "Use of Colour",
+    "essential": true,
     "facets": { "kind": "criterion", "helps": "low-vision", "level": "wcag-a" },
     "summary": "Colour is never the only way information is shown.",
     "description": "Error fields need an icon or text, not only red. Links in body text need an underline, or 3:1 against the text plus a hover cue. Chart series need patterns or direct labels. Check in greyscale: if the meaning disappears, add a second cue.",
@@ -662,6 +678,7 @@
   {
     "id": "keyboard",
     "title": "Keyboard",
+    "essential": true,
     "facets": { "kind": "criterion", "helps": "keyboard", "level": "wcag-a" },
     "summary": "Everything a mouse can do, a keyboard can do, with no timing required.",
     "description": "Unplug the mouse and Tab through: every control reachable, usable with Enter, Space or arrows, and never stuck (2.1.2 No Keyboard Trap). Click handlers on divs are the usual failure. Single-key shortcuts need a way to turn them off (2.1.4).",
@@ -674,6 +691,7 @@
   {
     "id": "focus-order",
     "title": "Focus Order",
+    "essential": true,
     "facets": { "kind": "criterion", "helps": "keyboard", "level": "wcag-a" },
     "summary": "The Tab order follows the visual reading order.",
     "description": "DOM order is focus order, so write the DOM in reading order and keep CSS reordering (flex `order`, grid placement) cosmetic. A positive `tabindex` jumps ahead of everything: never use one. Closed off-screen menus must leave the order.",
@@ -690,6 +708,7 @@
   {
     "id": "name-role-value",
     "title": "Name, Role, Value",
+    "essential": true,
     "facets": { "kind": "criterion", "helps": "screen-reader", "level": "wcag-a" },
     "summary": "Every control exposes its name, role and state to assistive tech, and updates them.",
     "description": "Native HTML does it for you. A custom widget must set a role, an accessible name and states such as `aria-checked` or `aria-expanded`, and change them as it changes. Most ARIA attributes exist to satisfy this criterion.",
@@ -702,6 +721,7 @@
   {
     "id": "info-and-relationships",
     "title": "Info and Relationships",
+    "essential": true,
     "facets": { "kind": "criterion", "helps": "screen-reader", "level": "wcag-a" },
     "summary": "Structure you can see is also in the markup: headings, lists, tables and labels.",
     "description": "If it looks like a heading it's an `<h2>`; if it looks like a list it's a `<ul>`. Data tables use `<th>` with `scope`, and fields are tied to their labels. Bold text and line breaks tell a screen reader nothing.",
