@@ -172,11 +172,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  /* The drawing and summary sit in the middle of whatever height the card has */
+  justify-content: center;
   gap: 1rem;
 }
 
+/* The box hugs the drawing instead of stretching to fill a tall card */
 .flashcard-image {
-  flex: 1;
+  flex: 0 1 auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -191,6 +194,19 @@
   max-width: 200px;
   max-height: 100%;
   object-fit: contain;
+}
+
+/* A single 160×120 drawing scales up (it's vector), capped so short screens keep the summary */
+.flashcard-image:not(.flashcard-image--split) {
+  padding: 0.75rem;
+}
+
+.flashcard-image:not(.flashcard-image--split) > img {
+  width: min(100%, 280px);
+  max-width: none;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  max-height: 30dvh;
 }
 
 /* Desktop + phone variants (mobile, or iOS + Android) side by side */
