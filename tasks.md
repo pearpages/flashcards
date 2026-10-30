@@ -79,6 +79,7 @@ item, and add a dated line at the top of **Done**.
 
 ## Done
 
+- [x] 2026-10-30: Released v0.5.0.
 - [x] 2026-10-30: Next.js deck: 104 interview-style App Router cards (routing, rendering, data, caching, mutations, proxy, assets, metadata, config, deploy) with a drawing each and a "runs on" badge (ADR-0016).
 - [x] 2026-10-30: Essential cards: about a fifth of every deck marked `"essential": true`, painted gold on both faces with a ★ before the title, a ★ toggle in the header (★ Essentials on desktop), stars in the list and counts on the deck picker; the validator checks the flag and the share (ADR-0015).
 - [x] 2026-10-30: Hide cards you know: ✓ button or `H` with Undo, remembered per deck in localStorage, faded with Unhide in browse, a hidden-cards counter in the header to study them again (ADR-0015).
