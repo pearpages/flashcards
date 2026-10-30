@@ -79,6 +79,7 @@ item, and add a dated line at the top of **Done**.
 
 ## Done
 
+- [x] 2026-10-30: Released v0.5.1.
 - [x] 2026-10-30: Card drawings: the image box hugs the drawing (scaled up to 280px wide, capped at 30% of the screen height) instead of stretching to fill the taller card; content is centred vertically.
 - [x] 2026-10-30: Released v0.5.0.
 - [x] 2026-10-30: Next.js deck: 104 interview-style App Router cards (routing, rendering, data, caching, mutations, proxy, assets, metadata, config, deploy) with a drawing each and a "runs on" badge (ADR-0016).
