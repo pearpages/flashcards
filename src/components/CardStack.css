@@ -1,233 +1,60 @@
+/* A column: progress bar, the card (taking the height left), then the buttons */
 .card-stack {
+  flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 2rem;
+  gap: var(--space-4);
   width: 100%;
+  max-width: 34rem;
+  margin: 0 auto;
 }
 
-.card-stack-container {
-  position: relative;
-  width: 100%;
-  max-width: 380px;
-  height: 480px;
+.card-stack__progress {
+  padding: 0 var(--space-4);
+}
+
+/* The card is the largest 5:7 rectangle that fits the stage (container query units) */
+.card-stack__stage {
+  flex: 1;
+  min-height: 380px;
+  container-type: size;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0 var(--space-4);
 }
 
-.card-wrapper {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 100%;
-  display: flex;
-  justify-content: center;
+.card-stack__card {
+  width: min(100cqw, 100cqh * 5 / 7);
+  aspect-ratio: 5 / 7;
   touch-action: pan-y;
 }
 
-/* Stacked card shadows behind the active card */
-.stack-card {
-  position: absolute;
-  width: 100%;
-  max-width: 380px;
-  height: 100%;
-  border-radius: 20px;
-  background: #f0f0f5;
-}
-
-.stack-card-2 {
-  transform: translateY(8px) scale(0.96);
-  opacity: 0.6;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-}
-
-.stack-card-3 {
-  transform: translateY(16px) scale(0.92);
-  opacity: 0.3;
-  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.04);
-}
-
-.card-stack-footer {
+.card-stack__controls {
   display: flex;
-  align-items: center;
-  gap: 1.75rem;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: 0 var(--space-4) var(--space-5);
 }
 
-.shuffle-button {
-  margin-left: 0.5rem;
-  font-size: 1.3rem;
-}
-
-.nav-button {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  border: none;
-  background: #ffffff;
-  color: #1a1a2e;
-  font-size: 1.2rem;
-  cursor: pointer;
+.card-stack__primary {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.08),
-    0 1px 2px rgba(0, 0, 0, 0.04);
-  transition: all 0.2s ease;
+  gap: var(--space-2);
 }
 
-.nav-button:hover:not(:disabled) {
-  background: #f0f0f5;
-  transform: scale(1.05);
+.card-stack__grow {
+  flex: 1;
+  min-width: 0;
 }
 
-.nav-button:active:not(:disabled) {
-  transform: scale(0.95);
-}
-
-.nav-button:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-}
-
-/* "I know this": a labelled pill so it reads as an action, not a navigation arrow */
-.hide-button {
-  height: 48px;
-  padding: 0 1.1rem;
-  border: none;
-  border-radius: 999px;
-  background: #1a1a2e;
-  color: #ffffff;
-  font: inherit;
-  font-size: 0.9rem;
-  font-weight: 600;
-  white-space: nowrap;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-}
-
-.hide-button:hover {
-  background: #2c2c48;
-}
-
-.hide-button:focus-visible {
-  outline: 2px solid #5b5bd6;
-  outline-offset: 2px;
-}
-
-/* Sits over the footer so showing it never moves the card */
-.card-stack__undo-region {
-  position: relative;
-  width: 100%;
-  height: 0;
-}
-
-.card-stack__undo {
-  position: absolute;
-  left: 50%;
-  bottom: 0.25rem;
-  transform: translateX(-50%);
+.card-stack__secondary {
   display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 0.5rem 0.6rem 0.5rem 1.1rem;
-  border-radius: 999px;
-  background: #1a1a2e;
-  color: #ffffff;
-  font-size: 0.9rem;
-  white-space: nowrap;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
-  z-index: 5;
-  animation: card-stack-undo-in 0.25s ease-out;
-}
-
-.card-stack__undo-button {
-  border: none;
-  border-radius: 999px;
-  padding: 0.4rem 0.9rem;
-  font: inherit;
-  font-weight: 600;
-  background: #f5c518;
-  color: #1a1a2e;
-  cursor: pointer;
-}
-
-.card-stack__undo-button:focus-visible {
-  outline: 2px solid #ffffff;
-  outline-offset: 2px;
-}
-
-@keyframes card-stack-undo-in {
-  from {
-    opacity: 0;
-    transform: translate(-50%, 0.5rem);
-  }
-}
-
-@keyframes card-stack-undo-fade {
-  from {
-    opacity: 0;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .card-stack__undo {
-    animation-name: card-stack-undo-fade;
-  }
+  justify-content: space-between;
+  gap: var(--space-2);
 }
 
 .card-stack--empty {
   justify-content: center;
-}
-
-.card-counter {
-  font-size: 0.95rem;
-  color: #888;
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
-  min-width: 60px;
-  text-align: center;
-}
-
-.card-stack-empty {
-  color: #888;
-  font-size: 1.1rem;
-  padding: 4rem 2rem;
-  text-align: center;
-}
-
-/* Phones: the card takes the height left between the filters and the buttons (up to 480px) */
-@media (max-width: 959px) {
-  .card-stack {
-    height: 100%;
-    gap: 0.85rem;
-  }
-
-  .card-stack-container {
-    flex: 1;
-    min-height: 0;
-    height: auto;
-    min-height: 380px;
-    max-height: 680px;
-  }
-
-  .card-stack-footer {
-    flex-shrink: 0;
-    gap: 0.75rem;
-  }
-
-  .hide-button {
-    height: 44px;
-    padding: 0 0.95rem;
-  }
-
-  .shuffle-button {
-    margin-left: 0;
-  }
-
-  .nav-button {
-    width: 44px;
-    height: 44px;
-  }
+  padding: var(--space-6) var(--space-4);
 }

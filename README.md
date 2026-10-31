@@ -36,7 +36,8 @@ A tenth deck, **LLM Internals**, has 100 cards on how the models work inside: to
 
 - **Vite** + **React** + **TypeScript**
 - **Framer Motion** — card stack animations, swipe gestures, spring physics
-- **Plain CSS** — no utility frameworks
+- **pulp** — the design system: tokens, CSS and React components (`@pearpages/pulp-*`), [ADR-0019](docs/adr/0019-pulp-design-system.md)
+- **Plain CSS** on pulp tokens — one stylesheet per component, no utility frameworks
 - **pnpm** — package manager
 - **Vitest** — unit tests
 - **@pearpages/credit** — the shared "Made by pearpages" footer
@@ -49,19 +50,20 @@ A tenth deck, **LLM Internals**, has 100 cards on how the models work inside: to
 ## Features
 
 - **Browse by purpose** — every component listed in sections by purpose, with search (names, other names, summaries) and a jump bar; tap one to study it. A sidebar next to the cards on desktop, a Study/Browse switch on mobile
-- **Deck picker** — the home screen lists every deck with a preview, its description and card count; a back arrow returns to it, and entering a deck starts fresh
+- **Deck picker** — the home screen lists every deck with a drawing and its card and essential counts; a back arrow returns to it, and entering a deck starts fresh
 - **Shareable links** — the URL follows the deck and card you're on (`#/design-system/card/sheet`) or the list (`#/design-system/browse`), and the Back button works
 - **Component deck** — name, purpose, layer, atomic level, wireframe illustration and one-line purpose on the front
 - **Tap to flip** — tap/click (or arrow up/down) to show when to use it, nearest alternatives, accessibility notes and native equivalents; tap again to go back to the front
-- **Essentials ★** — the must-know fifth of every deck is painted gold and starred in the list; the ★ toggle next to Study/Browse studies only those
-- **Hide what you know** — the "✓ Hide" button under the card (or `H`) takes it out of study, with Undo; hidden cards are remembered per deck in this browser only, stay in the list faded with an Unhide button, and the hidden counter in the header brings them back into study
-- **Filters** — narrow the deck by purpose and/or layer (each deck declares its own filters); the atomic design level is shown as a badge
+- **Essentials ★** — the must-know fifth of every deck is painted gold and starred in the list; "Essential cards only" in Filters studies only those
+- **I know this** — the button under the card (or `H`) takes it out of study, with Undo in a toast; known cards are remembered per deck in this browser only, stay in the list faded with a Put back button, and "Show cards I know" in Filters brings them back into study
+- **Filters** — a sheet (bottom on phones, side panel on desktop) with one chip group per filter the deck declares, each with its card count; the other facets show as a line on the card
 - **Desktop + mobile** — components that change shape on small screens show both versions side by side, or desktop · iOS · Android when the platforms differ
 - **Platform equivalents** — revealing a card shows its counterparts on the platforms its deck declares: iOS (SwiftUI/UIKit) and Android (Compose Material 3) for the UI decks, AWS, GCP and Azure for system design, Anthropic, OpenAI and Google for LLM engineering; search finds them too
 - **Multiple decks** — add a folder under `src/decks/` and it shows up on the deck picker
 - **Swipe navigation** — swipe left/right to navigate between cards
 - **Keyboard navigation** — left/right arrow keys
-- **Shuffle** — randomise the current deck
+- **Shuffle** — randomise the current deck, with Undo
+- **Progress** — "Card 3 of 100" and a progress bar above the card
 - **Mobile-first design** — full-width on mobile, centered and constrained on desktop
 - **Spring animations** — natural card movement with Framer Motion spring physics
 
@@ -110,7 +112,7 @@ Add an entry to `src/decks/<deck>/cards.json`:
 | `facets`      | Yes      | A value for every facet declared in `deck.json`                      |
 | `summary`     | Yes      | One line, shown on the front (≤ 90 chars)                            |
 | `description` | Yes      | Revealed on tap (≤ 280 chars to fit the card)                        |
-| `essential`   | No       | `true` for the deck's must-know cards (about a fifth of the deck): starred, kept by the ★ Essentials toggle |
+| `essential`   | No       | `true` for the deck's must-know cards (about a fifth of the deck): starred, kept by the "Essential cards only" switch |
 | `aliases`     | No       | Other names for the same thing                                       |
 | `platforms`   | No       | Equivalents keyed by the deck's declared platforms (e.g. `ios`, `android`; `aws`, `gcp`, `azure`; or `swiftui`, `compose`; `javascript`, `python`; `anthropic`, `openai`, `google`), ≤ 60 chars each |
 

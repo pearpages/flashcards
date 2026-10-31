@@ -1,19 +1,32 @@
 import { useEffect, useRef, useState } from "react";
 import "@pearpages/credit/credit.css";
 import { Credit } from "@pearpages/credit/react";
+import { DialogSystem } from "@pearpages/pulp-react/dialog";
+import { ToastProvider } from "@pearpages/pulp-react/toast";
 import { decks } from "./decks";
 import { parseRoute, pushRoute, type Route } from "./route";
 import DeckPicker from "./components/DeckPicker";
 import DeckView from "./components/DeckView";
-import "./App.css";
 
 // Legacy links (#card/<id>, #browse) predate decks, so they all point at design-system cards.
 const LEGACY_DECK_ID = "design-system";
 const defaultDeckId = decks.some((d) => d.id === LEGACY_DECK_ID) ? LEGACY_DECK_ID : decks[0]?.id;
 const readRoute = () => parseRoute(defaultDeckId);
 
-/** Chooses between the deck picker and a deck, following the URL. */
+/** pulp's overlays and toasts, mounted once around the whole app. */
 function App() {
+  return (
+    <DialogSystem>
+      {/* One toast at a time, centred; on phones it sits above the study buttons (DeckView.css) */}
+      <ToastProvider placement="bottom-center" max={1} duration={4000}>
+        <Screen />
+      </ToastProvider>
+    </DialogSystem>
+  );
+}
+
+/** Chooses between the deck picker and a deck, following the URL. */
+function Screen() {
   const [route, setRoute] = useState<Route>(readRoute);
   // Bumped every time a deck is entered so it starts fresh (first card, no filters).
   const [entryCount, setEntryCount] = useState(0);

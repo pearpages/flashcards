@@ -1,221 +1,138 @@
-/* The card flips in 3D: .flashcard gives perspective, .flashcard-inner rotates, two faces sit back to back */
+/* The card flips in 3D: .flashcard gives perspective, __inner rotates, two faces sit back to back.
+   The card fills its wrapper; CardStack sizes the wrapper to a 5:7 card that fits the screen. */
 .flashcard {
+  --card-radius: 20px;
+  --card-bg: var(--color-surface-raised);
+  --card-ring: var(--color-border-default);
+  --card-rule: var(--color-border-default);
+
   width: 100%;
-  max-width: 380px;
   height: 100%;
-  position: relative;
   perspective: 1400px;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
   user-select: none;
-  -webkit-user-select: none;
 }
 
-.flashcard-inner {
+.flashcard--essential {
+  --card-bg: linear-gradient(160deg, var(--essential-light) 0%, var(--essential-bg) 100%);
+  --card-ring: var(--essential-ring);
+  --card-rule: var(--essential-rule);
+}
+
+.flashcard__inner {
   position: relative;
   width: 100%;
   height: 100%;
   transform-style: preserve-3d;
 }
 
-.flashcard-face {
+.flashcard__face {
   position: absolute;
   inset: 0;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-  padding: 1.5rem 1.5rem 1.25rem;
-  border-radius: 20px;
-  background: #ffffff;
+  border-radius: var(--card-radius);
+  background: var(--card-bg);
   box-shadow:
-    0 4px 24px rgba(0, 0, 0, 0.08),
-    0 1px 4px rgba(0, 0, 0, 0.04);
-  overflow: hidden;
+    inset 0 0 0 1.5px var(--card-ring),
+    0 4px 24px 0 rgb(0 0 0 / 0.08),
+    0 1px 4px 0 rgb(0 0 0 / 0.04);
+  color: var(--color-text-default);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
 
-.flashcard-face--front {
+/* Front: facets, title, drawing, summary, hint */
+.flashcard__face--front {
+  gap: var(--space-3);
+  padding: var(--space-5) var(--space-5) var(--space-4);
   transform: rotateY(0deg);
 }
 
-/* Back: a light diamond lattice like a playing-card back, framed by an inset border */
-.flashcard-face--back {
+/* Back: a framed panel, cross-hatched on essential cards */
+.flashcard__face--back {
+  gap: var(--space-2);
+  padding: var(--space-3);
   transform: rotateY(180deg);
-  background-color: #f5f4fd;
+}
+
+.flashcard--essential .flashcard__face--back {
+  background-color: var(--essential-bg);
   background-image:
-    repeating-linear-gradient(45deg, rgba(91, 91, 214, 0.1) 0 1px, transparent 1px 14px),
-    repeating-linear-gradient(-45deg, rgba(91, 91, 214, 0.1) 0 1px, transparent 1px 14px);
+    repeating-linear-gradient(45deg, var(--essential-rule) 0 1px, transparent 1px 14px),
+    repeating-linear-gradient(-45deg, var(--essential-rule) 0 1px, transparent 1px 14px);
 }
 
-.flashcard-face--back::before {
-  content: "";
-  position: absolute;
-  inset: 10px;
-  border: 1px solid rgba(91, 91, 214, 0.22);
-  border-radius: 14px;
-  pointer-events: none;
-}
-
-/* Text sits on a near-white panel so the pattern never hurts legibility */
-.flashcard-back {
-  position: relative;
-  flex: 1;
-  min-height: 0;
-  width: 100%;
+.flashcard__meta {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  /* "safe" keeps long text reachable from the top instead of overflowing upwards */
-  justify-content: safe center;
-  gap: 0.85rem;
-  padding: 1.1rem 1.15rem;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 1px 3px rgba(91, 91, 214, 0.08);
-  text-align: center;
-  overflow-y: auto;
+  justify-content: space-between;
+  gap: var(--space-2);
+  min-height: 20px;
 }
 
-.flashcard-back__title {
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: #1a1a2e;
-  margin: 0;
-}
-
-.flashcard-back__description {
-  font-size: 0.95rem;
-  line-height: 1.5;
-  color: #333;
-  margin: 0;
-}
-
-.flashcard-back__aliases {
-  font-size: 0.8rem;
-  color: #888;
-  margin: 0;
-}
-
-/* Must-know cards are painted gold on both faces; the colour is the marker */
-.flashcard--essential .flashcard-face {
-  box-shadow:
-    inset 0 0 0 1.5px rgba(214, 168, 20, 0.55),
-    0 4px 24px rgba(0, 0, 0, 0.08),
-    0 1px 4px rgba(0, 0, 0, 0.04);
-}
-
-.flashcard--essential .flashcard-face--front {
-  background: linear-gradient(160deg, #fffaea 0%, #fdf1c8 100%);
-}
-
-.flashcard--essential .flashcard-face--back {
-  background-color: #fdf5da;
-  background-image:
-    repeating-linear-gradient(45deg, rgba(183, 134, 11, 0.12) 0 1px, transparent 1px 14px),
-    repeating-linear-gradient(-45deg, rgba(183, 134, 11, 0.12) 0 1px, transparent 1px 14px);
-}
-
-.flashcard--essential .flashcard-face--back::before {
-  border-color: rgba(183, 134, 11, 0.3);
-}
-
-.flashcard--essential .flashcard-back {
-  background: rgba(255, 251, 236, 0.92);
-}
-
-.flashcard--essential .flashcard-image {
-  background: rgba(255, 255, 255, 0.65);
-}
-
-.flashcard-star {
-  color: #b7860b;
-}
-
-.flashcard-hidden {
-  font-size: 0.7rem;
-  font-weight: 700;
+.flashcard__facets {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-xs);
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  padding: 0.2rem 0.55rem;
-  border-radius: 999px;
-  white-space: nowrap;
-  background: transparent;
-  color: #55556a;
-  box-shadow: inset 0 0 0 1px #b4b4c8;
+  color: var(--color-text-muted);
 }
 
-.flashcard-tags {
+.flashcard__title {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.5rem;
-  flex-shrink: 0;
-}
-
-.flashcard-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #1a1a2e;
-  text-align: center;
-  line-height: 1.2;
+  align-items: center;
+  gap: 0.35em;
   margin: 0;
+  font-family: var(--font-family-display);
+  font-size: clamp(1.375rem, 7cqw, 1.75rem);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.15;
+}
+
+.flashcard__face--back .flashcard__title {
+  font-size: var(--font-size-xl);
+}
+
+.flashcard__star {
   flex-shrink: 0;
+  display: inline-flex;
+  font-size: 0.9em;
+  color: var(--essential-ink);
 }
 
-/* Front body: image(s) + summary */
-.flashcard-body {
-  position: relative;
-  flex: 1;
-  min-height: 0;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  /* The drawing and summary sit in the middle of whatever height the card has */
-  justify-content: center;
-  gap: 1rem;
-}
-
-/* The box hugs the drawing instead of stretching to fill a tall card */
-.flashcard-image {
-  flex: 0 1 auto;
+/* The drawing takes the room left over, within limits, so the summary always shows */
+.flashcard__image {
+  flex: 1 1 200px;
+  min-height: 96px;
+  max-height: 240px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  min-height: 0;
-  background: #f7f7fb;
+  padding: var(--space-3);
   border-radius: 14px;
+  background: color-mix(in srgb, var(--color-neutral-0) 65%, transparent);
 }
 
-.flashcard-image img {
+.flashcard:not(.flashcard--essential) .flashcard__image {
+  background: var(--color-surface-base);
+}
+
+.flashcard__image > img {
   width: 100%;
-  max-width: 200px;
-  max-height: 100%;
+  max-width: 280px;
+  height: 100%;
   object-fit: contain;
 }
 
-/* A single 160×120 drawing scales up (it's vector), capped so short screens keep the summary */
-.flashcard-image:not(.flashcard-image--split) {
-  padding: 0.75rem;
-}
-
-.flashcard-image:not(.flashcard-image--split) > img {
-  width: min(100%, 280px);
-  max-width: none;
-  height: auto;
-  aspect-ratio: 4 / 3;
-  max-height: 30dvh;
-}
-
 /* Desktop + phone variants (mobile, or iOS + Android) side by side */
-.flashcard-image--split {
-  gap: 1rem;
-  padding: 0.75rem;
+.flashcard__image--split {
+  gap: var(--space-3);
 }
 
-.flashcard-image__variant {
+.flashcard__variant {
   margin: 0;
   height: 100%;
   min-width: 0;
@@ -223,133 +140,154 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.35rem;
+  gap: var(--space-1);
 }
 
-/* Same image height on both sides so the captions line up */
-.flashcard-image__variant img {
-  height: 130px;
-  /* Leave room for the caption when the card is short */
-  max-height: calc(100% - 1.2rem);
+.flashcard__variant img {
+  height: calc(100% - 1.2rem);
+  max-height: 130px;
+  min-height: 0;
   object-fit: contain;
 }
 
-.flashcard-image__variant--desktop {
+.flashcard__variant--desktop {
   flex: 1;
 }
 
-.flashcard-image__variant--desktop img {
+.flashcard__variant--desktop img {
   width: 100%;
   max-width: 190px;
 }
 
-.flashcard-image__variant--phone {
+.flashcard__variant--phone {
   flex-shrink: 0;
 }
 
-.flashcard-image__variant--phone img {
+.flashcard__variant--phone img {
   width: auto;
   max-width: none;
 }
 
-/* Three images: smaller phones and tighter gaps so all fit a narrow card */
-.flashcard-image--triple {
-  gap: 0.6rem;
-  padding: 0.6rem;
-}
-
-.flashcard-image--triple .flashcard-image__variant img {
-  height: 112px;
-}
-
-.flashcard-image__variant figcaption {
+.flashcard__variant figcaption {
+  font-family: var(--font-family-mono);
   font-size: 0.65rem;
-  font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #888;
+  color: var(--color-text-muted);
 }
 
-.flashcard-placeholder {
+.flashcard__placeholder {
+  font-family: var(--font-family-display);
   font-size: 4rem;
-  font-weight: 700;
-  color: #d0d0e0;
-  width: 100px;
-  height: 100px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-faint);
+}
+
+.flashcard__summary {
+  margin: 0;
+  font-size: var(--font-size-lg);
+  line-height: 1.5;
+}
+
+/* Pinned to the bottom of each face */
+.flashcard__hint {
+  margin: auto 0 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
-  background: #ececf4;
+  gap: var(--space-2);
+  padding-top: var(--space-3);
+  border-top: var(--size-hairline) solid var(--card-rule);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
 }
 
-.flashcard-summary {
-  font-size: 0.95rem;
-  line-height: 1.45;
-  color: #444;
-  text-align: center;
+.flashcard__face--back .flashcard__hint {
+  padding: var(--space-1) 0 var(--space-1);
+  border-top: none;
+}
+
+.flashcard__panel {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: 12px;
+  background: var(--color-surface-raised);
+  box-shadow: inset 0 0 0 1px var(--card-rule);
+}
+
+.flashcard--essential .flashcard__panel {
+  background: color-mix(in srgb, var(--essential-light) 92%, transparent);
+}
+
+.flashcard__description {
   margin: 0;
-  flex-shrink: 0;
+  font-size: var(--font-size-md);
+  line-height: 1.5;
 }
 
-/* Two columns (platform | native name), centred as a block */
-.flashcard-platforms {
+.flashcard__aliases {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-top: var(--space-3);
+  border-top: var(--size-hairline) solid var(--color-border-default);
+}
+
+.flashcard__label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-muted);
+}
+
+.flashcard__alias-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.flashcard__alias {
+  padding: 2px var(--space-2);
+  border: var(--size-hairline) solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-sm);
+}
+
+.flashcard__platforms {
   margin: 0;
   display: grid;
-  grid-template-columns: max-content auto;
-  justify-content: center;
-  column-gap: 0.5rem;
-  row-gap: 0.2rem;
-  font-size: 0.78rem;
-  line-height: 1.35;
-  text-align: left;
+  grid-template-columns: max-content minmax(0, 1fr);
 }
 
-.flashcard-platforms__row {
+/* Each row is a <div> wrapping a dt/dd pair; its children join the grid */
+.flashcard__platform {
   display: contents;
 }
 
-.flashcard-platforms dt {
-  font-weight: 700;
-  color: #55556a;
-  text-align: right;
-}
-
-.flashcard-platforms dd {
+.flashcard__platform dt,
+.flashcard__platform dd {
   margin: 0;
-  color: #666;
+  padding: var(--space-2) 0;
+  border-top: var(--size-hairline) solid var(--color-border-default);
 }
 
-.flashcard-hint {
-  font-size: 0.8rem;
-  color: #aaa;
-  margin: 0;
-  letter-spacing: 0.02em;
-  flex-shrink: 0;
-  position: relative;
+.flashcard__platform dt {
+  padding-inline-end: var(--space-4);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-muted);
 }
 
-
-/* Short phone screens (landscape-ish or with browser bars): tighter card so the drawing keeps its room */
-@media (max-width: 959px) and (max-height: 700px) {
-  .flashcard-face {
-    gap: 0.6rem;
-    padding: 1rem 1rem 0.85rem;
-  }
-
-  .flashcard-title {
-    font-size: 1.25rem;
-  }
-
-  .flashcard-body {
-    gap: 0.6rem;
-  }
-
-  .flashcard-summary {
-    font-size: 0.88rem;
-  }
-
-  .flashcard-hint {
-    display: none;
-  }
+.flashcard__platform dd {
+  font-size: var(--font-size-sm);
+  overflow-wrap: anywhere;
 }

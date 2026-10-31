@@ -18,7 +18,7 @@ item, and add a dated line at the top of **Done**.
       llm-engineering platform cells every few months. ADR-0017 and ADR-0018 still Proposed.
 - [ ] **Verify motion in a real browser.** Card slide (~0.7s spring) and 3D flip timing,
       jump-bar smooth scroll and section highlight were only checked frozen or headless.
-- [ ] **Split card text per deck** if the bundle grows again: the JS is ~970 kB (~305 kB
+- [ ] **Split card text per deck** if the bundle grows again: the JS is ~1,040 kB (~325 kB
       gzipped) with ten decks, a growing share of it card text. Loading a
       deck's cards on entry needs async loading in `decks/index.ts`, `App` and `DeckView`.
 - [ ] **Review Proposed ADRs 0006–0007** (GitHub Pages on `v*` tags; Vitest and CI).
@@ -27,6 +27,14 @@ item, and add a dated line at the top of **Done**.
       (candidates: `color-scheme`, `currentcolor`, `design-tokens`).
 - [ ] **Social card still says six decks.** `public/og.webp` predates the testing,
       Next.js and LLM decks; regenerate it with ten.
+
+- [ ] **Review Proposed ADR-0019** (UI on the pulp design system).
+- [ ] **Dark mode.** pulp's tokens support it, but the page is pinned to light: card
+      drawings use a light palette (#1a1a2e ink). Needs drawings that work on dark, or a light
+      plate behind them.
+- [ ] **Toast look.** pulp's toast is its info Alert; the redesign canvas drew a dark toast.
+      Decide whether pulp should offer that variant.
+- [ ] **README demo image** (`docs/static/demo.png`) and `public/og.webp` show the old UI.
 
 ### Advertising readiness
 
@@ -41,6 +49,7 @@ item, and add a dated line at the top of **Done**.
 
 ## Done
 
+- [x] 2026-10-31: Redesigned the app on the pulp design system, following the "Flashcards: mobile redesign on pulp" canvas: deck list, study screen with progress and Show answer / I know this / Next card, filters in a sheet with counts and switches, browse sections as surfaces, toasts with Undo; ADR-0019.
 - [x] 2026-10-31: Released v0.6.2.
 - [x] 2026-10-31: Reviewed the other eight decks against current docs: 86 fixes, e.g. Baseline badges (forced-colors widely; anchor positioning, line-clamp, display: contents limited), OWASP 2025 categories by CWE mapping, Next.js 16.4 (Edge runtime deprecated, prefetch defaults, slot `default.tsx`), renamed services (Timestream for InfluxDB, Azure Managed Redis), Material 3 Expressive names, WCAG/APG wording.
 - [x] 2026-10-31: Released v0.6.1.

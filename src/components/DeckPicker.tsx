@@ -1,4 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, type MouseEvent } from "react";
+import { Heading } from "@pearpages/pulp-react/heading";
+import { Text } from "@pearpages/pulp-react/text";
+import { Icon } from "@pearpages/pulp-react/icon";
+import { ChevronRight } from "@pearpages/pulp-icons";
 import type { Deck } from "../types";
 import { getCardImages } from "../decks";
 import "./DeckPicker.css";
@@ -8,16 +12,14 @@ interface DeckPickerProps {
   onSelect: (deckId: string) => void;
 }
 
-const PREVIEW_COUNT = 3;
-
-/** A few drawings spread across the deck, as a peek at what's inside. */
-function previewImages(deck: Deck): string[] {
-  const withImages = deck.cards
-    .map((card) => getCardImages(deck.id, card.id).desktop)
-    .filter((src): src is string => Boolean(src));
-  if (withImages.length <= PREVIEW_COUNT) return withImages;
-  const step = withImages.length / PREVIEW_COUNT;
-  return Array.from({ length: PREVIEW_COUNT }, (_, i) => withImages[Math.floor(i * step + step / 2)]);
+/** The deck's cover: the drawing of its first essential card (or first card) that has one. */
+function coverImage(deck: Deck): string | undefined {
+  const ordered = [...deck.cards.filter((card) => card.essential), ...deck.cards];
+  for (const card of ordered) {
+    const src = getCardImages(deck.id, card.id).desktop;
+    if (src) return src;
+  }
+  return undefined;
 }
 
 export default function DeckPicker({ decks, onSelect }: DeckPickerProps) {
@@ -25,52 +27,50 @@ export default function DeckPicker({ decks, onSelect }: DeckPickerProps) {
     document.title = "Flashcards";
   }, []);
 
+  // Real links, so a deck can be opened in a new tab; a plain click stays in the app.
+  const handleClick = (event: MouseEvent<HTMLAnchorElement>, deckId: string) => {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+    event.preventDefault();
+    onSelect(deckId);
+  };
+
   return (
     <main className="deck-picker">
       <header className="deck-picker__header">
-        <h1 className="deck-picker__title">Flashcards</h1>
-        <p className="deck-picker__subtitle">Choose a deck to study</p>
+        <Heading level={1} size="2xl">
+          Flashcards
+        </Heading>
+        <Text tone="muted">Pick a deck to study. Each card has a drawing on the front and the answer on the back.</Text>
       </header>
 
       {decks.length === 0 ? (
-        <p className="deck-picker__empty">No decks yet. Add a folder to src/decks/.</p>
+        <Text tone="muted">No decks yet. Add a folder to src/decks/.</Text>
       ) : (
         <ul className="deck-picker__list">
           {decks.map((deck) => {
-            const previews = previewImages(deck);
+            const cover = coverImage(deck);
             const essentials = deck.cards.filter((card) => card.essential).length;
             return (
-              <li key={deck.id}>
-                <button type="button" className="deck-tile" onClick={() => onSelect(deck.id)}>
-                  {previews.length > 0 && (
-                    <span className="deck-tile__preview" aria-hidden="true">
-                      {previews.map((src, i) => (
-                        <span key={src} className={`deck-tile__mini deck-tile__mini--${i}`}>
-                          <img src={src} alt="" draggable={false} />
-                        </span>
-                      ))}
-                    </span>
-                  )}
-                  <span className="deck-tile__title">{deck.title}</span>
-                  <span className="deck-tile__description">{deck.description}</span>
-                  <span className="deck-tile__footer">
-                    <span className="deck-tile__count">
+              <li key={deck.id} className="deck-picker__item">
+                <a
+                  className="deck-row"
+                  href={`#/${encodeURIComponent(deck.id)}`}
+                  onClick={(event) => handleClick(event, deck.id)}
+                >
+                  <span className="deck-row__cover" aria-hidden="true">
+                    {cover && <img src={cover} alt="" draggable={false} />}
+                  </span>
+                  <span className="deck-row__text">
+                    <span className="deck-row__title">{deck.title}</span>
+                    <span className="deck-row__meta">
                       {deck.cards.length} {deck.cards.length === 1 ? "card" : "cards"}
-                      {essentials > 0 && (
-                        <>
-                          {" · "}
-                          <span className="deck-tile__star" aria-hidden="true">
-                            ★
-                          </span>{" "}
-                          {essentials} essential
-                        </>
-                      )}
-                    </span>
-                    <span className="deck-tile__arrow" aria-hidden="true">
-                      →
+                      {essentials > 0 && ` · ${essentials} essential`}
                     </span>
                   </span>
-                </button>
+                  <Icon size="md">
+                    <ChevronRight />
+                  </Icon>
+                </a>
               </li>
             );
           })}

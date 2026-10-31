@@ -22,8 +22,8 @@ from `deck.json` `facets` (grouping uses the first facet with a filter row); no 
 mentions `purpose`, `layer` or `atomic`.
 *Why:* a second deck can bring its own facets without code changes. *Check:* review —
 `grep -rn "purpose\|atomic" src/components src/App.tsx` finds only explanatory comments.
-Styling a facet *value* (e.g. `.tag--atom` colours in `Tag.css`) is fine; an unknown value
-falls back to the neutral tag.
+Turning a facet *value* into a label (`valueLabel()`) is fine; it never depends on which
+facet the value belongs to.
 
 **P3. Deck data passes `pnpm validate`.** Ids are unique kebab-case; every facet value is
 declared in `deck.json`; `summary` ≤ 90, `description` ≤ 280 and each platform name ≤ 60

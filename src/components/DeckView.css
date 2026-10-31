@@ -1,0 +1,118 @@
+/* One deck. Phones show one view at a time (Study or Browse); from 960px the browse list is a
+   sidebar next to the study column. */
+.app {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.deck-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: 52px;
+  padding: var(--space-2) var(--space-3) 0 var(--space-1);
+}
+
+.deck-header__title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.deck-header__badge {
+  display: inline-flex;
+  margin-inline-start: var(--space-1);
+}
+
+.deck-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-1) var(--space-4) var(--space-2);
+}
+
+.deck-bar__count {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.app__study {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 959px) {
+  .app--view-study .app__browse,
+  .app--view-browse .app__study {
+    display: none;
+  }
+
+  /* Study fills one screen: the card takes the height left between the bar and the buttons.
+     Screens too short for that scroll instead. */
+  .app--view-study {
+    height: max(100dvh, 680px);
+  }
+
+  .app--view-study .app__study {
+    flex: 1;
+    min-height: 0;
+  }
+
+  /* The credit gives its height to the card; it still shows on the picker and in browse */
+  #root:has(.app--view-study) .sk-author {
+    display: none;
+  }
+
+  /* Toasts sit above the study buttons */
+  :root:has(.app--view-study) {
+    --app-shell-inset-block-end: 132px;
+  }
+}
+
+@media (min-width: 960px) {
+  .app {
+    display: grid;
+    grid-template-columns: 400px minmax(0, 1fr);
+    grid-template-rows: auto auto minmax(0, 1fr);
+    grid-template-areas:
+      "browse header"
+      "browse bar"
+      "browse study";
+    height: 100dvh;
+  }
+
+  .deck-header {
+    grid-area: header;
+    padding: var(--space-4) var(--space-5) 0 var(--space-3);
+  }
+
+  .deck-bar {
+    grid-area: bar;
+    padding: var(--space-1) var(--space-5) var(--space-3);
+  }
+
+  /* Both views show side by side, so there is nothing to switch */
+  .deck-bar__views {
+    display: none;
+  }
+
+  .app__browse {
+    grid-area: browse;
+    position: sticky;
+    top: 0;
+    height: 100dvh;
+    overflow: hidden;
+    border-right: var(--size-hairline) solid var(--color-border-default);
+  }
+
+  .app__study {
+    grid-area: study;
+    min-height: 0;
+  }
+}

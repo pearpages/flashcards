@@ -1,14 +1,19 @@
 import { motion, useReducedMotion } from "framer-motion";
+import { Badge } from "@pearpages/pulp-react/badge";
+import { Icon } from "@pearpages/pulp-react/icon";
+import { VisuallyHidden } from "@pearpages/pulp-react/visually-hidden";
 import type { Deck, Flashcard } from "../types";
 import { getCardImages, type CardImages } from "../decks";
-import Tag from "./Tag";
+import { valueLabel } from "../valueLabel";
+import InlineText from "./InlineText";
+import { FlipGlyph, StarGlyph } from "./icons";
 import "./FlashCard.css";
 
 interface FlashCardProps {
   deck: Deck;
   card: Flashcard;
   revealed: boolean;
-  /** Hidden by the learner but shown anyway ("Show hidden" is on). */
+  /** Hidden by the learner but shown anyway ("Show cards I know" is on). */
   hidden?: boolean;
   onReveal: () => void;
 }
@@ -33,95 +38,127 @@ function imageVariants(images: CardImages): ImageVariant[] {
   return variants;
 }
 
+function Title({ card }: { card: Flashcard }) {
+  return (
+    <h2 className="flashcard__title">
+      {card.essential && (
+        <span className="flashcard__star">
+          <Icon size="inherit" label="Essential card">
+            <StarGlyph />
+          </Icon>
+        </span>
+      )}
+      <span>{card.title}</span>
+    </h2>
+  );
+}
+
+/** One card: the drawing and summary on the front, the answer on the back; tapping flips it. */
 export default function FlashCard({ deck, card, revealed, hidden = false, onReveal }: FlashCardProps) {
   const variants = imageVariants(getCardImages(deck.id, card.id));
   const platforms = (deck.platforms ?? []).filter(({ key }) => card.platforms?.[key]);
+  const facetValues = deck.facets.map(({ key }) => card.facets[key]).filter(Boolean).map(valueLabel);
   const reduceMotion = useReducedMotion();
 
   return (
     <div className={`flashcard ${card.essential ? "flashcard--essential" : ""}`} onClick={onReveal}>
       <motion.div
-        className="flashcard-inner"
+        className="flashcard__inner"
         initial={false}
         animate={{ rotateY: revealed ? 180 : 0 }}
         transition={reduceMotion ? { duration: 0 } : { duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
       >
-        <div className="flashcard-face flashcard-face--front" aria-hidden={revealed}>
-          <div className="flashcard-tags">
-            {card.essential && <span className="visually-hidden">Essential card</span>}
-            {hidden && <span className="flashcard-hidden">Hidden</span>}
-            {deck.facets.map(({ key }) =>
-              card.facets[key] ? <Tag key={key} value={card.facets[key]} /> : null,
+        <div className="flashcard__face flashcard__face--front" aria-hidden={revealed}>
+          <div className="flashcard__meta">
+            <span className="flashcard__facets">{facetValues.join(" · ")}</span>
+            {hidden && (
+              <Badge size="sm" tone="neutral">
+                Known
+              </Badge>
             )}
           </div>
 
-          <h2 className="flashcard-title">
-            {card.essential && (
-              <span className="flashcard-star" aria-hidden="true">
-                ★{" "}
-              </span>
-            )}
-            {card.title}
-          </h2>
+          <Title card={card} />
 
-          <div className="flashcard-body">
-            {variants.length > 1 ? (
-              <div
-                className={`flashcard-image flashcard-image--split ${variants.length > 2 ? "flashcard-image--triple" : ""}`}
-              >
-                {variants.map((variant) => (
-                  <figure
-                    key={variant.key}
-                    className={`flashcard-image__variant flashcard-image__variant--${variant.phone ? "phone" : "desktop"}`}
-                  >
-                    <img src={variant.src} alt="" draggable={false} />
-                    <figcaption>{variant.label}</figcaption>
-                  </figure>
-                ))}
-              </div>
-            ) : (
-              <div className="flashcard-image">
-                {variants[0] ? (
-                  <img src={variants[0].src} alt="" draggable={false} />
-                ) : (
-                  <span className="flashcard-placeholder">?</span>
-                )}
-              </div>
-            )}
-
-            <p className="flashcard-summary">{card.summary}</p>
-          </div>
-
-          <p className="flashcard-hint">Tap to reveal</p>
-        </div>
-
-        <div className="flashcard-face flashcard-face--back" aria-hidden={!revealed}>
-          <div className="flashcard-back">
-            <h2 className="flashcard-back__title">
-              {card.essential && (
-                <span className="flashcard-star" aria-hidden="true">
-                  ★{" "}
+          {variants.length > 1 ? (
+            <div className="flashcard__image flashcard__image--split">
+              {variants.map((variant) => (
+                <figure
+                  key={variant.key}
+                  className={`flashcard__variant flashcard__variant--${variant.phone ? "phone" : "desktop"}`}
+                >
+                  <img src={variant.src} alt="" draggable={false} />
+                  <figcaption>{variant.label}</figcaption>
+                </figure>
+              ))}
+            </div>
+          ) : (
+            <div className="flashcard__image">
+              {variants[0] ? (
+                <img src={variants[0].src} alt="" draggable={false} />
+              ) : (
+                <span className="flashcard__placeholder" aria-hidden="true">
+                  ?
                 </span>
               )}
-              {card.title}
-            </h2>
-            <p className="flashcard-back__description">{card.description}</p>
+            </div>
+          )}
+
+          <p className="flashcard__summary">
+            <InlineText text={card.summary} />
+          </p>
+
+          <p className="flashcard__hint">
+            <Icon size="sm">
+              <FlipGlyph />
+            </Icon>
+            Tap the card to flip it
+          </p>
+        </div>
+
+        <div className="flashcard__face flashcard__face--back" aria-hidden={!revealed}>
+          <div className="flashcard__panel">
+            <Title card={card} />
+            <p className="flashcard__description">
+              <InlineText text={card.description} />
+            </p>
+
             {card.aliases && card.aliases.length > 0 && (
-              <p className="flashcard-back__aliases">Also known as: {card.aliases.join(", ")}</p>
+              <div className="flashcard__aliases">
+                <span className="flashcard__label" id={`aliases-${card.id}`}>
+                  Also known as
+                </span>
+                <ul className="flashcard__alias-list" aria-labelledby={`aliases-${card.id}`}>
+                  {card.aliases.map((alias) => (
+                    <li key={alias} className="flashcard__alias">
+                      {alias}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             )}
+
             {platforms.length > 0 && (
-              <dl className="flashcard-platforms">
+              <dl className="flashcard__platforms">
                 {platforms.map(({ key, label }) => (
-                  <div key={key} className="flashcard-platforms__row">
+                  <div key={key} className="flashcard__platform">
                     <dt>{label}</dt>
-                    <dd>{card.platforms?.[key]}</dd>
+                    <dd>
+                      <InlineText text={card.platforms?.[key] ?? ""} />
+                    </dd>
                   </div>
                 ))}
               </dl>
             )}
+            {hidden && <VisuallyHidden>You marked this card as known.</VisuallyHidden>}
           </div>
 
-          <p className="flashcard-hint">Tap to go back</p>
+          <p className="flashcard__hint">
+            <Icon size="sm">
+              <FlipGlyph />
+            </Icon>
+            Tap the card to see the question
+          </p>
         </div>
       </motion.div>
     </div>

@@ -44,8 +44,12 @@ Its only storage is the list of cards a learner hid, in `localStorage`. Everythi
 
 ## Dependencies
 
-- Runtime: `react`, `react-dom`, `framer-motion`, and `@pearpages/credit` (the owner's
-  shared footer: one stylesheet and a small React component). Everything else is build-time tooling
+- Runtime: `react`, `react-dom`, `framer-motion`, `@pearpages/credit` (the owner's
+  shared footer: one stylesheet and a small React component), and the owner's pulp design
+  system: `@pearpages/pulp-react` (which brings `react-aria-components`, `@floating-ui/react-dom`,
+  `@internationalized/date` and `@pearpages/heatmap`), `@pearpages/pulp-tokens`,
+  `@pearpages/pulp-css`, `@pearpages/pulp-icons` and `@pearpages/modals`. Fonts are
+  self-hosted from `@fontsource-variable/*` (no font CDN, so no third-party requests). Everything else is build-time tooling
   (including `vitest` for tests).
 - `pnpm-lock.yaml` is the committed lockfile; the GitHub workflow installs with
   `--frozen-lockfile`.

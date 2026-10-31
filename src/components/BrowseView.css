@@ -4,71 +4,40 @@
   flex-direction: column;
 }
 
-/* Search + filters + jump bar stay pinned while the list scrolls */
+/* Search, filters and the jump bar stay pinned while the list scrolls */
 .browse__toolbar {
   position: sticky;
   top: 0;
   z-index: 1;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  padding: 1rem 1.25rem 0.85rem;
-  background: rgba(244, 246, 250, 0.92);
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: color-mix(in srgb, var(--color-surface-base) 94%, transparent);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border-bottom: 1px solid #e4e4ee;
-}
-
-.browse__search {
-  width: 100%;
-  font: inherit;
-  font-size: 0.95rem;
-  padding: 0.7rem 1rem;
-  border: 1px solid #d8d8e4;
-  border-radius: 999px;
-  background: #ffffff;
-  color: #1a1a2e;
-}
-
-.browse__search:focus-visible {
-  outline: 2px solid #5b5bd6;
-  outline-offset: 1px;
 }
 
 .browse__filters {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 0.4rem;
+  gap: var(--space-2);
 }
 
 .browse__filters-label {
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: #888;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
 }
 
-.browse__filter-chip {
-  border: none;
-  border-radius: 999px;
-  padding: 0.25rem 0.6rem;
-  font: inherit;
-  font-size: 0.8rem;
-  text-transform: capitalize;
-  background: #1a1a2e;
-  color: #ffffff;
-  cursor: pointer;
-}
-
+/* One row of section chips that scrolls sideways inside itself */
 .browse__jump {
   display: flex;
-  gap: 0.45rem;
+  gap: var(--space-2);
+  margin: 0 calc(-1 * var(--space-4));
+  padding: 0 var(--space-4) var(--space-1);
   overflow-x: auto;
   scrollbar-width: none;
-  margin: 0 -1.25rem;
-  padding: 0 1.25rem;
 }
 
 .browse__jump::-webkit-scrollbar {
@@ -77,152 +46,133 @@
 
 .browse__jump-chip {
   flex-shrink: 0;
-  border: none;
-  border-radius: 999px;
-  padding: 0.4rem 0.85rem;
-  font: inherit;
-  font-size: 0.8rem;
-  text-transform: capitalize;
-  background: #ffffff;
-  color: #1a1a2e;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 36px;
+  padding: 0 var(--space-3);
+  border: var(--size-hairline) solid var(--color-border-default);
+  border-radius: var(--radius-control);
+  background: var(--color-surface-raised);
+  color: var(--color-text-default);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
   cursor: pointer;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 .browse__jump-chip[aria-current="true"] {
-  background: #5b5bd6;
-  color: #ffffff;
+  border-color: var(--color-surface-inverse);
+  background: var(--color-surface-inverse);
+  color: var(--color-text-on-inverse);
 }
 
-.browse__jump-chip:focus-visible,
-.browse__filter-chip:focus-visible,
-.browse__item:focus-visible {
-  outline: 2px solid #5b5bd6;
-  outline-offset: 2px;
+.browse__jump-count {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-xs);
+  opacity: 0.75;
 }
 
 .browse__list {
-  /* Offset parent for rows and sections, used when scrolling them into view */
-  position: relative;
-  padding: 0.5rem 1rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-1) var(--space-4) var(--space-6);
 }
 
+/* Each section is a raised surface: heading, then rows split by hairlines */
 .browse__group {
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: var(--radius-surface);
+  background: var(--color-surface-raised);
+  box-shadow: var(--shadow-raised);
   /* Leave room for the sticky toolbar when jumping to a section */
-  scroll-margin-top: 10rem;
+  scroll-margin-top: 9rem;
 }
 
 .browse__group-title {
   display: flex;
   align-items: baseline;
-  gap: 0.4rem;
-  margin: 1.5rem 0.4rem 0.6rem;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #55556a;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-3) var(--space-4) var(--space-2);
+  border-bottom: var(--size-hairline) solid var(--color-border-default);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
 }
 
 .browse__group-count {
-  font-weight: 500;
-  color: #aaa;
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text-muted);
 }
 
 .browse__items {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-
-.browse__item {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 0.9rem;
-  padding: 0.6rem 0.65rem;
-  border: none;
-  border-radius: 12px;
-  background: transparent;
-  font: inherit;
-  text-align: left;
-  color: inherit;
-  cursor: pointer;
-  scroll-margin: 10rem 0 1rem;
 }
 
 .browse__row {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 0.25rem;
 }
 
-.browse__row .browse__item {
+.browse__row + .browse__row {
+  border-top: var(--size-hairline) solid var(--color-border-default);
+}
+
+.browse__item {
   flex: 1;
   min-width: 0;
-}
-
-.browse__item--hidden {
-  opacity: 0.5;
-}
-
-.browse__star {
-  color: #b7860b;
-}
-
-.browse__unhide {
-  flex-shrink: 0;
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
   border: none;
-  border-radius: 999px;
-  padding: 0.4rem 0.75rem;
+  background: none;
+  color: var(--color-text-default);
   font: inherit;
-  font-size: 0.75rem;
-  font-weight: 600;
-  background: #ffffff;
-  color: #1a1a2e;
+  text-align: start;
   cursor: pointer;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-}
-
-.browse__unhide:hover {
-  background: #f0f0f5;
-}
-
-.browse__unhide:focus-visible {
-  outline: 2px solid #5b5bd6;
-  outline-offset: 2px;
+  scroll-margin-top: 10rem;
 }
 
 .browse__item:hover {
-  background: rgba(255, 255, 255, 0.7);
+  background: var(--color-surface-base);
 }
 
+.browse__item:focus-visible {
+  outline-offset: -3px;
+}
+
+/* The card being studied (desktop sidebar) */
 .browse__item[aria-current="true"] {
-  background: #ffffff;
-  box-shadow:
-    inset 3px 0 0 #5b5bd6,
-    0 1px 4px rgba(0, 0, 0, 0.06);
+  background: var(--color-action-primary-quiet);
+  box-shadow: inset 3px 0 0 var(--color-action-primary);
+}
+
+.browse__row--hidden .browse__item {
+  opacity: 0.55;
 }
 
 .browse__thumb {
   flex-shrink: 0;
-  width: 56px;
-  height: 42px;
-  object-fit: contain;
-  border-radius: 8px;
-  background: #ffffff;
-  box-shadow: inset 0 0 0 1px #ececf4;
-}
-
-.browse__thumb--empty {
+  width: 64px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #c0c0d0;
-  font-weight: 700;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-base);
+  color: var(--color-text-faint);
+}
+
+.browse__thumb img {
+  width: 56px;
+  height: 42px;
+  object-fit: contain;
 }
 
 .browse__item-text {
@@ -230,35 +180,50 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
+  gap: 2px;
 }
 
 .browse__item-title {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #1a1a2e;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+}
+
+.browse__star {
+  display: inline-flex;
+  font-size: 0.8em;
+  color: var(--essential-ink);
 }
 
 .browse__item-summary {
-  font-size: 0.8rem;
-  color: #777;
-  white-space: nowrap;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: var(--font-size-sm);
+  line-height: 1.4;
+  color: var(--color-text-muted);
 }
 
-.browse__item-tags {
+.browse__item-meta {
+  font-family: var(--font-family-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.browse__unhide {
   flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 0.2rem;
+  margin-inline-end: var(--space-2);
 }
 
 .browse__empty {
-  margin: 2rem 1rem;
+  margin: var(--space-6) var(--space-4);
   text-align: center;
-  color: #888;
+  color: var(--color-text-muted);
 }
 
 /* Desktop: the list is its own scroll area inside the sidebar */
@@ -275,6 +240,6 @@
 
   .browse__group,
   .browse__item {
-    scroll-margin-top: 0.5rem;
+    scroll-margin-top: var(--space-2);
   }
 }

@@ -37,7 +37,15 @@
     "test": "vitest"
   },
   "dependencies": {
+    "@fontsource-variable/archivo": "^5.3.0",
+    "@fontsource-variable/geist-mono": "^5.3.0",
+    "@fontsource-variable/instrument-sans": "^5.3.0",
     "@pearpages/credit": "^0.2.0",
+    "@pearpages/modals": "^0.5.0",
+    "@pearpages/pulp-css": "^0.1.9",
+    "@pearpages/pulp-icons": "^0.3.0",
+    "@pearpages/pulp-react": "^0.8.0",
+    "@pearpages/pulp-tokens": "^0.7.0",
     "framer-motion": "^12.33.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"

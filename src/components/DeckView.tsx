@@ -1,30 +1,27 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Button } from "@pearpages/pulp-react/button";
+import { IconButton } from "@pearpages/pulp-react/icon-button";
+import { Heading } from "@pearpages/pulp-react/heading";
+import { SegmentedControl } from "@pearpages/pulp-react/segmented-control";
+import { Badge } from "@pearpages/pulp-react/badge";
+import { useToast } from "@pearpages/pulp-react/toast";
+import { ChevronLeft } from "@pearpages/pulp-icons";
 import type { Deck, Flashcard, FilterState } from "../types";
 import { parseRoute, pushRoute, replaceRoute, type View } from "../route";
+import { countActive, matchesFilters, relaxFilters } from "../filters";
 import { useMediaQuery } from "../hooks/useMediaQuery";
 import { useHiddenCards } from "../hooks/useHiddenCards";
 import CardStack from "./CardStack";
-import DeckFilters from "./DeckFilters";
+import FilterSheet from "./FilterSheet";
 import BrowseView from "./BrowseView";
+import { SlidersGlyph } from "./icons";
+import "./DeckView.css";
 
 interface DeckViewProps {
   deck: Deck;
   initialView: View;
   initialCardId?: string;
   onBack: () => void;
-}
-
-function matchesFilters(card: Flashcard, filters: FilterState, skipKey?: string) {
-  return Object.entries(filters).every(
-    ([key, value]) => key === skipKey || value === null || card.facets[key] === value,
-  );
-}
-
-/** Keeps each filter only if the card still matches it, so the card is in the study deck. */
-function relaxFilters(filters: FilterState, card: Flashcard): FilterState {
-  return Object.fromEntries(
-    Object.entries(filters).map(([key, value]) => [key, value === null || card.facets[key] === value ? value : null]),
-  );
 }
 
 /** One deck: filters, the card stack and the browse list. Mounted fresh each time a deck is entered. */
@@ -40,6 +37,9 @@ export default function DeckView({ deck, initialView, initialCardId, onBack }: D
   const [showHidden, setShowHidden] = useState(false);
   const { hidden, setCardHidden } = useHiddenCards(deck);
   const isDesktop = useMediaQuery("(min-width: 960px)");
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [position, setPosition] = useState({ index: 0, total: 0 });
+  const { toast } = useToast();
 
   // The list is grouped by the deck's first filterable facet (purpose in the design-system deck).
   const groupFacet = deck.facets.find((facet) => facet.filter !== false);
@@ -71,9 +71,12 @@ export default function DeckView({ deck, initialView, initialCardId, onBack }: D
       ),
     [orderedCards, filters, groupFacet, essentialOnly],
   );
-  const hiddenCount = useMemo(
-    () => browseCards.filter((card) => hidden.has(card.id) && matchesFilters(card, filters)).length,
-    [browseCards, hidden, filters],
+  // Cards marked known in the whole deck, for the filters sheet
+  const hiddenCount = hidden.size;
+  // What the filter chips count: the deck narrowed by Essentials and known cards, before facet filters
+  const countableCards = useMemo(
+    () => orderedCards.filter((card) => (!essentialOnly || card.essential) && (showHidden || !hidden.has(card.id))),
+    [orderedCards, essentialOnly, showHidden, hidden],
   );
 
   /** Turns off whatever would keep `card` out of the study stack. */
@@ -127,6 +130,8 @@ export default function DeckView({ deck, initialView, initialCardId, onBack }: D
     [deck.id],
   );
 
+  const handlePosition = useCallback((index: number, total: number) => setPosition({ index, total }), []);
+
   const showView = (next: View) => {
     if (next === view) return;
     pushRoute({ deckId: deck.id, view: next, cardId: currentCardId });
@@ -146,67 +151,69 @@ export default function DeckView({ deck, initialView, initialCardId, onBack }: D
     setView("study");
   };
 
+  const clearAll = () => {
+    setFilters({});
+    setEssentialOnly(false);
+    setShowHidden(false);
+  };
+
+  const activeCount = countActive(filters) + (essentialOnly ? 1 : 0) + (showHidden ? 1 : 0);
+
+  // Closing the sheet with filters on says how many cards are left, with a way out.
+  const handleFiltersOpenChange = (open: boolean) => {
+    setFiltersOpen(open);
+    if (open || activeCount === 0) return;
+    const n = studyCards.length;
+    toast({
+      title: n === 0 ? "No cards match your filters." : `${n} ${n === 1 ? "card matches" : "cards match"} your filters.`,
+      duration: 6000,
+      action: { label: "Clear", onClick: clearAll },
+    });
+  };
+
   const activeFilters = deck.facets
     .filter((facet) => facet.key !== groupFacet?.key && filters[facet.key])
     .map((facet) => ({ facet, value: filters[facet.key]! }));
 
+  const counter =
+    view === "study" || isDesktop
+      ? studyCards.length === 0
+        ? "No cards"
+        : `Card ${Math.min(position.index + 1, position.total)} of ${position.total}`
+      : `${browseCards.length} ${browseCards.length === 1 ? "card" : "cards"}`;
+
   return (
     <div className={`app app--view-${view}`}>
-      <header className="app-header">
-        <button type="button" className="app-header__back" onClick={onBack} aria-label="Back to decks">
-          <span aria-hidden="true">←</span>
-          <span className="app-header__back-label">Decks</span>
-        </button>
-        <h1>{deck.title}</h1>
-        <div className="app-header__actions">
-          <button
-            type="button"
-            className="app-header__essentials"
-            aria-pressed={essentialOnly}
-            aria-label="Essentials"
-            title="Study only the essential cards"
-            onClick={() => setEssentialOnly((on) => !on)}
-          >
-            <span aria-hidden="true">★</span>
-            <span className="app-header__essentials-label" aria-hidden="true">
-              Essentials
+      <header className="deck-header">
+        <IconButton variant="ghost" icon={<ChevronLeft />} label="All decks" onClick={onBack} />
+        <Heading level={1} size="md" className="deck-header__title">
+          {deck.title}
+        </Heading>
+        <Button variant="secondary" iconStart={<SlidersGlyph />} onClick={() => setFiltersOpen(true)}>
+          Filters
+          {activeCount > 0 && (
+            <span className="deck-header__badge">
+              <Badge count={activeCount} tone="action" variant="solid" size="sm" label="filters on" />
             </span>
-          </button>
-          {(hiddenCount > 0 || showHidden) && (
-            <button
-              type="button"
-              className="app-header__hidden"
-              aria-pressed={showHidden}
-              aria-label={`Study hidden cards (${hiddenCount})`}
-              title="Study the cards you hid"
-              onClick={() => setShowHidden((on) => !on)}
-            >
-              <svg className="app-header__hidden-icon" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M3 12s3.5-6 9-6 9 6 9 6-3.5 6-9 6-9-6-9-6z" />
-                <circle cx="12" cy="12" r="2.5" />
-                <path d="M4 20 20 4" />
-              </svg>
-              <span className="app-header__hidden-label" aria-hidden="true">
-                Hidden ·
-              </span>
-              <span aria-hidden="true">{hiddenCount}</span>
-            </button>
           )}
-          <div className="app-header__views" role="group" aria-label="View">
-          {(["study", "browse"] as const).map((v) => (
-            <button
-              key={v}
-              type="button"
-              className="app-header__view"
-              aria-pressed={view === v}
-              onClick={() => showView(v)}
-            >
-              {v}
-            </button>
-          ))}
-          </div>
-        </div>
+        </Button>
       </header>
+
+      <div className="deck-bar">
+        <span className="deck-bar__count" aria-live="polite">
+          {counter}
+        </span>
+        <SegmentedControl
+          className="deck-bar__views"
+          label="View"
+          options={[
+            { value: "study", label: "Study" },
+            { value: "browse", label: "Browse" },
+          ]}
+          value={view}
+          onValueChange={showView}
+        />
+      </div>
 
       {groupFacet && (
         <aside className="app__browse">
@@ -227,27 +234,37 @@ export default function DeckView({ deck, initialView, initialCardId, onBack }: D
         </aside>
       )}
 
-      <div className="app__study">
-        <DeckFilters
-          facets={deck.facets}
-          filters={filters}
-          count={studyCards.length}
-          onChange={setFilters}
-          hiddenCount={showHidden ? 0 : hiddenCount}
+      <main className="app__study">
+        <CardStack
+          key={`${JSON.stringify(filters)}-${essentialOnly}-${showHidden}-${openCount}`}
+          deck={deck}
+          cards={studyCards}
+          startCardId={currentCardId}
+          onCardChange={handleCardChange}
+          onPositionChange={handlePosition}
+          hiddenIds={hidden}
+          dropHidden={!showHidden}
+          onHiddenChange={setCardHidden}
+          onShowHidden={() => setShowHidden(true)}
         />
-        <main className="app-main">
-          <CardStack
-            key={`${JSON.stringify(filters)}-${essentialOnly}-${showHidden}-${openCount}`}
-            deck={deck}
-            cards={studyCards}
-            startCardId={currentCardId}
-            onCardChange={handleCardChange}
-            hiddenIds={hidden}
-            dropHidden={!showHidden}
-            onHiddenChange={setCardHidden}
-          />
-        </main>
-      </div>
+      </main>
+
+      <FilterSheet
+        open={filtersOpen}
+        onOpenChange={handleFiltersOpenChange}
+        placement={isDesktop ? "end" : "bottom"}
+        facets={deck.facets}
+        filters={filters}
+        onFiltersChange={setFilters}
+        countableCards={countableCards}
+        matchCount={studyCards.length}
+        essentialOnly={essentialOnly}
+        onEssentialOnlyChange={setEssentialOnly}
+        showHidden={showHidden}
+        onShowHiddenChange={setShowHidden}
+        hiddenCount={hiddenCount}
+        onClearAll={clearAll}
+      />
     </div>
   );
 }

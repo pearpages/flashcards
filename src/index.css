@@ -1,13 +1,48 @@
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+/* Fonts: pulp's typefaces, self-hosted (no requests to a font CDN) */
+@import "@fontsource-variable/archivo";
+@import "@fontsource-variable/instrument-sans";
+@import "@fontsource-variable/geist-mono";
 
-html {
-  -webkit-text-size-adjust: 100%;
+/* pulp: layer order, tokens, reset and base styles */
+@import "@pearpages/pulp-css";
+
+/* The modal engine behind pulp's Sheet, below pulp's own components */
+@import "@pearpages/modals/styles.css" layer(vendor);
+
+/* The pulp components this app uses, one stylesheet each */
+@import "@pearpages/pulp-react/alert.css";
+@import "@pearpages/pulp-react/badge.css";
+@import "@pearpages/pulp-react/button.css";
+@import "@pearpages/pulp-react/chip.css";
+@import "@pearpages/pulp-react/dialog.css";
+@import "@pearpages/pulp-react/empty-state.css";
+@import "@pearpages/pulp-react/field.css";
+@import "@pearpages/pulp-react/heading.css";
+@import "@pearpages/pulp-react/icon.css";
+@import "@pearpages/pulp-react/icon-button.css";
+@import "@pearpages/pulp-react/progress.css";
+@import "@pearpages/pulp-react/segmented-control.css";
+@import "@pearpages/pulp-react/sheet.css";
+@import "@pearpages/pulp-react/stack.css";
+@import "@pearpages/pulp-react/switch.css";
+@import "@pearpages/pulp-react/text.css";
+@import "@pearpages/pulp-react/text-field.css";
+@import "@pearpages/pulp-react/toast.css";
+@import "@pearpages/pulp-react/visually-hidden.css";
+
+/* The app's own styles are unlayered, so they win over pulp's layers; they only target the app's classes. */
+
+:root {
+  /* The "Made by pearpages" footer (@pearpages/credit) in pulp's colours */
+  --sk-ink-soft: var(--color-text-muted);
+  --sk-accent: var(--color-action-text);
+
+  /* Essential cards are painted gold, from pulp's saffron */
+  --essential-ink: var(--color-saffron-700);
+  --essential-ring: color-mix(in srgb, var(--color-saffron-500) 55%, transparent);
+  --essential-rule: color-mix(in srgb, var(--color-saffron-700) 25%, transparent);
+  --essential-light: color-mix(in srgb, var(--color-saffron-100) 45%, var(--color-neutral-0));
+  --essential-bg: var(--color-saffron-100);
 }
 
 /* No rubber-band bounce or pull-to-refresh when swiping cards */
@@ -16,33 +51,13 @@ body {
   overscroll-behavior: none;
 }
 
-/* Theme for the "Made by pearpages" footer (@pearpages/credit) */
-:root {
-  --sk-ink-soft: #5c5c70;
-  --sk-accent: #5b5bd6;
-}
-
-body {
-  font-family:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
-    Arial, sans-serif;
-  background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f2 100%);
-  color: #1a1a2e;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* Text for screen readers only */
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  padding: 0;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-  border: 0;
+/* Inline code in card text (`like this`) */
+.inline-code {
+  padding: 0.05em 0.3em;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-sunken);
+  font-family: var(--font-family-mono);
+  font-size: 0.88em;
 }
 
 /* The page is a column: the screen (picker or deck) grows, the credit footer sits under it */

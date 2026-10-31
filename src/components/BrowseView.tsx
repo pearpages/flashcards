@@ -1,7 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Deck, Facet, Flashcard } from "../types";
+import { TextField } from "@pearpages/pulp-react/text-field";
+import { Chip } from "@pearpages/pulp-react/chip";
+import { Button } from "@pearpages/pulp-react/button";
+import { Icon } from "@pearpages/pulp-react/icon";
+import { VisuallyHidden } from "@pearpages/pulp-react/visually-hidden";
 import { getCardImages } from "../decks";
-import Tag from "./Tag";
+import { valueLabel } from "../valueLabel";
+import { StarGlyph } from "./icons";
 import "./BrowseView.css";
 
 interface ActiveFilter {
@@ -23,7 +29,7 @@ interface BrowseViewProps {
   onClearFilter: (facetKey: string) => void;
   essentialOnly: boolean;
   onClearEssential: () => void;
-  /** Cards the learner hid; listed faded with an Unhide button. */
+  /** Cards marked known; listed faded with a Put back button. */
   hiddenIds: ReadonlySet<string>;
   onUnhide: (cardId: string) => void;
 }
@@ -141,40 +147,30 @@ export default function BrowseView({
   const otherFacets = deck.facets.filter((facet) => facet.key !== groupFacet.key);
 
   return (
-    <section className="browse" aria-label="Browse components">
+    <section className="browse" aria-label="Browse cards">
       <div className="browse__toolbar">
-        <input
+        <TextField
           type="search"
-          className="browse__search"
-          placeholder={`Search ${cards.length} cards…`}
-          aria-label="Search cards"
+          label="Search cards"
+          hideLabel
+          placeholder={`Search ${cards.length} ${cards.length === 1 ? "card" : "cards"}`}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
+          onClear={() => setSearch("")}
         />
 
         {(activeFilters.length > 0 || essentialOnly) && (
           <div className="browse__filters">
             <span className="browse__filters-label">Filtered by</span>
             {essentialOnly && (
-              <button
-                type="button"
-                className="browse__filter-chip"
-                onClick={onClearEssential}
-                aria-label="Remove Essentials filter"
-              >
-                ★ Essentials <span aria-hidden="true">✕</span>
-              </button>
+              <Chip size="sm" onRemove={onClearEssential} removeLabel="Remove filter">
+                Essential only
+              </Chip>
             )}
             {activeFilters.map(({ facet, value }) => (
-              <button
-                key={facet.key}
-                type="button"
-                className="browse__filter-chip"
-                onClick={() => onClearFilter(facet.key)}
-                aria-label={`Remove ${facet.label} filter: ${value}`}
-              >
-                {value} <span aria-hidden="true">✕</span>
-              </button>
+              <Chip key={facet.key} size="sm" onRemove={() => onClearFilter(facet.key)} removeLabel="Remove filter">
+                {valueLabel(value)}
+              </Chip>
             ))}
           </div>
         )}
@@ -188,7 +184,8 @@ export default function BrowseView({
               aria-current={activeGroup === group.value ? "true" : undefined}
               onClick={() => jumpTo(group.value)}
             >
-              {group.value}
+              {valueLabel(group.value)}
+              <span className="browse__jump-count">{group.cards.length}</span>
             </button>
           ))}
         </nav>
@@ -196,57 +193,61 @@ export default function BrowseView({
 
       <div className="browse__list" ref={listRef}>
         {groups.map((group) => (
-          <section key={group.value} className="browse__group" data-group={group.value}>
-            <h2 className="browse__group-title">
-              {group.value}
-              <span className="browse__group-count">{group.cards.length}</span>
+          <section
+            key={group.value}
+            className="browse__group"
+            data-group={group.value}
+            aria-labelledby={`group-${group.value}`}
+          >
+            <h2 className="browse__group-title" id={`group-${group.value}`}>
+              {valueLabel(group.value)}
+              <span className="browse__group-count">
+                {group.cards.length} {group.cards.length === 1 ? "card" : "cards"}
+              </span>
             </h2>
             <ul className="browse__items">
               {group.cards.map((card) => {
                 const thumb = getCardImages(deck.id, card.id).desktop;
                 const isHidden = hiddenIds.has(card.id);
+                const meta = otherFacets.map(({ key }) => card.facets[key]).filter(Boolean).map(valueLabel);
                 return (
-                  <li key={card.id} className="browse__row">
+                  <li key={card.id} className={`browse__row ${isHidden ? "browse__row--hidden" : ""}`}>
                     <button
                       type="button"
-                      className={`browse__item ${isHidden ? "browse__item--hidden" : ""}`}
+                      className="browse__item"
                       data-card-id={card.id}
                       aria-current={card.id === activeCardId ? "true" : undefined}
                       onClick={() => onSelect(card)}
                     >
-                      {thumb ? (
-                        <img className="browse__thumb" src={thumb} alt="" loading="lazy" decoding="async" />
-                      ) : (
-                        <span className="browse__thumb browse__thumb--empty">?</span>
-                      )}
+                      <span className="browse__thumb" aria-hidden="true">
+                        {thumb ? <img src={thumb} alt="" loading="lazy" decoding="async" /> : "?"}
+                      </span>
                       <span className="browse__item-text">
                         <span className="browse__item-title">
+                          {card.title}
                           {card.essential && (
-                            <span className="browse__star" aria-hidden="true">
-                              ★{" "}
+                            <span className="browse__star">
+                              <Icon size="inherit" label="Essential">
+                                <StarGlyph />
+                              </Icon>
                             </span>
                           )}
-                          {card.title}
-                          {card.essential && <span className="visually-hidden">, essential</span>}
-                          {isHidden && <span className="visually-hidden">, hidden</span>}
+                          {isHidden && <VisuallyHidden>, known</VisuallyHidden>}
                         </span>
                         <span className="browse__item-summary">{card.summary}</span>
-                      </span>
-                      <span className="browse__item-tags">
-                        {otherFacets.map(({ key }) =>
-                          card.facets[key] ? <Tag key={key} value={card.facets[key]} size="sm" /> : null,
-                        )}
+                        {meta.length > 0 && <span className="browse__item-meta">{meta.join(" · ")}</span>}
                       </span>
                     </button>
                     {isHidden && (
-                      <button
-                        type="button"
+                      <Button
+                        variant="ghost"
+                        size="sm"
                         className="browse__unhide"
                         onClick={() => onUnhide(card.id)}
-                        aria-label={`Unhide ${card.title}`}
+                        aria-label={`Put ${card.title} back in study`}
                       >
-                        Unhide
-                      </button>
+                        Put back
+                      </Button>
                     )}
                   </li>
                 );
