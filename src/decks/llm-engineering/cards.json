@@ -9,7 +9,7 @@
     "aliases": ["Tokenization", "Subword"],
     "platforms": {
       "anthropic": "count_tokens endpoint",
-      "openai": "tiktoken / usage field",
+      "openai": "Input token count / usage field",
       "google": "countTokens"
     }
   },
@@ -31,9 +31,9 @@
     "description": "Frontier models cost several times more per token than small fast ones. Prototype on the best to learn what's possible, build evals, then step down a tier and keep the cheapest model that still passes. Re-run the evals on every new release.",
     "aliases": ["Model size", "Frontier vs small"],
     "platforms": {
-      "anthropic": "Opus / Sonnet / Haiku",
-      "openai": "GPT-5 / mini / nano",
-      "google": "Gemini Pro / Flash / Flash-Lite"
+      "anthropic": "Fable / Opus / Sonnet / Haiku",
+      "openai": "GPT-6 Astra / Sol / Terra / Luna",
+      "google": "Gemini Argon / Pro / Flash / Flash-Lite"
     }
   },
   {
@@ -42,10 +42,10 @@
     "essential": true,
     "facets": {"area": "models", "kind": "concept", "stage": "prototype"},
     "summary": "Sampling knob: low picks the likeliest token, high spreads choice across more of them.",
-    "description": "Use low values for extraction, classification and code; higher for brainstorming and varied copy. Zero still isn't fully deterministic. Reasoning models often fix or ignore it, so check the docs before tuning it.",
+    "description": "Use low values for extraction, classification and code; higher for brainstorming and varied copy. Zero still isn't fully deterministic. Newer models often fix it or reject it outright (current Claude models return an error), so check the docs before tuning it.",
     "aliases": ["Sampling temperature", "Randomness"],
     "platforms": {
-      "anthropic": "temperature",
+      "anthropic": "Removed in API 2026-10-21",
       "openai": "temperature",
       "google": "temperature"
     }
@@ -55,10 +55,10 @@
     "title": "Top-p (Nucleus Sampling)",
     "facets": {"area": "models", "kind": "concept", "stage": "production"},
     "summary": "Sample only from the smallest set of tokens whose probabilities add up to p.",
-    "description": "Cuts the long tail of unlikely tokens while keeping variety when many are plausible. Tune temperature or top-p, not both: they interact and it gets hard to reason about. Most apps never need to touch it.",
+    "description": "Cuts the long tail of unlikely tokens while keeping variety when many are plausible. Tune temperature or top-p, not both: they interact, and some APIs reject the pair. Many newer models no longer accept it at all; most apps never need it.",
     "aliases": ["Nucleus sampling", "top_p"],
     "platforms": {
-      "anthropic": "top_p",
+      "anthropic": "Removed in API 2026-10-21",
       "openai": "top_p",
       "google": "topP"
     }
@@ -98,7 +98,7 @@
     "description": "They shine on maths, code, planning and multi-step problems; they're overkill for lookups and rewording. Thinking tokens are billed as output. Give them the goal and constraints, not step-by-step instructions: they plan better than a scripted chain of thought.",
     "aliases": ["Thinking models", "Extended thinking", "o-series"],
     "platforms": {
-      "anthropic": "Extended thinking",
+      "anthropic": "Adaptive thinking + effort",
       "openai": "Reasoning models (reasoning)",
       "google": "Gemini thinking"
     }
@@ -208,8 +208,7 @@
     "description": "Lets you diff, review and eval prompt changes like code. Keep the fixed part first and variables last so prompt caching still hits. Escape or tag user values so they can't close your delimiters.",
     "aliases": ["Prompt versioning", "Prompt management"],
     "platforms": {
-      "anthropic": "Console prompt templates",
-      "openai": "Reusable prompts (prompt id)"
+      "google": "Agent Platform prompt management"
     }
   },
   {
@@ -217,10 +216,10 @@
     "title": "Prefilling the Reply",
     "facets": {"area": "prompting", "kind": "technique", "stage": "production"},
     "summary": "Write the first words of the assistant's turn so the model continues from there.",
-    "description": "Starting with `{` forces JSON; starting mid-sentence keeps a voice or skips a preamble. Only some APIs allow it, and it doesn't combine with extended thinking. Structured outputs are now the sturdier way to force a format.",
+    "description": "Starting with `{` forces JSON; starting mid-sentence keeps a voice or skips a preamble. Newer models increasingly reject it (Claude 4.6 and later return an error). Structured outputs are now the sturdier way to force a format.",
     "aliases": ["Assistant prefill", "Response priming"],
     "platforms": {
-      "anthropic": "Prefill the assistant turn"
+      "anthropic": "Rejected on Claude 4.6 and later"
     }
   },
   {
@@ -263,9 +262,8 @@
     "description": "A good first draft in seconds, with structure and examples you'd forget. It is still a draft: run it through your evals and edit it. Useful as a second opinion when a prompt is stuck.",
     "aliases": ["Meta-prompting", "Prompt generator"],
     "platforms": {
-      "anthropic": "Console prompt generator/improver",
       "openai": "Playground prompt generation",
-      "google": "AI Studio prompt help"
+      "google": "Agent Platform prompt optimizer"
     }
   },
   {
@@ -287,7 +285,7 @@
     "aliases": ["Context caching", "KV cache reuse"],
     "platforms": {
       "anthropic": "Prompt caching (cache_control)",
-      "openai": "Automatic prompt caching",
+      "openai": "Prompt caching (auto or breakpoints)",
       "google": "Context caching (implicit/explicit)"
     }
   },
@@ -295,13 +293,13 @@
     "id": "conversation-history",
     "title": "Conversation History",
     "facets": {"area": "context", "kind": "concept", "stage": "prototype"},
-    "summary": "The API is stateless: every turn you resend the whole conversation.",
+    "summary": "Most model APIs are stateless: every turn you resend the whole conversation.",
     "description": "Cost grows with every turn because old messages are paid again. Trim or summarise old turns, cache the stable prefix, and keep tool results short. Some APIs can store the history server-side for you, but it still counts as input.",
     "aliases": ["Chat history", "Multi-turn", "Stateless API"],
     "platforms": {
       "anthropic": "Messages array (stateless)",
       "openai": "previous_response_id / Conversations",
-      "google": "Chat sessions in the SDK"
+      "google": "Interactions API previous_interaction_id"
     }
   },
   {
@@ -313,7 +311,8 @@
     "aliases": ["Summarisation", "Context editing", "Memory trimming"],
     "platforms": {
       "anthropic": "Context editing / compaction",
-      "openai": "Responses compaction"
+      "openai": "Compaction (context_management)",
+      "google": "ADK context compaction"
     }
   },
   {
@@ -333,7 +332,7 @@
     "aliases": ["Token budget"],
     "platforms": {
       "anthropic": "Token counting API",
-      "openai": "tiktoken",
+      "openai": "Input token count endpoint",
       "google": "countTokens"
     }
   },
@@ -358,7 +357,8 @@
     "description": "The model forgets everything between calls. Store preferences, decisions and progress in a file or database the agent can read and write, and fetch only what's relevant. Let users see and delete what's remembered.",
     "aliases": ["Agent memory", "Persistent memory"],
     "platforms": {
-      "anthropic": "Memory tool"
+      "anthropic": "Memory tool",
+      "google": "Agent Platform Memory Bank"
     }
   },
   {
@@ -384,9 +384,9 @@
     "description": "Pick it over \"please answer in JSON\" whenever code reads the output. Constrained decoding guarantees shape, not truth: still validate values. Keep schemas simple, and give a field for \"unknown\" so the model isn't forced to invent.",
     "aliases": ["JSON Schema output", "Constrained output", "JSON mode"],
     "platforms": {
-      "anthropic": "Structured outputs (output_format)",
+      "anthropic": "Structured outputs (output_config.format)",
       "openai": "Structured Outputs (json_schema)",
-      "google": "responseSchema"
+      "google": "responseFormat (JSON Schema)"
     }
   },
   {
@@ -402,7 +402,7 @@
     "title": "Tool Choice",
     "facets": {"area": "tools", "kind": "technique", "stage": "production"},
     "summary": "Let the model decide, force any tool, force a specific one, or forbid tools.",
-    "description": "Force a specific tool to get structured extraction in one step; forbid tools for the final answer. Forcing a tool skips the model's own reasoning text, so use auto when you want it to explain or ask questions first.",
+    "description": "Force a specific tool to get structured extraction in one step, where the model allows it (some newest Claude models reject forced tools; use auto plus strict tools). Forcing skips the model's own reasoning text, so use auto when it should explain or ask first.",
     "aliases": ["tool_choice", "Function calling mode"],
     "platforms": {
       "anthropic": "tool_choice",
@@ -433,8 +433,8 @@
     "aliases": ["MCP server", "MCP client"],
     "platforms": {
       "anthropic": "MCP connector",
-      "openai": "Remote MCP servers (Responses)",
-      "google": "MCP in Gemini SDK and CLI"
+      "openai": "MCP servers (mcp tool)",
+      "google": "Remote MCP servers (Interactions API)"
     }
   },
   {
@@ -484,7 +484,8 @@
     "description": "Each definition costs tokens on every call, and similar tools get mixed up. Merge overlapping tools, namespace them, and load rarely-used ones on demand with tool search. If a human can't tell which tool to use, the model can't either.",
     "aliases": ["Tool overload", "Tool search"],
     "platforms": {
-      "anthropic": "Tool search tool"
+      "anthropic": "Tool search tool",
+      "openai": "Tool search (tool_search)"
     }
   },
   {
@@ -494,7 +495,11 @@
     "facets": {"area": "retrieval", "kind": "pattern", "stage": "production"},
     "summary": "Fetch the relevant documents for a question and put them in the prompt before answering.",
     "description": "Gives the model private and fresh knowledge without retraining, and lets it cite sources. Quality is mostly retrieval quality: if the right chunk isn't fetched, no prompt can fix the answer. Evaluate retrieval and generation separately.",
-    "aliases": ["RAG", "Grounded generation"]
+    "aliases": ["RAG", "Grounded generation"],
+    "platforms": {
+      "anthropic": "Search result content blocks",
+      "google": "Agent Platform RAG Engine"
+    }
   },
   {
     "id": "embeddings",
@@ -505,9 +510,9 @@
     "description": "The basis of semantic search, clustering and deduplication. Embed queries and documents with the same model, and re-embed everything when you change it: vectors from different models aren't comparable.",
     "aliases": ["Vector embeddings", "Text embeddings"],
     "platforms": {
-      "anthropic": "Voyage AI (recommended partner)",
+      "anthropic": "Voyage AI (no native embedding model)",
       "openai": "text-embedding-3",
-      "google": "gemini-embedding-001"
+      "google": "gemini-embedding-2"
     }
   },
   {
@@ -527,15 +532,15 @@
     "aliases": ["Vector store", "pgvector", "ANN index"],
     "platforms": {
       "openai": "Vector stores",
-      "google": "Vertex AI Vector Search"
+      "google": "Vector Search on Agent Platform"
     }
   },
   {
     "id": "cosine-similarity",
     "title": "Cosine Similarity",
     "facets": {"area": "retrieval", "kind": "concept", "stage": "production"},
-    "summary": "How close two embeddings point: 1 is the same direction, 0 unrelated.",
-    "description": "The usual score for semantic search. Similar is not the same as relevant: \"how to cancel\" and \"how not to cancel\" can sit close. Scores aren't comparable across models, so tune thresholds per model.",
+    "summary": "How close two embeddings point: 1 is the same direction; unrelated texts score lower.",
+    "description": "The usual score for semantic search. Similar is not the same as relevant: \"how to cancel\" and \"how not to cancel\" can sit close. Unrelated texts rarely score near 0, and scores aren't comparable across models, so tune thresholds per model.",
     "aliases": ["Dot product", "Vector similarity"]
   },
   {
@@ -544,7 +549,10 @@
     "facets": {"area": "retrieval", "kind": "technique", "stage": "production"},
     "summary": "Combine keyword search (BM25) with vector search and merge the rankings.",
     "description": "Embeddings miss exact terms like error codes, SKUs and names; keywords miss paraphrases. Running both and fusing the results (e.g. reciprocal rank fusion) beats either alone on most real corpora.",
-    "aliases": ["BM25 + vectors", "Reciprocal rank fusion"]
+    "aliases": ["BM25 + vectors", "Reciprocal rank fusion"],
+    "platforms": {
+      "openai": "File search hybrid_search"
+    }
   },
   {
     "id": "reranking",
@@ -554,8 +562,8 @@
     "description": "A cross-encoder reads the query and each chunk together, so it judges relevance far better than vector distance. Retrieve 50–100, rerank, keep the top 5–10: better answers with fewer tokens.",
     "aliases": ["Cross-encoder", "Two-stage retrieval"],
     "platforms": {
-      "anthropic": "Voyage rerank (partner)",
-      "google": "Vertex AI ranking API"
+      "anthropic": "Voyage AI rerankers (third-party)",
+      "google": "Agent Search ranking API"
     }
   },
   {
@@ -572,7 +580,10 @@
     "facets": {"area": "retrieval", "kind": "technique", "stage": "production"},
     "summary": "Turn the user's message into better search queries before retrieving.",
     "description": "Follow-ups like \"what about the second one?\" need the conversation folded in. A model can expand acronyms, split multi-part questions, or write a hypothetical answer to embed (HyDE). Adds a call, so measure the gain.",
-    "aliases": ["HyDE", "Query expansion"]
+    "aliases": ["HyDE", "Query expansion"],
+    "platforms": {
+      "openai": "Vector store search rewrite_query"
+    }
   },
   {
     "id": "agentic-search",
@@ -587,7 +598,7 @@
     "title": "Managed File Search",
     "facets": {"area": "retrieval", "kind": "technique", "stage": "prototype"},
     "summary": "Upload files and let the provider chunk, embed, index and retrieve them for you.",
-    "description": "The fastest path to a working RAG demo with no vector database to run. You give up control over chunking, ranking and where data lives; move to your own pipeline when evals show retrieval is the bottleneck.",
+    "description": "The fastest path to a working RAG demo with no vector database to run. You give up most control over chunking, ranking and where data lives; move to your own pipeline when evals show retrieval is the bottleneck.",
     "aliases": ["Hosted RAG", "File search"],
     "platforms": {
       "openai": "File search tool",
@@ -676,7 +687,10 @@
     "facets": {"area": "agents", "kind": "pattern", "stage": "production"},
     "summary": "One call drafts, another critiques it, and the draft is revised until it passes.",
     "description": "Works when you can state what \"good\" looks like and feedback measurably helps, as in translation or code that must pass tests. Cap the rounds: models can loop on taste forever.",
-    "aliases": ["Self-critique", "Reflection", "Generator–critic"]
+    "aliases": ["Self-critique", "Reflection", "Generator–critic"],
+    "platforms": {
+      "anthropic": "Managed Agents outcomes"
+    }
   },
   {
     "id": "subagents",
@@ -684,7 +698,10 @@
     "facets": {"area": "agents", "kind": "pattern", "stage": "scale"},
     "summary": "Delegate a side task to a fresh agent and get back only its summary.",
     "description": "Keeps the main context clean: the subagent can read fifty files and return five lines. The handoff loses detail both ways, so brief it like a colleague and ask for exactly the output you need.",
-    "aliases": ["Context isolation", "Delegation"]
+    "aliases": ["Context isolation", "Delegation"],
+    "platforms": {
+      "anthropic": "Agent SDK subagents"
+    }
   },
   {
     "id": "multi-agent",
@@ -694,7 +711,7 @@
     "description": "Pays off for wide, parallel work like research across many sources. For tightly coupled tasks like coding one feature, agents step on each other and lose shared context. Tokens multiply quickly, so prove one agent falls short first.",
     "aliases": ["Agent swarm", "Crew"],
     "platforms": {
-      "anthropic": "Claude Agent SDK subagents",
+      "anthropic": "Managed Agents multiagent orchestration",
       "openai": "Agents SDK handoffs",
       "google": "ADK multi-agent"
     }
@@ -705,7 +722,12 @@
     "facets": {"area": "agents", "kind": "pattern", "stage": "production"},
     "summary": "Pause the agent for approval before risky, costly or irreversible actions.",
     "description": "Sending email, paying, deleting or deploying should need a click. Show what will happen and why, make approval granular, and keep an audit log. Too many prompts and people approve blindly, so gate only what matters.",
-    "aliases": ["Approval step", "Confirmation"]
+    "aliases": ["Approval step", "Confirmation"],
+    "platforms": {
+      "anthropic": "Managed Agents permission policies",
+      "openai": "Agents SDK human-in-the-loop",
+      "google": "ADK tool confirmation"
+    }
   },
   {
     "id": "runaway-agent",
@@ -713,7 +735,10 @@
     "facets": {"area": "agents", "kind": "pitfall", "stage": "production"},
     "summary": "An agent loops, retries or expands scope, burning tokens without finishing.",
     "description": "Set a step limit, a token or cost budget, and timeouts on every tool. Detect repeated identical calls. Make tool errors tell it what to change, and give it a way to stop and report that it's stuck.",
-    "aliases": ["Infinite loop", "Budget limits"]
+    "aliases": ["Infinite loop", "Budget limits"],
+    "platforms": {
+      "anthropic": "Task budgets"
+    }
   },
   {
     "id": "compounding-errors",
@@ -732,7 +757,8 @@
     "aliases": ["Skills", "Procedural knowledge"],
     "platforms": {
       "anthropic": "Agent Skills",
-      "openai": "Skills (Codex)"
+      "openai": "Skills (shell tool)",
+      "google": "ADK Skills (experimental)"
     }
   },
   {
@@ -744,9 +770,7 @@
     "description": "The only way to know whether a prompt, model or retrieval change made things better or worse. Start with 20–50 real cases before writing much prompt; grow the set from production failures. Without evals every change is a guess.",
     "aliases": ["Evaluation", "LLM testing"],
     "platforms": {
-      "anthropic": "Console Evaluation tool",
-      "openai": "Evals API",
-      "google": "Vertex AI Gen AI evaluation"
+      "google": "Gemini Enterprise Agent Platform Evals"
     }
   },
   {
@@ -798,9 +822,9 @@
     "description": "You can't debug an agent from its final answer. Traces show which step went wrong, what context it had and what it cost. Redact secrets and personal data before storing them.",
     "aliases": ["LLM observability", "Spans"],
     "platforms": {
-      "anthropic": "Console logs",
+      "anthropic": "OpenTelemetry tracing",
       "openai": "Agents SDK tracing",
-      "google": "Vertex AI tracing"
+      "google": "Agent Platform observability (Cloud Trace)"
     }
   },
   {
@@ -868,7 +892,7 @@
     "description": "Catch off-topic requests, abuse, personal data and policy breaks with small fast classifiers or rules. They add latency and false positives, so run them in parallel where possible and tune on real traffic.",
     "aliases": ["Moderation", "Content filters", "Input/output filters"],
     "platforms": {
-      "openai": "Moderation API",
+      "openai": "Moderation API / Agents SDK guardrails",
       "google": "Safety settings"
     }
   },
@@ -936,7 +960,7 @@
     "platforms": {
       "anthropic": "Message Batches API",
       "openai": "Batch API",
-      "google": "Batch Mode"
+      "google": "Batch API"
     }
   },
   {
@@ -990,7 +1014,7 @@
     "description": "Low effort for simple routing and chat, high for hard problems. Thinking tokens are billed, so the default isn't always right. Set it per request type and check the effect in your evals.",
     "aliases": ["Thinking budget", "Reasoning effort"],
     "platforms": {
-      "anthropic": "effort / thinking budget",
+      "anthropic": "Effort (output_config.effort)",
       "openai": "reasoning.effort",
       "google": "thinkingBudget / thinkingLevel"
     }
@@ -1016,24 +1040,23 @@
     "title": "Fine-Tuning",
     "facets": {"area": "deploy", "kind": "technique", "stage": "scale"},
     "summary": "Further train a model on your examples to change its default behaviour.",
-    "description": "Reach for it after prompting, examples and retrieval are exhausted: to fix a format or style at scale, or to make a small model do one narrow task well. It teaches behaviour, not facts; use RAG for knowledge.",
+    "description": "Reach for it after prompting, examples and retrieval are exhausted: to fix a format or style at scale, or to make a small model do one narrow task well. It shapes behaviour far better than it adds facts; use RAG for knowledge.",
     "aliases": ["SFT", "Custom model", "Distillation"],
     "platforms": {
-      "anthropic": "Fine-tuning via Amazon Bedrock",
-      "openai": "Fine-tuning API",
-      "google": "Vertex AI tuning"
+      "openai": "Fine-tuning API (closed to new users)",
+      "google": "Agent Platform supervised tuning"
     }
   },
   {
     "id": "model-pinning",
     "title": "Pinning Model Versions",
     "facets": {"area": "deploy", "kind": "technique", "stage": "production"},
-    "summary": "Call a dated model snapshot, not a moving alias, and upgrade on purpose.",
-    "description": "An alias can change under you and silently shift outputs. Pin the snapshot, run your evals against the new one, then switch, with a rollback ready. Note deprecation dates: old snapshots get retired.",
+    "summary": "Call a fixed model snapshot, not a moving alias, and upgrade on purpose.",
+    "description": "An alias can change under you and silently shift outputs. Pin the exact snapshot id, run your evals against the new one, then switch, with a rollback ready. Note deprecation dates: old snapshots get retired.",
     "aliases": ["Model snapshot", "Deprecation"],
     "platforms": {
-      "anthropic": "Dated model ids",
-      "openai": "Dated snapshots",
+      "anthropic": "Pinned model IDs",
+      "openai": "Model snapshots",
       "google": "Stable model versions"
     }
   },
@@ -1043,11 +1066,11 @@
     "facets": {"area": "deploy", "kind": "concept", "stage": "production"},
     "summary": "Use the same models via your cloud provider for billing, regions and compliance.",
     "description": "Fits companies already on one cloud: one bill, existing IAM, private networking and data residency. New features may arrive later than on the provider's own API, and model ids and quotas differ.",
-    "aliases": ["Bedrock", "Vertex AI", "Azure OpenAI"],
+    "aliases": ["Bedrock", "Vertex AI", "Agent Platform", "Microsoft Foundry"],
     "platforms": {
-      "anthropic": "Amazon Bedrock, Google Vertex AI",
-      "openai": "Azure OpenAI in Foundry",
-      "google": "Vertex AI"
+      "anthropic": "Amazon Bedrock, Google Cloud, Microsoft Foundry",
+      "openai": "Azure OpenAI in Microsoft Foundry",
+      "google": "Gemini Enterprise Agent Platform"
     }
   },
   {
@@ -1079,12 +1102,12 @@
     "title": "Data Retention and Training",
     "facets": {"area": "deploy", "kind": "concept", "stage": "production"},
     "summary": "Know what the provider stores, for how long, and whether it trains on your data.",
-    "description": "API data is generally not used for training by default, but logs are kept for a period for abuse monitoring. Zero-data-retention agreements, regions and BAAs exist for sensitive workloads; check them before sending health or legal data.",
+    "description": "Paid API data is generally not used for training by default (some free tiers are). Retention varies: some providers keep logs for abuse monitoring, some models require it. Zero-data-retention terms, regions and BAAs exist; check them before sending health or legal data.",
     "aliases": ["ZDR", "Data residency", "Privacy"],
     "platforms": {
       "anthropic": "Zero data retention (by agreement)",
       "openai": "Zero data retention (by agreement)",
-      "google": "Vertex AI zero data retention"
+      "google": "Agent Platform zero data retention"
     }
   },
   {
@@ -1103,9 +1126,9 @@
     "description": "A prompt change or a looping agent can multiply the bill overnight. Log usage from every response, attribute it, set budget alerts and hard spend limits, and review the most expensive requests.",
     "aliases": ["Spend tracking", "Usage dashboard"],
     "platforms": {
-      "anthropic": "Console usage and cost",
+      "anthropic": "Console usage + Usage and Cost API",
       "openai": "Usage dashboard and limits",
-      "google": "Cloud Billing budgets"
+      "google": "AI Studio spend caps and usage"
     }
   }
 ]

@@ -5,11 +5,10 @@ item, and add a dated line at the top of **Done**.
 
 ## Open
 
-- [ ] **Review the LLM decks** (ADR-0017, ADR-0018 Proposed): llm-engineering (107 cards)
-      and llm-internals (100) were written from memory. Least sure: the Anthropic/OpenAI/Google
-      platform names (compaction, memory tool, skills, tool search, MCP support, effort
-      controls, fine-tuning via Bedrock), Gemini Computer Use and File Search, and research
-      claims (induction heads timing, attention sinks, hallucination mechanism, CoT faithfulness).
+- [ ] **LLM decks: open points from the 2026-10-31 review.** Couldn't confirm: Google's
+      ranking API name after the Agent Search rename, OpenAI Evals' replacement (Datasets?),
+      whether any Claude model is fine-tunable today. Provider features churn: re-check the
+      llm-engineering platform cells every few months. ADR-0017 and ADR-0018 still Proposed.
 - [ ] **Verify motion in a real browser.** Card slide (~0.7s spring) and 3D flip timing,
       jump-bar smooth scroll and section highlight were only checked frozen or headless.
 - [ ] **Review native-platform names.** Newer Material 3 Expressive names (ButtonGroup,
@@ -84,6 +83,7 @@ item, and add a dated line at the top of **Done**.
 
 ## Done
 
+- [x] 2026-10-31: Reviewed the LLM decks against current docs and papers: fixed 17 internals/engineering text errors (perplexity, KV cache, BPE, cosine 0…) and the provider cells (Claude sampling params and prefill now rejected, `output_config.format`, Workbench evals retired; OpenAI GPT-6 names, Evals and stored prompts shutting down, fine-tuning closed; Vertex AI renamed Agent Platform, `responseFormat`).
 - [x] 2026-10-31: Released v0.6.0.
 - [x] 2026-10-31: Two LLM decks: LLM Engineering (107 cards, Anthropic/OpenAI/Google equivalents, stage badge) and LLM Internals (100 cards, training-phase badge), a drawing per card; ADR-0017, ADR-0018.
 - [x] 2026-10-30: Released v0.5.1.

@@ -13,8 +13,8 @@
     "title": "Byte-Pair Encoding (BPE)",
     "facets": {"area": "tokens", "kind": "technique", "phase": "pretraining"},
     "summary": "Build a vocabulary by repeatedly merging the most frequent pair of symbols.",
-    "description": "Starts from bytes, so any text can be encoded with no unknown token. Frequent strings like \" the\" become single tokens, rare ones stay in pieces. Most LLM tokenizers are BPE or close relatives like SentencePiece and WordPiece.",
-    "aliases": ["SentencePiece", "WordPiece", "Subword tokenization"]
+    "description": "Byte-level BPE (GPT-2 onward) starts from bytes, so any text encodes with no unknown token. Frequent strings like \" the\" become single tokens. Most LLMs use BPE (via tiktoken or SentencePiece); Unigram and WordPiece are close relatives.",
+    "aliases": ["SentencePiece", "Byte-level BPE", "Subword tokenization"]
   },
   {
     "id": "vocabulary",
@@ -70,7 +70,7 @@
     "title": "Decoder-Only Model",
     "facets": {"area": "architecture", "kind": "concept", "phase": "any"},
     "summary": "One stack that reads the prompt and generates the reply with causal attention.",
-    "description": "GPT, Claude, Gemini and Llama are decoder-only: input and output are one sequence and each token sees only earlier ones. Simpler to scale than encoder-decoder models, which suit fixed input→output tasks like translation.",
+    "description": "GPT, Llama and most chat LLMs are decoder-only: input and output are one sequence and each token sees only earlier ones. Simpler to scale than encoder-decoder models, which suit fixed input→output tasks like translation.",
     "aliases": ["Autoregressive model", "GPT-style"]
   },
   {
@@ -79,7 +79,7 @@
     "facets": {"area": "architecture", "kind": "concept", "phase": "any"},
     "summary": "Models that see the whole text both ways and output representations, not text.",
     "description": "BERT-style models are the workhorses of embeddings, classification and reranking: small, fast and good at understanding, but they don't generate. Pick one when you need a vector or a label, not a sentence.",
-    "aliases": ["BERT", "Bidirectional encoder", "Encoder-decoder", "T5"]
+    "aliases": ["BERT", "Bidirectional encoder"]
   },
   {
     "id": "token-embedding",
@@ -250,7 +250,7 @@
     "title": "Attention Sinks",
     "facets": {"area": "attention", "kind": "phenomenon", "phase": "inference"},
     "summary": "Models park lots of attention on the first tokens, whatever they say.",
-    "description": "Softmax must put attention somewhere, so heads with nothing to look at dump it on the start. Drop those tokens from a sliding cache and quality collapses; keeping them lets streaming generation run indefinitely.",
+    "description": "Softmax must put attention somewhere, so heads with nothing to look at dump it on the first tokens. Evict them from a sliding cache and quality collapses; keeping them lets streaming run for millions of tokens, though evicted text is still forgotten.",
     "aliases": ["StreamingLLM", "First-token attention"]
   },
   {
@@ -266,7 +266,7 @@
     "title": "Position Bias",
     "facets": {"area": "attention", "kind": "phenomenon", "phase": "inference"},
     "summary": "Attention favours the start and the end of the context over the middle.",
-    "description": "Training data and attention sinks put weight on the first tokens; the recent tokens matter most for the next word. Facts buried mid-context get used less, which is the mechanism behind \"lost in the middle\".",
+    "description": "Many models attend more to the first tokens (attention sinks) and the most recent ones. Facts buried mid-context get used less; this U-shaped attention bias is one leading explanation of \"lost in the middle\".",
     "aliases": ["Recency bias", "Primacy bias", "Lost in the middle"]
   },
   {
@@ -292,7 +292,7 @@
     "title": "Cross-Entropy Loss",
     "facets": {"area": "training", "kind": "concept", "phase": "pretraining"},
     "summary": "How wrong the model was: minus the log of the probability it gave the right token.",
-    "description": "Low when the model was confident and right, very high when confident and wrong. Averaged over tokens it's the number training pushes down; perplexity is its exponent.",
+    "description": "Low when the model was confident and right, very high when confident and wrong. Averaged over tokens it's the number training pushes down; perplexity is e raised to it (exp of the loss).",
     "aliases": ["Log loss", "Perplexity", "Negative log-likelihood"]
   },
   {
@@ -300,7 +300,7 @@
     "title": "Backpropagation",
     "facets": {"area": "training", "kind": "technique", "phase": "pretraining"},
     "summary": "Work out how much each weight contributed to the loss, layer by layer backwards.",
-    "description": "The chain rule run from the loss back through every layer gives a gradient per parameter. The optimiser then nudges each weight against its gradient. Done over billions of steps, this is what training is.",
+    "description": "The chain rule run from the loss back through every layer gives a gradient per parameter. The optimiser then nudges each weight against its gradient. Repeated over up to millions of steps, each on millions of tokens, this is training.",
     "aliases": ["Gradient descent", "Gradients"]
   },
   {
@@ -308,7 +308,7 @@
     "title": "Adam Optimizer",
     "facets": {"area": "training", "kind": "component", "phase": "pretraining"},
     "summary": "Updates each weight using running averages of its gradient and gradient size.",
-    "description": "Adapts the step size per parameter, which makes huge transformers trainable. It keeps two extra numbers per weight, so optimizer state can triple training memory. AdamW adds proper weight decay and is the usual choice.",
+    "description": "Adapts the step size per parameter, which makes huge transformers trainable. It keeps two extra numbers per weight; in mixed precision, optimizer state and master weights take ~12 bytes per parameter. AdamW adds proper weight decay.",
     "aliases": ["AdamW", "Optimizer state"]
   },
   {
@@ -349,7 +349,7 @@
     "title": "Mixed Precision",
     "facets": {"area": "training", "kind": "technique", "phase": "pretraining"},
     "summary": "Do most maths in 16-bit (bf16) or 8-bit while keeping a 32-bit master copy of weights.",
-    "description": "Halves memory and roughly doubles throughput on modern GPUs. bf16 keeps fp32's range, avoiding the overflow tricks fp16 needed. FP8 training pushes further with careful scaling.",
+    "description": "Cuts activation memory and multiplies throughput on tensor-core GPUs. bf16 keeps fp32's range, avoiding the loss scaling fp16 needed. FP8 training pushes further with careful scaling.",
     "aliases": ["bf16", "FP8", "fp16"]
   },
   {
@@ -491,7 +491,7 @@
     "essential": true,
     "facets": {"area": "inference", "kind": "component", "phase": "inference"},
     "summary": "Keep each past token's keys and values so they aren't recomputed for every new token.",
-    "description": "Turns generation from quadratic to linear work, at the cost of memory that grows with context length and batch size. Prompt caching across requests is reusing this cache for a shared prefix.",
+    "description": "Each new token then computes only its own keys and values and reads the cache, instead of reprocessing the whole sequence. The price is memory that grows with context and batch. Prompt caching reuses this cache for a shared prefix.",
     "aliases": ["Key-value cache"]
   },
   {
@@ -556,8 +556,8 @@
     "title": "Speculative Decoding",
     "facets": {"area": "inference", "kind": "technique", "phase": "inference"},
     "summary": "A small model drafts several tokens; the big model checks them all in one pass.",
-    "description": "Accepted drafts give several tokens for one big-model step, often 2–3× faster with exactly the same output distribution. Works best on predictable text like code and boilerplate.",
-    "aliases": ["Draft model", "Assisted generation", "Medusa"]
+    "description": "Accepted drafts give several tokens for one big-model step, often 2–3× faster. With standard rejection sampling the output distribution is exactly the big model's. Works best on predictable text like code and boilerplate.",
+    "aliases": ["Draft model", "Assisted generation"]
   },
   {
     "id": "continuous-batching",
@@ -582,7 +582,7 @@
     "facets": {"area": "inference", "kind": "technique", "phase": "inference"},
     "summary": "Sample several reasoning paths and take the majority answer.",
     "description": "Errors scatter while correct answers agree, so voting raises accuracy on maths and logic. Costs several times the tokens. Needs a final answer that can be compared, like a number or a label.",
-    "aliases": ["Majority voting", "Best-of-n"]
+    "aliases": ["Majority voting"]
   },
   {
     "id": "quantization",
@@ -656,7 +656,7 @@
     "title": "Emergent Abilities",
     "facets": {"area": "scaling", "kind": "phenomenon", "phase": "pretraining"},
     "summary": "Skills that seem absent in small models and appear suddenly at larger scale.",
-    "description": "Multi-step arithmetic or following complex instructions can jump from chance to good. Some jumps are an artefact of all-or-nothing metrics; smoother metrics show gradual gains. Either way, small-model tests underpredict.",
+    "description": "Multi-step arithmetic or following complex instructions can jump from chance to good. Some jumps are an artefact of all-or-nothing metrics; smoother metrics show gradual gains. Exact-match tests on small models underpredict.",
     "aliases": ["Emergence", "Phase transitions"]
   },
   {
@@ -672,7 +672,7 @@
     "title": "Grokking",
     "facets": {"area": "scaling", "kind": "phenomenon", "phase": "pretraining"},
     "summary": "A model memorises training data, then much later suddenly generalises.",
-    "description": "Seen on small algorithmic tasks: training loss is flat at zero for a long time while test accuracy jumps late, as a simpler general solution replaces memorisation. A reminder that loss curves don't show everything.",
+    "description": "Seen on small algorithmic tasks: training accuracy is perfect early while test accuracy stays near chance, then jumps much later as weight decay favours a simpler general solution over memorisation. Loss curves don't show everything.",
     "aliases": ["Delayed generalisation"]
   },
   {
