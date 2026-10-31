@@ -25,21 +25,15 @@ item, and add a dated line at the top of **Done**.
 - [ ] **Review Proposed ADR-0015 and the essential picks** (about 20% of each deck, chosen by
       judgement). Open questions: css has no essential card in colour or architecture
       (candidates: `color-scheme`, `currentcolor`, `design-tokens`).
-- [ ] **Social card still says six decks.** `public/og.webp` predates the testing,
-      Next.js and LLM decks; regenerate it with ten.
-
 - [ ] **Dark mode.** pulp's tokens support it, but the page is pinned to light: card
       drawings use a light palette (#1a1a2e ink). Needs drawings that work on dark, or a light
       plate behind them.
 - [ ] **Toast look.** pulp's toast is its info Alert; the redesign canvas drew a dark toast.
       Decide whether pulp should offer that variant.
-- [ ] **README demo image** (`docs/static/demo.png`) and `public/og.webp` show the old UI.
 
 ### Advertising readiness
 
-- [ ] **A8 Open Graph live.** The tags and `og.webp` exist in the repo but the live site has
-      none yet (og.webp 404), so shared links show no preview — commit, then `/release minor`
-      to deploy, and check a LinkedIn preview (WebP card; switch to PNG if it comes up blank).
+None open: the 2026-10-31 assessment's gaps are closed (see Done).
 
 ### Scaffold follow-ups
 
@@ -48,6 +42,9 @@ item, and add a dated line at the top of **Done**.
 
 ## Done
 
+- [x] 2026-10-31: Closed the maturity gaps: new social card and README demo image of the v1.0.0 design, descriptions and keywords list all ten decks (package.json, index.html, GitHub repo and topics), v1.0.0 release notes, README no longer calls facets badges.
+- [x] 2026-10-31: Maturity assessment — verdict Ready after blockers, 4 gaps added to Open.
+- [x] 2026-10-31: A8 Open Graph live: the tags and `og.webp` are served on flashcards.pearpages.com.
 - [x] 2026-10-31: Accepted ADR-0019 (UI on the pulp design system).
 - [x] 2026-10-31: Released v1.0.0.
 - [x] 2026-10-31: Redesigned the app on the pulp design system, following the "Flashcards: mobile redesign on pulp" canvas: deck list, study screen with progress and Show answer / I know this / Next card, filters in a sheet with counts and switches, browse sections as surfaces, toasts with Undo; ADR-0019.

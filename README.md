@@ -6,11 +6,11 @@
 [![Release](https://img.shields.io/github/v/release/pearpages/flashcards)](https://github.com/pearpages/flashcards/releases)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-A mobile-first flashcard app with ten decks: design systems, CSS, accessibility, web performance, web security, system design, testing, Next.js, LLM engineering and LLM internals. Every card has a wireframe drawing, and each deck brings its own filters and badges. About a fifth of every deck is starred ★ as the essentials you must know, and you can hide the cards you already know.
+A mobile-first flashcard app with ten decks: design systems, CSS, accessibility, web performance, web security, system design, testing, Next.js, LLM engineering and LLM internals. Every card has a wireframe drawing, and each deck brings its own filters and facets. About a fifth of every deck is starred ★ as the essentials you must know, and you can hide the cards you already know.
 
 The first deck, **Design System**, has 155 components, each tagged three ways: its purpose (forms, navigation, overlays…), its layer (primitive, component, pattern) and its atomic design level (atom, molecule, organism, template). Each card has wireframe drawings and, for most, the iOS and Android equivalents.
 
-A second deck, **Accessibility**, covers 100 ARIA patterns, roles and attributes, techniques and WCAG 2.2 criteria, filtered by kind and by who they help most (screen reader, keyboard, low vision, motor, cognitive, hearing, vestibular, photosensitive), with the WCAG level as a badge and the SwiftUI and Compose equivalents.
+A second deck, **Accessibility**, covers 100 ARIA patterns, roles and attributes, techniques and WCAG 2.2 criteria, filtered by kind and by who they help most (screen reader, keyboard, low vision, motor, cognitive, hearing, vestibular, photosensitive), with the WCAG level on each card and the SwiftUI and Compose equivalents.
 
 A third deck, **System Design**, has 104 building blocks, patterns and principles of backend systems (caching, messaging, consistency, reliability…), each with the AWS, Google Cloud and Azure service where one exists.
 
@@ -30,7 +30,7 @@ A tenth deck, **LLM Internals**, has 100 cards on how the models work inside: to
 
 **Try it: [flashcards.pearpages.com](https://flashcards.pearpages.com)** — works on phones and desktop, no sign-up.
 
-<img src="./docs/static/demo.png" alt="Two phone screens: the Sheet card in study mode with desktop and mobile drawings, and the browse list grouped by purpose" width="500" />
+<img src="./docs/static/demo.png" alt="Two phone screens: the Sheet card in study mode with its desktop and mobile drawings, progress bar and Show answer button, and the accessibility browse list with search, section chips and starred essential cards" width="500" />
 
 ## Tech Stack
 
@@ -139,9 +139,9 @@ Create `src/decks/<deck-id>/` with a `deck.json` (its `id` must match the folder
 
 A deck whose cards list equivalents declares the columns, in display order, in `deck.json`: `"platforms": [{ "key": "aws", "label": "AWS" }, …]`. A card key that isn't declared fails `pnpm validate`.
 
-Add `"filter": false` to a facet to show it as a badge on each card without a filter row (the design-system deck does this for `atomic`).
+Add `"filter": false` to a facet to show it on each card (in the line of facets above the title) without a filter row (the design-system deck does this for `atomic`).
 
-In the accessibility deck, `kind` (pattern, role, attribute, technique, criterion) groups the list, `helps` filters by who benefits most, and `level` (WCAG A/AA/AAA of the main success criterion) is a badge; criteria list their `SC x.y.z` number in `aliases`, so search finds them.
+In the accessibility deck, `kind` (pattern, role, attribute, technique, criterion) groups the list, `helps` filters by who benefits most, and `level` (WCAG A/AA/AAA of the main success criterion) shows on the card; criteria list their `SC x.y.z` number in `aliases`, so search finds them.
 
 In the design-system deck, `layer` means `primitive` (unopinionated building block), `component` or `pattern` (a composition that solves a recurring problem).
 
