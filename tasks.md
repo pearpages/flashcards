@@ -42,6 +42,7 @@ None open: the 2026-10-31 assessment's gaps are closed (see Done).
 
 ## Done
 
+- [x] 2026-10-31: Maturity assessment — verdict Ready to advertise, 0 gaps added to Open.
 - [x] 2026-10-31: Released v1.0.1.
 - [x] 2026-10-31: Closed the maturity gaps: new social card and README demo image of the v1.0.0 design, descriptions and keywords list all ten decks (package.json, index.html, GitHub repo and topics), v1.0.0 release notes, README no longer calls facets badges.
 - [x] 2026-10-31: Maturity assessment — verdict Ready after blockers, 4 gaps added to Open.
