@@ -84,6 +84,7 @@ item, and add a dated line at the top of **Done**.
 
 ## Done
 
+- [x] 2026-10-31: Released v0.6.0.
 - [x] 2026-10-31: Two LLM decks: LLM Engineering (107 cards, Anthropic/OpenAI/Google equivalents, stage badge) and LLM Internals (100 cards, training-phase badge), a drawing per card; ADR-0017, ADR-0018.
 - [x] 2026-10-30: Released v0.5.1.
 - [x] 2026-10-30: Card drawings: the image box hugs the drawing (scaled up to 280px wide, capped at 30% of the screen height) instead of stretching to fill the taller card; content is centred vertically.
