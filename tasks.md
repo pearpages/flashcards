@@ -28,7 +28,6 @@ item, and add a dated line at the top of **Done**.
 - [ ] **Social card still says six decks.** `public/og.webp` predates the testing,
       Next.js and LLM decks; regenerate it with ten.
 
-- [ ] **Review Proposed ADR-0019** (UI on the pulp design system).
 - [ ] **Dark mode.** pulp's tokens support it, but the page is pinned to light: card
       drawings use a light palette (#1a1a2e ink). Needs drawings that work on dark, or a light
       plate behind them.
@@ -49,6 +48,7 @@ item, and add a dated line at the top of **Done**.
 
 ## Done
 
+- [x] 2026-10-31: Accepted ADR-0019 (UI on the pulp design system).
 - [x] 2026-10-31: Released v1.0.0.
 - [x] 2026-10-31: Redesigned the app on the pulp design system, following the "Flashcards: mobile redesign on pulp" canvas: deck list, study screen with progress and Show answer / I know this / Next card, filters in a sheet with counts and switches, browse sections as surfaces, toasts with Undo; ADR-0019.
 - [x] 2026-10-31: Released v0.6.2.

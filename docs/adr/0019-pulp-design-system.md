@@ -1,7 +1,7 @@
 # 0019. Build the UI on the pulp design system
 
 - **Date:** 2026-10-31
-- **Status:** Proposed
+- **Status:** Accepted
 
 ## Context
 
