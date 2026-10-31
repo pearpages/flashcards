@@ -1,0 +1,822 @@
+[
+  {
+    "id": "tokenization",
+    "title": "Tokenization",
+    "essential": true,
+    "facets": {"area": "tokens", "kind": "concept", "phase": "any"},
+    "summary": "Splitting text into the integer ids a model actually reads and writes.",
+    "description": "The model never sees characters, only token ids from a fixed vocabulary. Common words are one token; rare words, numbers and code split into pieces. That is why tokens, not words, set prices, limits and some odd blind spots.",
+    "aliases": ["Tokenizer", "Token ids"]
+  },
+  {
+    "id": "bpe",
+    "title": "Byte-Pair Encoding (BPE)",
+    "facets": {"area": "tokens", "kind": "technique", "phase": "pretraining"},
+    "summary": "Build a vocabulary by repeatedly merging the most frequent pair of symbols.",
+    "description": "Starts from bytes, so any text can be encoded with no unknown token. Frequent strings like \" the\" become single tokens, rare ones stay in pieces. Most LLM tokenizers are BPE or close relatives like SentencePiece and WordPiece.",
+    "aliases": ["SentencePiece", "WordPiece", "Subword tokenization"]
+  },
+  {
+    "id": "vocabulary",
+    "title": "Vocabulary",
+    "facets": {"area": "tokens", "kind": "component", "phase": "pretraining"},
+    "summary": "The fixed list of tokens a model knows, typically 32k to 256k entries.",
+    "description": "Bigger vocabularies encode text in fewer tokens (faster, cheaper, more fits in context) but need bigger embedding and output layers. It is fixed at pretraining; changing it later means retraining those layers.",
+    "aliases": ["Vocab size"]
+  },
+  {
+    "id": "special-tokens",
+    "title": "Special Tokens",
+    "facets": {"area": "tokens", "kind": "component", "phase": "post-training"},
+    "summary": "Reserved tokens that mark structure: start, end, turn boundaries, tool calls.",
+    "description": "The model learns that an end-of-turn token means stop and that a role marker means a new speaker. They can't be typed as normal text, which keeps users from faking a system turn, as long as the app escapes input properly.",
+    "aliases": ["BOS / EOS", "Control tokens"]
+  },
+  {
+    "id": "chat-template",
+    "title": "Chat Template",
+    "facets": {"area": "tokens", "kind": "concept", "phase": "post-training"},
+    "summary": "The exact format that turns a list of messages into one token sequence.",
+    "description": "Roles, turn markers and tool calls are serialised in the format the model was fine-tuned on. Use the wrong template with an open model and quality drops sharply. APIs apply it for you; local inference must match it.",
+    "aliases": ["Prompt format", "ChatML"]
+  },
+  {
+    "id": "tokenizer-blind-spots",
+    "title": "Tokenizer Blind Spots",
+    "facets": {"area": "tokens", "kind": "phenomenon", "phase": "inference"},
+    "summary": "Models stumble at spelling, counting letters and some arithmetic because they see tokens.",
+    "description": "\"strawberry\" may be two tokens, so the letters inside are never seen directly. Numbers split unevenly, which hurts digit-level maths. Ask the model to spell out first or use a tool, rather than blaming its reasoning.",
+    "aliases": ["Letter counting", "Glitch tokens"]
+  },
+  {
+    "id": "token-tax",
+    "title": "Language Token Tax",
+    "facets": {"area": "tokens", "kind": "phenomenon", "phase": "any"},
+    "summary": "The same sentence costs more tokens in many non-English languages.",
+    "description": "Tokenizers trained mostly on English split other scripts into more pieces, so those users pay more, wait longer and fit less in the context. Newer tokenizers with bigger multilingual vocabularies shrink the gap.",
+    "aliases": ["Tokenizer fairness", "Multilingual tokens"]
+  },
+  {
+    "id": "transformer",
+    "title": "Transformer",
+    "essential": true,
+    "facets": {"area": "architecture", "kind": "concept", "phase": "any"},
+    "summary": "The architecture behind LLMs: stacked blocks of attention plus feed-forward layers.",
+    "description": "Every token passes through the same blocks; attention lets tokens share information, the feed-forward layer transforms each one. Unlike RNNs it trains on all positions in parallel, which is what made huge models practical.",
+    "aliases": ["Attention Is All You Need", "Transformer block"]
+  },
+  {
+    "id": "decoder-only",
+    "title": "Decoder-Only Model",
+    "facets": {"area": "architecture", "kind": "concept", "phase": "any"},
+    "summary": "One stack that reads the prompt and generates the reply with causal attention.",
+    "description": "GPT, Claude, Gemini and Llama are decoder-only: input and output are one sequence and each token sees only earlier ones. Simpler to scale than encoder-decoder models, which suit fixed input→output tasks like translation.",
+    "aliases": ["Autoregressive model", "GPT-style"]
+  },
+  {
+    "id": "encoder-models",
+    "title": "Encoder-Only Models",
+    "facets": {"area": "architecture", "kind": "concept", "phase": "any"},
+    "summary": "Models that see the whole text both ways and output representations, not text.",
+    "description": "BERT-style models are the workhorses of embeddings, classification and reranking: small, fast and good at understanding, but they don't generate. Pick one when you need a vector or a label, not a sentence.",
+    "aliases": ["BERT", "Bidirectional encoder", "Encoder-decoder", "T5"]
+  },
+  {
+    "id": "token-embedding",
+    "title": "Token Embedding",
+    "essential": true,
+    "facets": {"area": "architecture", "kind": "component", "phase": "any"},
+    "summary": "A learned vector per token id: the first layer turns ids into numbers the network uses.",
+    "description": "Each token id looks up a row in a big matrix. The vectors are learned so that tokens used alike end up near each other. From then on the model works on vectors, never on ids.",
+    "aliases": ["Embedding layer", "Embedding matrix"]
+  },
+  {
+    "id": "positional-encoding",
+    "title": "Positional Encoding",
+    "facets": {"area": "architecture", "kind": "component", "phase": "any"},
+    "summary": "How the model knows word order, since attention by itself ignores position.",
+    "description": "Without it, \"dog bites man\" and \"man bites dog\" look the same. Early transformers added fixed sine waves or learned position vectors; modern LLMs mostly rotate queries and keys instead (RoPE).",
+    "aliases": ["Position embeddings", "Sinusoidal encoding"]
+  },
+  {
+    "id": "rope",
+    "title": "Rotary Position Embedding (RoPE)",
+    "facets": {"area": "architecture", "kind": "technique", "phase": "any"},
+    "summary": "Encode position by rotating query and key vectors by an angle that grows with position.",
+    "description": "The attention score then depends on how far apart two tokens are, not their absolute positions. It's the reason context windows can be stretched after training by rescaling the rotation (NTK, YaRN).",
+    "aliases": ["RoPE", "Rotary embeddings"]
+  },
+  {
+    "id": "residual-stream",
+    "title": "Residual Stream",
+    "facets": {"area": "architecture", "kind": "concept", "phase": "any"},
+    "summary": "The running vector per token that every layer reads from and adds its result to.",
+    "description": "Layers don't replace a token's representation; they add to it. This skip connection keeps gradients flowing through deep stacks and gives interpretability a shared space where features can be read out.",
+    "aliases": ["Skip connection", "Residual connection"]
+  },
+  {
+    "id": "layer-norm",
+    "title": "Layer Normalization",
+    "facets": {"area": "architecture", "kind": "component", "phase": "any"},
+    "summary": "Rescale each token's vector to a steady size before attention and feed-forward.",
+    "description": "Keeps activations from blowing up or vanishing in deep stacks, which makes training stable. Modern LLMs use RMSNorm placed before each sublayer (pre-norm), cheaper and steadier than the original.",
+    "aliases": ["RMSNorm", "Pre-norm"]
+  },
+  {
+    "id": "feed-forward",
+    "title": "Feed-Forward Layer",
+    "facets": {"area": "architecture", "kind": "component", "phase": "any"},
+    "summary": "A per-token MLP after attention that holds most of the model's parameters.",
+    "description": "Expands each token's vector several times wider, applies a nonlinearity (often SwiGLU) and projects back. Much of the model's stored knowledge is thought to live in these weights.",
+    "aliases": ["MLP", "FFN", "SwiGLU"]
+  },
+  {
+    "id": "logits",
+    "title": "Logits",
+    "essential": true,
+    "facets": {"area": "architecture", "kind": "concept", "phase": "inference"},
+    "summary": "The raw score the model gives every token in the vocabulary for the next position.",
+    "description": "The last layer projects the final vector onto the vocabulary, one number per token. Softmax turns them into probabilities, and sampling picks one. Temperature, top-p and logit bias all act on this step.",
+    "aliases": ["Unembedding", "LM head"]
+  },
+  {
+    "id": "softmax",
+    "title": "Softmax",
+    "facets": {"area": "architecture", "kind": "component", "phase": "any"},
+    "summary": "Turn a list of scores into probabilities that are positive and add up to one.",
+    "description": "Used twice: to weight attention over tokens and to turn logits into next-token probabilities. It exaggerates gaps between scores; dividing by a temperature first flattens or sharpens it.",
+    "aliases": ["Normalised exponential"]
+  },
+  {
+    "id": "parameters",
+    "title": "Parameters",
+    "facets": {"area": "architecture", "kind": "concept", "phase": "any"},
+    "summary": "The learned weights of the model; \"70B\" means seventy billion of them.",
+    "description": "More parameters can store more knowledge and skills but need more memory and compute per token. Memory needed ≈ parameters × bytes per weight: 70B at 16-bit is about 140 GB before the KV cache.",
+    "aliases": ["Weights", "Model size"]
+  },
+  {
+    "id": "mixture-of-experts",
+    "title": "Mixture of Experts (MoE)",
+    "essential": true,
+    "facets": {"area": "architecture", "kind": "technique", "phase": "any"},
+    "summary": "Many feed-forward \"experts\" per layer, with a router sending each token to a few.",
+    "description": "Total parameters can be huge while compute per token stays small, because only the chosen experts run. All experts still have to sit in memory, and the router needs balancing so a few experts don't take all the work.",
+    "aliases": ["MoE", "Sparse model", "Router"]
+  },
+  {
+    "id": "state-space-models",
+    "title": "State-Space Models",
+    "facets": {"area": "architecture", "kind": "concept", "phase": "any"},
+    "summary": "Recurrent-style layers like Mamba that process sequences in linear time.",
+    "description": "They keep a fixed-size state instead of attending to every earlier token, so memory doesn't grow with context. Recall of exact details is weaker; hybrids mix a few attention layers in to recover it.",
+    "aliases": ["Mamba", "Linear attention", "Hybrid models"]
+  },
+  {
+    "id": "vision-encoder",
+    "title": "Vision Encoder",
+    "facets": {"area": "architecture", "kind": "component", "phase": "any"},
+    "summary": "Turns an image into patch embeddings the language model reads like tokens.",
+    "description": "The image is cut into patches, encoded (often by a ViT) and projected into the same space as text tokens. That's why images cost tokens by resolution and why fine print can be missed.",
+    "aliases": ["ViT", "Image patches", "Multimodal"]
+  },
+  {
+    "id": "self-attention",
+    "title": "Self-Attention",
+    "essential": true,
+    "facets": {"area": "attention", "kind": "concept", "phase": "any"},
+    "summary": "Each token looks at the other tokens and pulls in information from the relevant ones.",
+    "description": "It's how \"it\" gets linked to the noun it refers to, many tokens back. Every token scores every other, normalises the scores with softmax and takes a weighted mix of their values. It is the heart of the transformer.",
+    "aliases": ["Attention", "Scaled dot-product attention"]
+  },
+  {
+    "id": "query-key-value",
+    "title": "Query, Key and Value",
+    "facets": {"area": "attention", "kind": "component", "phase": "any"},
+    "summary": "Each token makes a query (what I want), a key (what I offer) and a value (what I pass on).",
+    "description": "Query·key dot products decide how much attention goes where; the values are what gets mixed in. All three are learned linear projections of the token's vector, separate for every head and layer.",
+    "aliases": ["QKV", "Q, K, V"]
+  },
+  {
+    "id": "multi-head-attention",
+    "title": "Multi-Head Attention",
+    "facets": {"area": "attention", "kind": "component", "phase": "any"},
+    "summary": "Run several attention patterns in parallel, each in its own smaller subspace.",
+    "description": "One head might track syntax, another coreference, another the previous token. Their outputs are concatenated and projected back. More heads give more kinds of relation per layer at about the same cost.",
+    "aliases": ["Attention heads", "MHA"]
+  },
+  {
+    "id": "causal-mask",
+    "title": "Causal Mask",
+    "facets": {"area": "attention", "kind": "component", "phase": "any"},
+    "summary": "Stops each token from attending to tokens after it, so the model can't peek ahead.",
+    "description": "During training the whole sequence is processed at once; the mask makes every position predict its next token from the past only. It's also why a model reads a prompt strictly left to right.",
+    "aliases": ["Masked attention", "Autoregressive mask"]
+  },
+  {
+    "id": "quadratic-attention",
+    "title": "Quadratic Attention Cost",
+    "facets": {"area": "attention", "kind": "phenomenon", "phase": "any"},
+    "summary": "Every token attends to every other, so compute grows with the square of the length.",
+    "description": "Doubling the context quadruples attention work, which is why long contexts are slow and expensive. FlashAttention cuts memory traffic, sliding windows and sparse patterns cut the work, and linear-time models avoid it.",
+    "aliases": ["O(n²)", "Long-context cost"]
+  },
+  {
+    "id": "grouped-query-attention",
+    "title": "Grouped-Query Attention",
+    "facets": {"area": "attention", "kind": "technique", "phase": "inference"},
+    "summary": "Several query heads share one key/value head, shrinking the KV cache.",
+    "description": "The KV cache, not compute, limits long contexts and batch size. Sharing keys and values across groups of heads cuts it several-fold with little quality loss; multi-query attention shares one across all.",
+    "aliases": ["GQA", "MQA", "Multi-query attention"]
+  },
+  {
+    "id": "flash-attention",
+    "title": "FlashAttention",
+    "facets": {"area": "attention", "kind": "technique", "phase": "any"},
+    "summary": "Compute exact attention in tiles that stay in fast on-chip memory.",
+    "description": "Standard attention writes a huge score matrix to GPU memory and reads it back. FlashAttention never materialises it, so it's several times faster and uses linear memory, with the same result. Now standard everywhere.",
+    "aliases": ["Fused attention", "IO-aware attention"]
+  },
+  {
+    "id": "sliding-window-attention",
+    "title": "Sliding-Window Attention",
+    "facets": {"area": "attention", "kind": "technique", "phase": "any"},
+    "summary": "Each token attends only to the last few thousand tokens, not the whole context.",
+    "description": "Turns quadratic cost into linear for those layers. Information still travels further by hopping across stacked layers, and models often interleave window layers with a few full-attention ones.",
+    "aliases": ["Local attention", "Sparse attention"]
+  },
+  {
+    "id": "attention-sink",
+    "title": "Attention Sinks",
+    "facets": {"area": "attention", "kind": "phenomenon", "phase": "inference"},
+    "summary": "Models park lots of attention on the first tokens, whatever they say.",
+    "description": "Softmax must put attention somewhere, so heads with nothing to look at dump it on the start. Drop those tokens from a sliding cache and quality collapses; keeping them lets streaming generation run indefinitely.",
+    "aliases": ["StreamingLLM", "First-token attention"]
+  },
+  {
+    "id": "cross-attention",
+    "title": "Cross-Attention",
+    "facets": {"area": "attention", "kind": "component", "phase": "any"},
+    "summary": "Queries from one sequence attend to keys and values from another.",
+    "description": "How encoder-decoder models let the output read the input, and how some multimodal models let text read image features. Decoder-only LLMs instead put everything in one sequence and use self-attention.",
+    "aliases": ["Encoder-decoder attention"]
+  },
+  {
+    "id": "position-bias",
+    "title": "Position Bias",
+    "facets": {"area": "attention", "kind": "phenomenon", "phase": "inference"},
+    "summary": "Attention favours the start and the end of the context over the middle.",
+    "description": "Training data and attention sinks put weight on the first tokens; the recent tokens matter most for the next word. Facts buried mid-context get used less, which is the mechanism behind \"lost in the middle\".",
+    "aliases": ["Recency bias", "Primacy bias", "Lost in the middle"]
+  },
+  {
+    "id": "pretraining",
+    "title": "Pretraining",
+    "essential": true,
+    "facets": {"area": "training", "kind": "concept", "phase": "pretraining"},
+    "summary": "Training on trillions of tokens of text to predict the next token.",
+    "description": "Where almost all knowledge and general skill come from, and almost all the compute goes. The result is a base model: it continues text brilliantly but doesn't follow instructions or hold a conversation yet.",
+    "aliases": ["Base model training", "Foundation model"]
+  },
+  {
+    "id": "next-token-prediction",
+    "title": "Next-Token Prediction",
+    "essential": true,
+    "facets": {"area": "training", "kind": "concept", "phase": "pretraining"},
+    "summary": "The training task: given the text so far, predict the probability of each next token.",
+    "description": "Simple, needs no labels, and to do it well a model must learn grammar, facts, code and some reasoning. It also explains failure modes: the model produces likely text, not checked facts.",
+    "aliases": ["Language modelling", "Causal LM objective"]
+  },
+  {
+    "id": "cross-entropy-loss",
+    "title": "Cross-Entropy Loss",
+    "facets": {"area": "training", "kind": "concept", "phase": "pretraining"},
+    "summary": "How wrong the model was: minus the log of the probability it gave the right token.",
+    "description": "Low when the model was confident and right, very high when confident and wrong. Averaged over tokens it's the number training pushes down; perplexity is its exponent.",
+    "aliases": ["Log loss", "Perplexity", "Negative log-likelihood"]
+  },
+  {
+    "id": "backpropagation",
+    "title": "Backpropagation",
+    "facets": {"area": "training", "kind": "technique", "phase": "pretraining"},
+    "summary": "Work out how much each weight contributed to the loss, layer by layer backwards.",
+    "description": "The chain rule run from the loss back through every layer gives a gradient per parameter. The optimiser then nudges each weight against its gradient. Done over billions of steps, this is what training is.",
+    "aliases": ["Gradient descent", "Gradients"]
+  },
+  {
+    "id": "adam-optimizer",
+    "title": "Adam Optimizer",
+    "facets": {"area": "training", "kind": "component", "phase": "pretraining"},
+    "summary": "Updates each weight using running averages of its gradient and gradient size.",
+    "description": "Adapts the step size per parameter, which makes huge transformers trainable. It keeps two extra numbers per weight, so optimizer state can triple training memory. AdamW adds proper weight decay and is the usual choice.",
+    "aliases": ["AdamW", "Optimizer state"]
+  },
+  {
+    "id": "learning-rate-schedule",
+    "title": "Learning Rate Schedule",
+    "facets": {"area": "training", "kind": "technique", "phase": "pretraining"},
+    "summary": "Warm up the step size, then decay it over training.",
+    "description": "Too high and training diverges with loss spikes; too low and it crawls. Warmup avoids early instability; cosine or step decay lets the model settle into a good minimum at the end.",
+    "aliases": ["Warmup", "Cosine decay"]
+  },
+  {
+    "id": "training-data-mix",
+    "title": "Training Data Mix",
+    "facets": {"area": "training", "kind": "concept", "phase": "pretraining"},
+    "summary": "Which sources go into pretraining, in what proportions, after what filtering.",
+    "description": "Web, code, books, papers and maths in tuned ratios shape what the model is good at. Quality filtering and deduplication often matter more than raw volume, and duplicated text drives memorisation.",
+    "aliases": ["Data curation", "Deduplication"]
+  },
+  {
+    "id": "synthetic-data",
+    "title": "Synthetic Data",
+    "facets": {"area": "training", "kind": "technique", "phase": "post-training"},
+    "summary": "Training examples generated by models, then filtered or verified.",
+    "description": "Fills gaps where human data is scarce: maths with checked answers, code that passes tests, tool-use transcripts. Unfiltered, it narrows diversity and can amplify a model's own errors.",
+    "aliases": ["Model-generated data", "Self-instruct"]
+  },
+  {
+    "id": "distillation",
+    "title": "Distillation",
+    "essential": true,
+    "facets": {"area": "training", "kind": "technique", "phase": "post-training"},
+    "summary": "Train a small student model to imitate a big teacher's outputs.",
+    "description": "The student learns from the teacher's full probability distribution or its answers, reaching far better quality than training alone at its size. It's how many fast, cheap models are made.",
+    "aliases": ["Knowledge distillation", "Teacher–student"]
+  },
+  {
+    "id": "mixed-precision",
+    "title": "Mixed Precision",
+    "facets": {"area": "training", "kind": "technique", "phase": "pretraining"},
+    "summary": "Do most maths in 16-bit (bf16) or 8-bit while keeping a 32-bit master copy of weights.",
+    "description": "Halves memory and roughly doubles throughput on modern GPUs. bf16 keeps fp32's range, avoiding the overflow tricks fp16 needed. FP8 training pushes further with careful scaling.",
+    "aliases": ["bf16", "FP8", "fp16"]
+  },
+  {
+    "id": "parallelism",
+    "title": "Data, Tensor and Pipeline Parallelism",
+    "facets": {"area": "training", "kind": "technique", "phase": "pretraining"},
+    "summary": "Spread training across thousands of GPUs by splitting data, layers or matrices.",
+    "description": "Data parallel copies the model and splits batches; tensor parallel splits each matrix; pipeline parallel splits the layers; sharded optimisers (ZeRO, FSDP) split state. Large runs combine all of them.",
+    "aliases": ["FSDP", "ZeRO", "Model parallelism"]
+  },
+  {
+    "id": "memorization",
+    "title": "Memorization",
+    "facets": {"area": "training", "kind": "phenomenon", "phase": "pretraining"},
+    "summary": "The model reproduces training text word for word, including private or copyrighted data.",
+    "description": "More likely for text repeated many times and for bigger models. It's a privacy and legal risk, and it inflates benchmark scores when test sets leak into training. Deduplication and filtering reduce it.",
+    "aliases": ["Regurgitation", "Training data extraction"]
+  },
+  {
+    "id": "catastrophic-forgetting",
+    "title": "Catastrophic Forgetting",
+    "facets": {"area": "training", "kind": "phenomenon", "phase": "post-training"},
+    "summary": "Fine-tuning on a narrow task degrades skills the model had before.",
+    "description": "Weights that served general abilities get rewritten for the new data. Mix some general data back in, use a low learning rate, or train small adapters (LoRA) that leave the base weights untouched.",
+    "aliases": ["Forgetting", "Capability regression"]
+  },
+  {
+    "id": "base-vs-instruct",
+    "title": "Base vs Instruct Model",
+    "essential": true,
+    "facets": {"area": "alignment", "kind": "concept", "phase": "post-training"},
+    "summary": "A base model continues text; an instruct model follows requests and holds a conversation.",
+    "description": "Ask a base model a question and it may write more questions. Post-training turns it into an assistant with a chat format, helpfulness and safety behaviour. Base models are still useful for fine-tuning and raw completion.",
+    "aliases": ["Chat model", "Foundation vs assistant"]
+  },
+  {
+    "id": "sft",
+    "title": "Supervised Fine-Tuning (SFT)",
+    "essential": true,
+    "facets": {"area": "alignment", "kind": "technique", "phase": "post-training"},
+    "summary": "Train on curated prompt→ideal-response pairs to teach format and behaviour.",
+    "description": "The first post-training step: it teaches the model to answer as an assistant, use the chat template and call tools. Quality beats quantity: a few thousand excellent examples go a long way.",
+    "aliases": ["Instruction tuning", "SFT"]
+  },
+  {
+    "id": "rlhf",
+    "title": "RLHF",
+    "essential": true,
+    "facets": {"area": "alignment", "kind": "technique", "phase": "post-training"},
+    "summary": "Reinforcement learning from human feedback: push the model toward answers people prefer.",
+    "description": "People compare pairs of answers, a reward model learns their preferences, and the LLM is trained to score well on it while staying close to the SFT model. Made models far more helpful, and also more sycophantic.",
+    "aliases": ["Reinforcement learning from human feedback", "PPO"]
+  },
+  {
+    "id": "reward-model",
+    "title": "Reward Model",
+    "facets": {"area": "alignment", "kind": "component", "phase": "post-training"},
+    "summary": "A model trained to score responses the way human raters would.",
+    "description": "Turns thousands of human comparisons into a signal that can grade millions of answers during RL. Its blind spots become the policy's exploits, so it needs care, refresh and checks for reward hacking.",
+    "aliases": ["Preference model", "RM"]
+  },
+  {
+    "id": "dpo",
+    "title": "Direct Preference Optimization",
+    "facets": {"area": "alignment", "kind": "technique", "phase": "post-training"},
+    "summary": "Learn from preferred vs rejected answer pairs directly, with no reward model or RL loop.",
+    "description": "A simple loss on preference pairs reaches results close to RLHF with far less machinery and instability. Popular for open models; less flexible when you want to optimise rewards beyond static pairs.",
+    "aliases": ["DPO", "Preference tuning"]
+  },
+  {
+    "id": "rlvr",
+    "title": "RL with Verifiable Rewards",
+    "facets": {"area": "alignment", "kind": "technique", "phase": "post-training"},
+    "summary": "Reward the model when its answer can be checked: tests pass, the maths is right.",
+    "description": "No human rater needed, so it scales to millions of problems. It is how reasoning models learn long chains of thought, backtracking and self-checking. Works best where correctness can be verified automatically.",
+    "aliases": ["RLVR", "Reasoning RL", "GRPO"]
+  },
+  {
+    "id": "constitutional-ai",
+    "title": "Constitutional AI",
+    "facets": {"area": "alignment", "kind": "technique", "phase": "post-training"},
+    "summary": "Train behaviour from written principles, with the model critiquing its own answers.",
+    "description": "The model judges responses against the principles and those AI judgements replace many human labels (RLAIF). The values are explicit and easy to inspect and change, rather than hidden in raters' choices.",
+    "aliases": ["RLAIF", "AI feedback"]
+  },
+  {
+    "id": "reward-hacking",
+    "title": "Reward Hacking",
+    "facets": {"area": "alignment", "kind": "phenomenon", "phase": "post-training"},
+    "summary": "The model finds ways to score well on the reward without doing what was meant.",
+    "description": "Special-casing tests so they pass, padding answers that raters like, claiming success it didn't verify. Optimisation pressure finds every gap in the reward. Mitigate with robust checks, varied rewards and monitoring.",
+    "aliases": ["Specification gaming", "Goodhart's law"]
+  },
+  {
+    "id": "sycophancy-origin",
+    "title": "Why Models Flatter",
+    "facets": {"area": "alignment", "kind": "phenomenon", "phase": "post-training"},
+    "summary": "Preference training rewards agreement, so models learn to say what people want to hear.",
+    "description": "Raters tend to prefer answers that agree with them and sound confident. The policy learns that, and may drop a correct answer under pushback. Labs now train and test against it directly.",
+    "aliases": ["Sycophancy", "Agreeableness bias"]
+  },
+  {
+    "id": "lora",
+    "title": "LoRA",
+    "essential": true,
+    "facets": {"area": "alignment", "kind": "technique", "phase": "post-training"},
+    "summary": "Fine-tune by training small low-rank matrices added to frozen weights.",
+    "description": "Trains well under 1% of the parameters, so it fits on modest GPUs and each adapter is megabytes. Swap adapters per task over one base model. QLoRA does the same on a 4-bit quantized base.",
+    "aliases": ["Low-rank adaptation", "QLoRA", "PEFT", "Adapters"]
+  },
+  {
+    "id": "red-teaming",
+    "title": "Red Teaming",
+    "facets": {"area": "alignment", "kind": "technique", "phase": "post-training"},
+    "summary": "Deliberately attack a model to find harmful, unsafe or broken behaviour before users do.",
+    "description": "People and automated attackers probe for jailbreaks, dangerous knowledge, bias and agent misuse. Findings feed training data, classifiers and policies. Never done: new capabilities open new failure modes.",
+    "aliases": ["Adversarial testing", "Safety evaluation"]
+  },
+  {
+    "id": "autoregressive-decoding",
+    "title": "Autoregressive Generation",
+    "essential": true,
+    "facets": {"area": "inference", "kind": "concept", "phase": "inference"},
+    "summary": "Generate one token, append it, run the model again, repeat until a stop token.",
+    "description": "Each new token needs a full forward pass, which is why output is slow and priced higher than input. The model can't revise earlier tokens; it can only continue, so early mistakes stick.",
+    "aliases": ["Token-by-token generation", "Decoding"]
+  },
+  {
+    "id": "prefill-vs-decode",
+    "title": "Prefill vs Decode",
+    "facets": {"area": "inference", "kind": "concept", "phase": "inference"},
+    "summary": "Reading the prompt is one parallel pass; writing the answer is one pass per token.",
+    "description": "Prefill is compute-bound and fast per token; decode is memory-bound and slow. That split explains why input tokens cost less than output, and why time-to-first-token grows with prompt length.",
+    "aliases": ["Prompt processing", "Generation phase"]
+  },
+  {
+    "id": "kv-cache",
+    "title": "KV Cache",
+    "essential": true,
+    "facets": {"area": "inference", "kind": "component", "phase": "inference"},
+    "summary": "Keep each past token's keys and values so they aren't recomputed for every new token.",
+    "description": "Turns generation from quadratic to linear work, at the cost of memory that grows with context length and batch size. Prompt caching across requests is reusing this cache for a shared prefix.",
+    "aliases": ["Key-value cache"]
+  },
+  {
+    "id": "greedy-decoding",
+    "title": "Greedy Decoding",
+    "facets": {"area": "inference", "kind": "technique", "phase": "inference"},
+    "summary": "Always pick the single most likely next token.",
+    "description": "Deterministic in principle and fine for short, factual answers, but long outputs tend to loop and sound flat. Most chat uses sampling instead; temperature 0 approximates greedy.",
+    "aliases": ["Argmax decoding", "Temperature 0"]
+  },
+  {
+    "id": "sampling",
+    "title": "Sampling with Temperature",
+    "essential": true,
+    "facets": {"area": "inference", "kind": "technique", "phase": "inference"},
+    "summary": "Pick the next token at random in proportion to its probability, sharpened or flattened.",
+    "description": "Dividing logits by a temperature below 1 makes likely tokens likelier; above 1 spreads the odds. Sampling gives variety and avoids loops, at the cost of occasional odd picks.",
+    "aliases": ["Temperature", "Stochastic decoding"]
+  },
+  {
+    "id": "top-k-top-p",
+    "title": "Top-k and Top-p",
+    "facets": {"area": "inference", "kind": "technique", "phase": "inference"},
+    "summary": "Cut the candidate list before sampling: keep the k best, or the smallest set summing to p.",
+    "description": "Removes the long tail of unlikely tokens that would derail the text. Top-p adapts: few candidates when the model is sure, many when it isn't. Min-p is a newer variant relative to the top token.",
+    "aliases": ["Nucleus sampling", "Min-p", "Truncation sampling"]
+  },
+  {
+    "id": "beam-search",
+    "title": "Beam Search",
+    "facets": {"area": "inference", "kind": "technique", "phase": "inference"},
+    "summary": "Keep several candidate sequences at each step and return the most probable overall.",
+    "description": "Good for translation and short fixed outputs, where the likeliest sequence is the best one. For open-ended text it produces bland, repetitive output, so chat models sample instead.",
+    "aliases": ["Beam width"]
+  },
+  {
+    "id": "repetition",
+    "title": "Repetition Loops",
+    "facets": {"area": "inference", "kind": "phenomenon", "phase": "inference"},
+    "summary": "The model repeats a phrase over and over, each copy making the next more likely.",
+    "description": "Once a pattern is in context, attention keeps copying it. Sampling, repetition or frequency penalties and better-trained models reduce it. A loop in production often means greedy decoding or a broken template.",
+    "aliases": ["Degeneration", "Frequency penalty"]
+  },
+  {
+    "id": "logprobs",
+    "title": "Log Probabilities",
+    "facets": {"area": "inference", "kind": "concept", "phase": "inference"},
+    "summary": "The log of the probability the model gave each output token, optionally with alternatives.",
+    "description": "Useful as a rough confidence signal for classification, to rank options or to spot where a model was unsure. Not calibrated truth: a model can be confidently wrong. Not every API exposes them.",
+    "aliases": ["Logprobs", "Token probabilities"]
+  },
+  {
+    "id": "constrained-decoding",
+    "title": "Constrained Decoding",
+    "facets": {"area": "inference", "kind": "technique", "phase": "inference"},
+    "summary": "Mask out any token that would break a grammar or JSON Schema before sampling.",
+    "description": "Guarantees output that parses, by construction. It's how structured outputs work. Too-tight constraints can push the model into odd tokens, so let it reason before the constrained part when possible.",
+    "aliases": ["Grammar-constrained generation", "Structured generation"]
+  },
+  {
+    "id": "speculative-decoding",
+    "title": "Speculative Decoding",
+    "facets": {"area": "inference", "kind": "technique", "phase": "inference"},
+    "summary": "A small model drafts several tokens; the big model checks them all in one pass.",
+    "description": "Accepted drafts give several tokens for one big-model step, often 2–3× faster with exactly the same output distribution. Works best on predictable text like code and boilerplate.",
+    "aliases": ["Draft model", "Assisted generation", "Medusa"]
+  },
+  {
+    "id": "continuous-batching",
+    "title": "Continuous Batching",
+    "facets": {"area": "inference", "kind": "technique", "phase": "inference"},
+    "summary": "Add and remove requests from the GPU batch at every step instead of waiting for all.",
+    "description": "Short replies leave and new requests join without idle slots, multiplying throughput for a server. Together with paged KV memory it's the core of engines like vLLM and TGI.",
+    "aliases": ["In-flight batching", "PagedAttention", "vLLM"]
+  },
+  {
+    "id": "test-time-compute",
+    "title": "Test-Time Compute",
+    "essential": true,
+    "facets": {"area": "inference", "kind": "concept", "phase": "inference"},
+    "summary": "Spend more computation per question (thinking longer, sampling more) for better answers.",
+    "description": "A second scaling axis next to model size: a model that reasons for thousands of tokens can beat a bigger one that answers at once. Costs latency and tokens, so it pays off on hard problems.",
+    "aliases": ["Inference-time scaling", "Thinking tokens"]
+  },
+  {
+    "id": "self-consistency",
+    "title": "Self-Consistency",
+    "facets": {"area": "inference", "kind": "technique", "phase": "inference"},
+    "summary": "Sample several reasoning paths and take the majority answer.",
+    "description": "Errors scatter while correct answers agree, so voting raises accuracy on maths and logic. Costs several times the tokens. Needs a final answer that can be compared, like a number or a label.",
+    "aliases": ["Majority voting", "Best-of-n"]
+  },
+  {
+    "id": "quantization",
+    "title": "Quantization",
+    "essential": true,
+    "facets": {"area": "efficiency", "kind": "technique", "phase": "inference"},
+    "summary": "Store weights in fewer bits (8, 4 or less) to shrink memory and speed up inference.",
+    "description": "A 70B model goes from ~140 GB at 16-bit to ~40 GB at 4-bit, small enough for one large GPU. Quality drops a little at 8-bit and more at 4-bit and below, unevenly across tasks; eval the quantized model, not the original.",
+    "aliases": ["INT8", "INT4", "GGUF", "AWQ", "GPTQ"]
+  },
+  {
+    "id": "memory-bandwidth",
+    "title": "Memory-Bound Decoding",
+    "facets": {"area": "efficiency", "kind": "phenomenon", "phase": "inference"},
+    "summary": "Generating a token is limited by reading the weights from memory, not by maths.",
+    "description": "Each token needs every weight read once, so speed ≈ memory bandwidth ÷ model size. That's why quantization, batching many users and speculative decoding speed things up: they read the weights less per token.",
+    "aliases": ["Memory wall", "Arithmetic intensity"]
+  },
+  {
+    "id": "flops",
+    "title": "FLOPs per Token",
+    "facets": {"area": "efficiency", "kind": "concept", "phase": "any"},
+    "summary": "A dense model costs about 2 × parameters floating-point operations per token to run.",
+    "description": "Training costs about 6 × parameters × training tokens. These rules of thumb let you estimate GPU hours and price. MoE models count only the active parameters per token.",
+    "aliases": ["Compute cost", "6ND"]
+  },
+  {
+    "id": "pruning",
+    "title": "Pruning",
+    "facets": {"area": "efficiency", "kind": "technique", "phase": "post-training"},
+    "summary": "Remove weights, heads or whole layers that contribute little, then lightly retrain.",
+    "description": "Can shrink a model with modest loss, but unstructured sparsity rarely speeds up real hardware. Structured pruning (whole layers or widths) plus distillation is how some smaller variants are made.",
+    "aliases": ["Sparsity", "Structured pruning"]
+  },
+  {
+    "id": "gpu-memory-budget",
+    "title": "GPU Memory Budget",
+    "facets": {"area": "efficiency", "kind": "concept", "phase": "inference"},
+    "summary": "Serving memory = weights + KV cache + activations, and the KV cache often wins.",
+    "description": "A long context times many concurrent users can need more memory than the weights. That is why GQA, KV-cache quantization and paged memory matter as much as quantizing the weights.",
+    "aliases": ["VRAM", "KV cache size"]
+  },
+  {
+    "id": "scaling-laws",
+    "title": "Scaling Laws",
+    "essential": true,
+    "facets": {"area": "scaling", "kind": "concept", "phase": "pretraining"},
+    "summary": "Loss falls predictably as a power law of parameters, data and compute.",
+    "description": "Labs fit these curves on small runs to predict what a huge run will reach before paying for it. Lower loss doesn't map neatly to specific abilities, but the trend has held across many orders of magnitude.",
+    "aliases": ["Kaplan scaling", "Power laws"]
+  },
+  {
+    "id": "chinchilla",
+    "title": "Compute-Optimal Training",
+    "facets": {"area": "scaling", "kind": "concept", "phase": "pretraining"},
+    "summary": "For fixed compute, grow parameters and data together: about 20 tokens per parameter.",
+    "description": "Early large models were undertrained. Today models are trained far past that point on purpose: a smaller model trained longer costs more upfront but is cheaper to serve to millions of users.",
+    "aliases": ["Chinchilla", "Overtraining"]
+  },
+  {
+    "id": "in-context-learning",
+    "title": "In-Context Learning",
+    "essential": true,
+    "facets": {"area": "scaling", "kind": "phenomenon", "phase": "inference"},
+    "summary": "The model learns a task from examples in the prompt, with no weight updates.",
+    "description": "Show three labelled examples and it continues the pattern on the fourth. It improves with scale and is what makes few-shot prompting work. Nothing is remembered once the context is gone.",
+    "aliases": ["Few-shot learning", "ICL"]
+  },
+  {
+    "id": "emergent-abilities",
+    "title": "Emergent Abilities",
+    "facets": {"area": "scaling", "kind": "phenomenon", "phase": "pretraining"},
+    "summary": "Skills that seem absent in small models and appear suddenly at larger scale.",
+    "description": "Multi-step arithmetic or following complex instructions can jump from chance to good. Some jumps are an artefact of all-or-nothing metrics; smoother metrics show gradual gains. Either way, small-model tests underpredict.",
+    "aliases": ["Emergence", "Phase transitions"]
+  },
+  {
+    "id": "long-context-extension",
+    "title": "Context Length Extension",
+    "facets": {"area": "scaling", "kind": "technique", "phase": "post-training"},
+    "summary": "Stretch a model trained on short sequences to much longer ones with brief extra training.",
+    "description": "Rescale RoPE frequencies (position interpolation, YaRN), then train a little on long documents. Reaching a long window is easier than using it well; check recall across the whole length.",
+    "aliases": ["YaRN", "Position interpolation"]
+  },
+  {
+    "id": "grokking",
+    "title": "Grokking",
+    "facets": {"area": "scaling", "kind": "phenomenon", "phase": "pretraining"},
+    "summary": "A model memorises training data, then much later suddenly generalises.",
+    "description": "Seen on small algorithmic tasks: training loss is flat at zero for a long time while test accuracy jumps late, as a simpler general solution replaces memorisation. A reminder that loss curves don't show everything.",
+    "aliases": ["Delayed generalisation"]
+  },
+  {
+    "id": "benchmark-saturation",
+    "title": "Benchmark Saturation",
+    "facets": {"area": "scaling", "kind": "phenomenon", "phase": "any"},
+    "summary": "Models hit near-perfect scores, so the benchmark stops telling them apart.",
+    "description": "Each famous test (MMLU, GSM8K, HumanEval) gets saturated or leaks into training within a few years. New, harder or private evals replace them; treat any single score with suspicion.",
+    "aliases": ["Contamination", "Leaderboards"]
+  },
+  {
+    "id": "features",
+    "title": "Features",
+    "facets": {"area": "interpretability", "kind": "concept", "phase": "any"},
+    "summary": "Directions in a model's activations that stand for a concept, like \"Golden Gate Bridge\".",
+    "description": "Interpretability looks for these units of meaning instead of single neurons. Finding them lets researchers see what a model represents and even steer it by turning a feature up or down.",
+    "aliases": ["Concepts", "Representations"]
+  },
+  {
+    "id": "superposition",
+    "title": "Superposition",
+    "facets": {"area": "interpretability", "kind": "phenomenon", "phase": "any"},
+    "summary": "Models pack more concepts than they have neurons by overlapping them.",
+    "description": "Most concepts are rarely active at once, so the model stores them in nearly orthogonal directions sharing neurons. That's why single neurons look polysemantic, firing for unrelated things.",
+    "aliases": ["Polysemantic neurons"]
+  },
+  {
+    "id": "sparse-autoencoders",
+    "title": "Sparse Autoencoders",
+    "facets": {"area": "interpretability", "kind": "technique", "phase": "any"},
+    "summary": "Decompose activations into many sparse, human-readable features.",
+    "description": "Trained to rebuild activations from a large dictionary where only a few entries fire at once. The entries often line up with clear concepts, from code bugs to deception, giving a map of what the model knows.",
+    "aliases": ["SAE", "Dictionary learning"]
+  },
+  {
+    "id": "circuits",
+    "title": "Circuits",
+    "facets": {"area": "interpretability", "kind": "concept", "phase": "any"},
+    "summary": "The chain of features and connections that carries out a specific behaviour.",
+    "description": "Tracing which components pass what to whom shows how the model actually computes an answer: for example, planning a rhyme before writing the line. Attribution graphs map these paths for single prompts.",
+    "aliases": ["Mechanistic interpretability", "Attribution graphs"]
+  },
+  {
+    "id": "induction-heads",
+    "title": "Induction Heads",
+    "facets": {"area": "interpretability", "kind": "concept", "phase": "pretraining"},
+    "summary": "Heads that find an earlier copy of the current token and predict what came after it.",
+    "description": "Seeing \"A B … A\" they predict B. They form at a distinct moment in training, coinciding with a jump in in-context learning, and are one of the best-understood circuits.",
+    "aliases": ["Copying heads", "Pattern completion"]
+  },
+  {
+    "id": "logit-lens",
+    "title": "Logit Lens",
+    "facets": {"area": "interpretability", "kind": "technique", "phase": "any"},
+    "summary": "Decode a middle layer's residual stream as if it were the last, to see the guess forming.",
+    "description": "Shows how the prediction sharpens layer by layer, often settling well before the end. A cheap first look; tuned lenses train a small probe per layer for more faithful readouts.",
+    "aliases": ["Tuned lens"]
+  },
+  {
+    "id": "probing",
+    "title": "Probing",
+    "facets": {"area": "interpretability", "kind": "technique", "phase": "any"},
+    "summary": "Train a simple classifier on activations to test whether they encode a property.",
+    "description": "If a linear probe can read truthfulness, sentiment or board state from a layer, the information is there. That a probe finds it doesn't prove the model uses it; interventions test that.",
+    "aliases": ["Linear probe", "Diagnostic classifier"]
+  },
+  {
+    "id": "steering-vectors",
+    "title": "Steering Vectors",
+    "facets": {"area": "interpretability", "kind": "technique", "phase": "inference"},
+    "summary": "Add a direction to the activations during generation to push behaviour one way.",
+    "description": "Take the activation difference between, say, happy and sad prompts and add it to change tone without retraining. A research tool for testing what features do; strong pushes degrade fluency.",
+    "aliases": ["Activation steering", "Representation engineering"]
+  },
+  {
+    "id": "unfaithful-reasoning",
+    "title": "Unfaithful Chain of Thought",
+    "facets": {"area": "interpretability", "kind": "phenomenon", "phase": "inference"},
+    "summary": "The written reasoning doesn't always reflect how the model really reached its answer.",
+    "description": "Models can be swayed by hints they never mention, or rationalise after the fact. Visible reasoning is useful for debugging and monitoring, but not proof of what happened inside.",
+    "aliases": ["CoT faithfulness", "Post-hoc rationalisation"]
+  },
+  {
+    "id": "hallucination-mechanism",
+    "title": "Why Models Hallucinate",
+    "facets": {"area": "interpretability", "kind": "phenomenon", "phase": "inference"},
+    "summary": "Training rewards a plausible guess over \"I don't know\", so the model fills gaps fluently.",
+    "description": "Next-token prediction and accuracy-only grading both favour answering. Models have internal signals for \"I know this entity\"; hallucination often happens when that signal misfires on something half-familiar.",
+    "aliases": ["Confabulation", "Calibration"]
+  },
+  {
+    "id": "loss-spikes",
+    "title": "Loss Spikes",
+    "facets": {"area": "training", "kind": "phenomenon", "phase": "pretraining"},
+    "summary": "Training loss suddenly jumps, sometimes recovering, sometimes ruining the run.",
+    "description": "Caused by bad batches, too-high learning rates or numerical blow-ups in attention. Large runs clip gradients, normalise carefully, checkpoint often and roll back past a spike, skipping the data that caused it.",
+    "aliases": ["Training instability", "Gradient clipping"]
+  },
+  {
+    "id": "mid-training",
+    "title": "Mid-Training and Annealing",
+    "facets": {"area": "training", "kind": "technique", "phase": "pretraining"},
+    "summary": "End pretraining on a smaller, high-quality mix while the learning rate decays.",
+    "description": "The last stretch of training has an outsized effect, so labs feed curated maths, code, reasoning and long documents there. It's where long-context and many specialised skills get their boost before post-training.",
+    "aliases": ["Annealing", "Data curriculum"]
+  },
+  {
+    "id": "multi-token-prediction",
+    "title": "Multi-Token Prediction",
+    "facets": {"area": "training", "kind": "technique", "phase": "pretraining"},
+    "summary": "Train extra heads to predict several future tokens at once, not just the next one.",
+    "description": "Gives a richer training signal that helps planning, especially in code, and the extra heads can draft tokens for speculative decoding at inference. The main next-token head is still what generates.",
+    "aliases": ["MTP", "Future token prediction"]
+  },
+  {
+    "id": "tool-use-training",
+    "title": "Training Tool Use",
+    "facets": {"area": "alignment", "kind": "technique", "phase": "post-training"},
+    "summary": "Teach a model to call tools with fine-tuning and RL on transcripts of calls and results.",
+    "description": "Tool calls are just special tokens in the output that the app intercepts. Models learn when to call, how to fill arguments and how to recover from errors, increasingly by RL in real environments with checkable outcomes.",
+    "aliases": ["Function calling training", "Agentic RL"]
+  },
+  {
+    "id": "model-merging",
+    "title": "Model Merging",
+    "facets": {"area": "alignment", "kind": "technique", "phase": "post-training"},
+    "summary": "Average or combine the weights of fine-tuned models that share a base.",
+    "description": "Can blend skills from separate fine-tunes without more training, or smooth out a run by averaging checkpoints. Only works between models from the same base; results are unpredictable and need evals.",
+    "aliases": ["Weight averaging", "Model soups", "Task arithmetic"]
+  },
+  {
+    "id": "batch-nondeterminism",
+    "title": "Batch Non-Determinism",
+    "facets": {"area": "inference", "kind": "phenomenon", "phase": "inference"},
+    "summary": "The same prompt at temperature 0 can give different outputs on a busy server.",
+    "description": "Floating-point maths isn't associative, and kernels add numbers in an order that depends on batch size and hardware. Other users' requests change your batch, so tiny differences flip a token and the text diverges.",
+    "aliases": ["Floating-point non-associativity", "Reproducibility"]
+  },
+  {
+    "id": "kv-cache-compression",
+    "title": "KV Cache Compression",
+    "facets": {"area": "efficiency", "kind": "technique", "phase": "inference"},
+    "summary": "Shrink the KV cache by quantizing it, sharing it or evicting less-used entries.",
+    "description": "Long contexts make the cache the main memory cost. 8-bit or 4-bit KV, latent compression (MLA), and keeping only important tokens all trade a little quality for more context or more users per GPU.",
+    "aliases": ["MLA", "KV quantization", "Cache eviction"]
+  }
+]

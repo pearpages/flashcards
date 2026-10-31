@@ -5,13 +5,18 @@ item, and add a dated line at the top of **Done**.
 
 ## Open
 
+- [ ] **Review the LLM decks** (ADR-0017, ADR-0018 Proposed): llm-engineering (107 cards)
+      and llm-internals (100) were written from memory. Least sure: the Anthropic/OpenAI/Google
+      platform names (compaction, memory tool, skills, tool search, MCP support, effort
+      controls, fine-tuning via Bedrock), Gemini Computer Use and File Search, and research
+      claims (induction heads timing, attention sinks, hallucination mechanism, CoT faithfulness).
 - [ ] **Verify motion in a real browser.** Card slide (~0.7s spring) and 3D flip timing,
       jump-bar smooth scroll and section highlight were only checked frozen or headless.
 - [ ] **Review native-platform names.** Newer Material 3 Expressive names (ButtonGroup,
       SplitButtonLayout, FloatingToolbar) and some iOS approximations (TipKit for Tour) were
       written from memory — check against current docs in `cards.json`.
-- [ ] **Split card text per deck** if the bundle grows again: the JS is ~865 kB (~273 kB
-      gzipped) after ADR-0012, about a third of it card text for all eight decks. Loading a
+- [ ] **Split card text per deck** if the bundle grows again: the JS is ~970 kB (~305 kB
+      gzipped) with ten decks, a growing share of it card text. Loading a
       deck's cards on entry needs async loading in `decks/index.ts`, `App` and `DeckView`.
 - [ ] **Review Proposed ADRs 0006–0007** (GitHub Pages on `v*` tags; Vitest and CI).
 - [ ] **Review Proposed ADR-0015 and the essential picks** (about 20% of each deck, chosen by
@@ -24,8 +29,8 @@ item, and add a dated line at the top of **Done**.
       prefetching only in production, `after()` in proxy, the CVE-2025-29927 mechanism,
       `metadataBase` build error vs warning, ImageResponse 500 KB cap, env load order with
       `NODE_ENV=test`, what `output: "export"` loses, `next/script` `worker`.
-- [ ] **Social card still says six decks.** `public/og.webp` predates the testing and
-      Next.js decks; regenerate it with eight.
+- [ ] **Social card still says six decks.** `public/og.webp` predates the testing,
+      Next.js and LLM decks; regenerate it with ten.
 - [ ] **Review the accessibility deck** (100 cards, ADR-0008 Proposed): check the content and
       the SwiftUI/Compose names in `src/decks/accessibility/cards.json` against current
       WAI-ARIA APG, WCAG 2.2 and platform docs; written from memory. Least sure:
@@ -79,6 +84,7 @@ item, and add a dated line at the top of **Done**.
 
 ## Done
 
+- [x] 2026-10-31: Two LLM decks: LLM Engineering (107 cards, Anthropic/OpenAI/Google equivalents, stage badge) and LLM Internals (100 cards, training-phase badge), a drawing per card; ADR-0017, ADR-0018.
 - [x] 2026-10-30: Released v0.5.1.
 - [x] 2026-10-30: Card drawings: the image box hugs the drawing (scaled up to 280px wide, capped at 30% of the screen height) instead of stretching to fill the taller card; content is centred vertically.
 - [x] 2026-10-30: Released v0.5.0.

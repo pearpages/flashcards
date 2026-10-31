@@ -27,6 +27,8 @@ accepted.
 | [0014](docs/adr/0014-testing-deck-facets.md) | Testing deck: area and kind filters, test level as a badge | Proposed | 2026-10-20 |
 | [0015](docs/adr/0015-essential-cards-and-local-hidden-cards.md) | Essential cards as a card field, hidden cards in localStorage | Proposed | 2026-10-30 |
 | [0016](docs/adr/0016-nextjs-deck-facets.md) | Next.js deck: area and kind filters, where it runs as a badge | Proposed | 2026-10-30 |
+| [0017](docs/adr/0017-llm-engineering-deck-facets.md) | LLM Engineering deck: area and kind filters, stage as a badge, model providers as platforms | Proposed | 2026-10-31 |
+| [0018](docs/adr/0018-llm-internals-deck-facets.md) | LLM Internals deck: area and kind filters, training phase as a badge | Proposed | 2026-10-31 |
 
 ## Format
 

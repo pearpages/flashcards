@@ -1,0 +1,48 @@
+{
+  "id": "llm-engineering",
+  "title": "LLM Engineering",
+  "description": "Building with LLMs: prompting, context, tool use, retrieval, agents, evals, safety, cost and deploys. What each piece solves, when to pick it over its siblings, and the Anthropic, OpenAI and Google feature for it.",
+  "platforms": [
+    { "key": "anthropic", "label": "Anthropic" },
+    { "key": "openai", "label": "OpenAI" },
+    { "key": "google", "label": "Google" }
+  ],
+  "facets": [
+    {
+      "key": "area",
+      "label": "Area",
+      "values": [
+        "models",
+        "prompting",
+        "context",
+        "tools",
+        "retrieval",
+        "agents",
+        "evals",
+        "safety",
+        "cost",
+        "deploy"
+      ]
+    },
+    {
+      "key": "kind",
+      "label": "Kind",
+      "values": [
+        "concept",
+        "technique",
+        "pattern",
+        "pitfall"
+      ]
+    },
+    {
+      "key": "stage",
+      "label": "Matters at",
+      "filter": false,
+      "values": [
+        "prototype",
+        "production",
+        "scale"
+      ]
+    }
+  ]
+}

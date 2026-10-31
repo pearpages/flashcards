@@ -1,0 +1,1111 @@
+[
+  {
+    "id": "token",
+    "title": "Token",
+    "essential": true,
+    "facets": {"area": "models", "kind": "concept", "stage": "prototype"},
+    "summary": "The unit a model reads, writes and bills by: roughly ¾ of an English word.",
+    "description": "Limits, prices and speed are all in tokens, not characters. Code, numbers and non-English text use more tokens per word, so the same prompt costs more in Japanese than in English. Count with the provider's tokenizer before trusting an estimate.",
+    "aliases": ["Tokenization", "Subword"],
+    "platforms": {
+      "anthropic": "count_tokens endpoint",
+      "openai": "tiktoken / usage field",
+      "google": "countTokens"
+    }
+  },
+  {
+    "id": "context-window",
+    "title": "Context Window",
+    "essential": true,
+    "facets": {"area": "models", "kind": "concept", "stage": "prototype"},
+    "summary": "The most tokens a model can see at once: prompt, history, documents and its reply.",
+    "description": "Everything the model knows about this request has to fit inside it; there is no other memory. Input and output share the budget. A bigger window is not free: cost and latency grow with every token you send, and quality on details buried mid-context drops.",
+    "aliases": ["Context length", "Context limit"]
+  },
+  {
+    "id": "model-selection",
+    "title": "Choosing a Model Tier",
+    "essential": true,
+    "facets": {"area": "models", "kind": "technique", "stage": "prototype"},
+    "summary": "Start with the most capable model, prove the task works, then try smaller ones.",
+    "description": "Frontier models cost several times more per token than small fast ones. Prototype on the best to learn what's possible, build evals, then step down a tier and keep the cheapest model that still passes. Re-run the evals on every new release.",
+    "aliases": ["Model size", "Frontier vs small"],
+    "platforms": {
+      "anthropic": "Opus / Sonnet / Haiku",
+      "openai": "GPT-5 / mini / nano",
+      "google": "Gemini Pro / Flash / Flash-Lite"
+    }
+  },
+  {
+    "id": "temperature",
+    "title": "Temperature",
+    "essential": true,
+    "facets": {"area": "models", "kind": "concept", "stage": "prototype"},
+    "summary": "Sampling knob: low picks the likeliest token, high spreads choice across more of them.",
+    "description": "Use low values for extraction, classification and code; higher for brainstorming and varied copy. Zero still isn't fully deterministic. Reasoning models often fix or ignore it, so check the docs before tuning it.",
+    "aliases": ["Sampling temperature", "Randomness"],
+    "platforms": {
+      "anthropic": "temperature",
+      "openai": "temperature",
+      "google": "temperature"
+    }
+  },
+  {
+    "id": "top-p",
+    "title": "Top-p (Nucleus Sampling)",
+    "facets": {"area": "models", "kind": "concept", "stage": "production"},
+    "summary": "Sample only from the smallest set of tokens whose probabilities add up to p.",
+    "description": "Cuts the long tail of unlikely tokens while keeping variety when many are plausible. Tune temperature or top-p, not both: they interact and it gets hard to reason about. Most apps never need to touch it.",
+    "aliases": ["Nucleus sampling", "top_p"],
+    "platforms": {
+      "anthropic": "top_p",
+      "openai": "top_p",
+      "google": "topP"
+    }
+  },
+  {
+    "id": "max-tokens",
+    "title": "Max Output Tokens",
+    "facets": {"area": "models", "kind": "concept", "stage": "prototype"},
+    "summary": "A hard cap on the reply length; the model stops mid-sentence when it hits it.",
+    "description": "Check the stop reason: a reply cut by the cap ends with `max_tokens`/`length`, not a natural end, and truncated JSON won't parse. Set it high enough for the longest valid answer, and use it as a cost ceiling, not a style control.",
+    "aliases": ["max_tokens", "Output limit"],
+    "platforms": {
+      "anthropic": "max_tokens",
+      "openai": "max_output_tokens",
+      "google": "maxOutputTokens"
+    }
+  },
+  {
+    "id": "stop-sequences",
+    "title": "Stop Sequences",
+    "facets": {"area": "models", "kind": "technique", "stage": "production"},
+    "summary": "Strings that end generation the moment the model writes them.",
+    "description": "Useful to stop after one item of a list or at a closing tag, saving tokens and parsing work. The stop string itself is not returned. With structured outputs or tools available, prefer those over hand-rolled delimiters.",
+    "aliases": ["stop", "Stop tokens"],
+    "platforms": {
+      "anthropic": "stop_sequences",
+      "openai": "stop (Chat Completions)",
+      "google": "stopSequences"
+    }
+  },
+  {
+    "id": "reasoning-models",
+    "title": "Reasoning Models",
+    "essential": true,
+    "facets": {"area": "models", "kind": "concept", "stage": "prototype"},
+    "summary": "Models that think in hidden tokens before answering: slower and pricier, more accurate.",
+    "description": "They shine on maths, code, planning and multi-step problems; they're overkill for lookups and rewording. Thinking tokens are billed as output. Give them the goal and constraints, not step-by-step instructions: they plan better than a scripted chain of thought.",
+    "aliases": ["Thinking models", "Extended thinking", "o-series"],
+    "platforms": {
+      "anthropic": "Extended thinking",
+      "openai": "Reasoning models (reasoning)",
+      "google": "Gemini thinking"
+    }
+  },
+  {
+    "id": "multimodal-input",
+    "title": "Multimodal Input",
+    "facets": {"area": "models", "kind": "concept", "stage": "prototype"},
+    "summary": "Sending images, PDFs or audio alongside text in the same request.",
+    "description": "A screenshot or a scanned invoice often beats describing it. Images cost tokens by resolution, so resize to what the task needs. Models still misread small text, dense tables and exact positions: verify anything you act on.",
+    "aliases": ["Vision", "Image input", "PDF input"],
+    "platforms": {
+      "anthropic": "Vision and PDF support",
+      "openai": "Image and file inputs",
+      "google": "Native multimodal input"
+    }
+  },
+  {
+    "id": "knowledge-cutoff",
+    "title": "Knowledge Cutoff",
+    "facets": {"area": "models", "kind": "concept", "stage": "prototype"},
+    "summary": "The date the training data ends; the model knows nothing after it unless you tell it.",
+    "description": "Ask about a newer library version and it will confidently answer about the old one. Pass today's date, current docs or search results in the context when freshness matters, and don't ask the model which model it is.",
+    "aliases": ["Training cutoff", "Stale knowledge"]
+  },
+  {
+    "id": "open-weights",
+    "title": "Open-Weights Models",
+    "facets": {"area": "models", "kind": "concept", "stage": "scale"},
+    "summary": "Models whose weights you download and run yourself, like Llama, Mistral or Gemma.",
+    "description": "Pick them for data that can't leave your network, offline use, fine-tuning freedom or very high volume on a narrow task. You take on GPUs, serving, scaling and safety. Hosted frontier models are usually still ahead on hard reasoning.",
+    "aliases": ["Open-source models", "Self-hosted models", "Local LLM"],
+    "platforms": {
+      "openai": "gpt-oss",
+      "google": "Gemma"
+    }
+  },
+  {
+    "id": "hallucination",
+    "title": "Hallucination",
+    "essential": true,
+    "facets": {"area": "models", "kind": "pitfall", "stage": "prototype"},
+    "summary": "A fluent, confident answer that is false: invented facts, APIs, citations or numbers.",
+    "description": "The model predicts plausible text, not checked truth. Reduce it with grounding (put the source in the context), asking for quotes, letting it say \"I don't know\", and verifying with tools. Never ship model-written facts to users unchecked when they matter.",
+    "aliases": ["Confabulation", "Making things up"]
+  },
+  {
+    "id": "non-determinism",
+    "title": "Non-Determinism",
+    "facets": {"area": "models", "kind": "pitfall", "stage": "production"},
+    "summary": "The same prompt can give different answers, even at temperature 0.",
+    "description": "Batching, hardware and floating-point order change the result. Don't build tests that assert exact strings; assert properties, parse structure, or run evals over many samples. Cache responses when you need repeatable output.",
+    "aliases": ["Flaky outputs", "Seed"]
+  },
+  {
+    "id": "system-prompt",
+    "title": "System Prompt",
+    "essential": true,
+    "facets": {"area": "prompting", "kind": "concept", "stage": "prototype"},
+    "summary": "Instructions that set the model's role, rules and context for the whole conversation.",
+    "description": "Put stable things here: who it is, the task, tone, constraints, output format. Keep per-request data in the user turn. Explain why a rule exists; models generalise from reasons better than from bare commands in capitals.",
+    "aliases": ["System message", "Developer message", "Instructions"],
+    "platforms": {
+      "anthropic": "system parameter",
+      "openai": "instructions / developer role",
+      "google": "systemInstruction"
+    }
+  },
+  {
+    "id": "few-shot",
+    "title": "Few-Shot Examples",
+    "essential": true,
+    "facets": {"area": "prompting", "kind": "technique", "stage": "prototype"},
+    "summary": "Show two to five input→output examples so the model copies the format and judgement.",
+    "description": "Often the fastest fix when instructions alone aren't followed. Make the examples varied and representative, or the model copies their accidental quirks (length, wording, always the first label). Wrap them in tags so they aren't mistaken for the real input.",
+    "aliases": ["Multishot prompting", "In-context examples", "Zero-shot"]
+  },
+  {
+    "id": "chain-of-thought",
+    "title": "Chain of Thought",
+    "facets": {"area": "prompting", "kind": "technique", "stage": "prototype"},
+    "summary": "Let the model reason step by step before the final answer.",
+    "description": "Improves maths, logic and multi-step tasks on non-reasoning models. Ask it to think inside tags and answer in a separate tag, so you can strip the reasoning. Reasoning models do this natively; scripting their steps usually hurts.",
+    "aliases": ["CoT", "Think step by step", "Scratchpad"]
+  },
+  {
+    "id": "role-prompting",
+    "title": "Role Prompting",
+    "facets": {"area": "prompting", "kind": "technique", "stage": "prototype"},
+    "summary": "Give the model a role (\"a senior tax accountant\") to set its vocabulary and standards.",
+    "description": "Cheap and works best in the system prompt. It shapes tone and the depth of detail, but it doesn't add knowledge the model lacks. A precise description of the audience and task usually matters more than the job title.",
+    "aliases": ["Persona", "Act as"]
+  },
+  {
+    "id": "xml-delimiters",
+    "title": "Delimiters and Tags",
+    "facets": {"area": "prompting", "kind": "technique", "stage": "prototype"},
+    "summary": "Wrap instructions, documents and examples in tags like <doc> so they can't blur together.",
+    "description": "Separates what to do from what to process, which helps quality and makes injected text in documents easier to treat as data. Refer to the tags by name in the instructions, and ask for output in tags you can parse.",
+    "aliases": ["XML tags", "Markdown sections", "Fences"]
+  },
+  {
+    "id": "prompt-template",
+    "title": "Prompt Template",
+    "facets": {"area": "prompting", "kind": "pattern", "stage": "production"},
+    "summary": "A versioned prompt with variables filled in per request, kept out of string concatenation.",
+    "description": "Lets you diff, review and eval prompt changes like code. Keep the fixed part first and variables last so prompt caching still hits. Escape or tag user values so they can't close your delimiters.",
+    "aliases": ["Prompt versioning", "Prompt management"],
+    "platforms": {
+      "anthropic": "Console prompt templates",
+      "openai": "Reusable prompts (prompt id)"
+    }
+  },
+  {
+    "id": "prefill",
+    "title": "Prefilling the Reply",
+    "facets": {"area": "prompting", "kind": "technique", "stage": "production"},
+    "summary": "Write the first words of the assistant's turn so the model continues from there.",
+    "description": "Starting with `{` forces JSON; starting mid-sentence keeps a voice or skips a preamble. Only some APIs allow it, and it doesn't combine with extended thinking. Structured outputs are now the sturdier way to force a format.",
+    "aliases": ["Assistant prefill", "Response priming"],
+    "platforms": {
+      "anthropic": "Prefill the assistant turn"
+    }
+  },
+  {
+    "id": "negative-instructions",
+    "title": "Saying What Not to Do",
+    "facets": {"area": "prompting", "kind": "pitfall", "stage": "prototype"},
+    "summary": "\"Don't use markdown\" works worse than \"write plain prose paragraphs\".",
+    "description": "Naming the unwanted thing puts it in the context and can prime it. State the behaviour you want instead, show it in examples, and match the prompt's own style to the output style you expect.",
+    "aliases": ["Negative prompting", "Don'ts"]
+  },
+  {
+    "id": "prompt-chaining",
+    "title": "Prompt Chaining",
+    "facets": {"area": "prompting", "kind": "pattern", "stage": "production"},
+    "summary": "Split a big task into steps where each prompt's output feeds the next.",
+    "description": "Each step is simpler, testable and debuggable on its own, and you can check or fix output between steps. Costs more calls and latency. Pick it over one giant prompt when the task has clear stages like extract → analyse → write.",
+    "aliases": ["Pipeline", "Multi-step prompts"]
+  },
+  {
+    "id": "long-context-order",
+    "title": "Documents First, Question Last",
+    "facets": {"area": "prompting", "kind": "technique", "stage": "production"},
+    "summary": "In long prompts, put the documents at the top and the question at the end.",
+    "description": "Models answer better when the instruction comes right before they start writing. Tag each document with its source and metadata, and ask the model to quote the relevant parts first, then answer from those quotes.",
+    "aliases": ["Long-context prompting", "Query at the end"]
+  },
+  {
+    "id": "prompt-overfitting",
+    "title": "Prompt Overfitting",
+    "facets": {"area": "prompting", "kind": "pitfall", "stage": "production"},
+    "summary": "Patching the prompt for each failing case until it breaks the cases that used to work.",
+    "description": "Every special rule is context the model weighs against everything else. Change prompts against an eval set, not one example; prefer general principles over lists of exceptions; and re-test when the model version changes.",
+    "aliases": ["Prompt whack-a-mole", "Brittle prompts"]
+  },
+  {
+    "id": "prompt-improver",
+    "title": "Generated Prompts",
+    "facets": {"area": "prompting", "kind": "technique", "stage": "prototype"},
+    "summary": "Ask a model to draft or improve your prompt from a task description.",
+    "description": "A good first draft in seconds, with structure and examples you'd forget. It is still a draft: run it through your evals and edit it. Useful as a second opinion when a prompt is stuck.",
+    "aliases": ["Meta-prompting", "Prompt generator"],
+    "platforms": {
+      "anthropic": "Console prompt generator/improver",
+      "openai": "Playground prompt generation",
+      "google": "AI Studio prompt help"
+    }
+  },
+  {
+    "id": "context-engineering",
+    "title": "Context Engineering",
+    "essential": true,
+    "facets": {"area": "context", "kind": "concept", "stage": "production"},
+    "summary": "Choosing exactly which tokens the model sees on each call: instructions, data, tools.",
+    "description": "Most failures are context failures, not model failures: the fact wasn't there, or it was buried in noise. Aim for the smallest set of high-signal tokens that makes the right answer likely, and fetch the rest on demand with tools.",
+    "aliases": ["Context management"]
+  },
+  {
+    "id": "prompt-caching",
+    "title": "Prompt Caching",
+    "essential": true,
+    "facets": {"area": "context", "kind": "technique", "stage": "production"},
+    "summary": "Reuse the processed prefix of a prompt across calls for a large cost and latency cut.",
+    "description": "Works only on an exact prefix match, so put stable content (system prompt, tools, documents) first and anything that varies last. A changed timestamp at the top kills every hit. Watch the cached-token fields in usage to confirm it works.",
+    "aliases": ["Context caching", "KV cache reuse"],
+    "platforms": {
+      "anthropic": "Prompt caching (cache_control)",
+      "openai": "Automatic prompt caching",
+      "google": "Context caching (implicit/explicit)"
+    }
+  },
+  {
+    "id": "conversation-history",
+    "title": "Conversation History",
+    "facets": {"area": "context", "kind": "concept", "stage": "prototype"},
+    "summary": "The API is stateless: every turn you resend the whole conversation.",
+    "description": "Cost grows with every turn because old messages are paid again. Trim or summarise old turns, cache the stable prefix, and keep tool results short. Some APIs can store the history server-side for you, but it still counts as input.",
+    "aliases": ["Chat history", "Multi-turn", "Stateless API"],
+    "platforms": {
+      "anthropic": "Messages array (stateless)",
+      "openai": "previous_response_id / Conversations",
+      "google": "Chat sessions in the SDK"
+    }
+  },
+  {
+    "id": "compaction",
+    "title": "Context Compaction",
+    "facets": {"area": "context", "kind": "technique", "stage": "scale"},
+    "summary": "Summarise or drop old turns and tool results when a long session nears the window.",
+    "description": "Lets agents run for hours without hitting the limit. Keep decisions, open questions and file paths; drop raw tool output that can be fetched again. Bad summaries lose the detail that mattered, so test what survives.",
+    "aliases": ["Summarisation", "Context editing", "Memory trimming"],
+    "platforms": {
+      "anthropic": "Context editing / compaction",
+      "openai": "Responses compaction"
+    }
+  },
+  {
+    "id": "lost-in-the-middle",
+    "title": "Lost in the Middle",
+    "facets": {"area": "context", "kind": "pitfall", "stage": "production"},
+    "summary": "Models use facts at the start and end of a long context better than those in the middle.",
+    "description": "Stuffing the window with everything you have can hide the one fact that matters. Retrieve less and rank better, place key material near the question, and ask for supporting quotes so you can see what it actually used.",
+    "aliases": ["Context rot", "Needle in a haystack"]
+  },
+  {
+    "id": "token-counting",
+    "title": "Counting Tokens",
+    "facets": {"area": "context", "kind": "technique", "stage": "production"},
+    "summary": "Measure a request's tokens before sending it, to stay under limits and predict cost.",
+    "description": "Character-count rules of thumb break on code, JSON and other languages. Count with the provider's own endpoint or tokenizer, then trim history or retrieved chunks to fit a budget you set per request.",
+    "aliases": ["Token budget"],
+    "platforms": {
+      "anthropic": "Token counting API",
+      "openai": "tiktoken",
+      "google": "countTokens"
+    }
+  },
+  {
+    "id": "files-api",
+    "title": "Files API",
+    "facets": {"area": "context", "kind": "technique", "stage": "production"},
+    "summary": "Upload a document once, then refer to it by id in many requests.",
+    "description": "Saves re-sending large PDFs or images on every call and keeps request bodies small. The file still counts as input tokens each time it's used. Mind the retention period and delete files that hold personal data.",
+    "aliases": ["File upload", "File references"],
+    "platforms": {
+      "anthropic": "Files API",
+      "openai": "Files API",
+      "google": "Files API"
+    }
+  },
+  {
+    "id": "long-term-memory",
+    "title": "Long-Term Memory",
+    "facets": {"area": "context", "kind": "pattern", "stage": "scale"},
+    "summary": "Persist facts outside the context and load the relevant ones into later sessions.",
+    "description": "The model forgets everything between calls. Store preferences, decisions and progress in a file or database the agent can read and write, and fetch only what's relevant. Let users see and delete what's remembered.",
+    "aliases": ["Agent memory", "Persistent memory"],
+    "platforms": {
+      "anthropic": "Memory tool"
+    }
+  },
+  {
+    "id": "tool-use",
+    "title": "Tool Use",
+    "essential": true,
+    "facets": {"area": "tools", "kind": "concept", "stage": "prototype"},
+    "summary": "The model asks your code to run a function, you return the result, it continues.",
+    "description": "How a model gets live data and takes actions. You describe each tool with a name, description and JSON Schema; the model returns a call, never runs it itself. Your code executes, validates and decides whether to send the result back.",
+    "aliases": ["Function calling", "Tool calling"],
+    "platforms": {
+      "anthropic": "Tool use (tools)",
+      "openai": "Function calling",
+      "google": "Function calling"
+    }
+  },
+  {
+    "id": "structured-outputs",
+    "title": "Structured Outputs",
+    "essential": true,
+    "facets": {"area": "tools", "kind": "technique", "stage": "prototype"},
+    "summary": "Constrain the reply to a JSON Schema so it always parses.",
+    "description": "Pick it over \"please answer in JSON\" whenever code reads the output. Constrained decoding guarantees shape, not truth: still validate values. Keep schemas simple, and give a field for \"unknown\" so the model isn't forced to invent.",
+    "aliases": ["JSON Schema output", "Constrained output", "JSON mode"],
+    "platforms": {
+      "anthropic": "Structured outputs (output_format)",
+      "openai": "Structured Outputs (json_schema)",
+      "google": "responseSchema"
+    }
+  },
+  {
+    "id": "tool-descriptions",
+    "title": "Writing Tool Descriptions",
+    "facets": {"area": "tools", "kind": "technique", "stage": "production"},
+    "summary": "Describe each tool as you would to a new colleague: when to use it, inputs, outputs.",
+    "description": "The description is the prompt for picking the tool. Say when not to use it, what each parameter means and its format, and what errors look like. Return short, useful results and error messages that tell the model what to try next.",
+    "aliases": ["Tool schema", "Function descriptions", "ACI"]
+  },
+  {
+    "id": "tool-choice",
+    "title": "Tool Choice",
+    "facets": {"area": "tools", "kind": "technique", "stage": "production"},
+    "summary": "Let the model decide, force any tool, force a specific one, or forbid tools.",
+    "description": "Force a specific tool to get structured extraction in one step; forbid tools for the final answer. Forcing a tool skips the model's own reasoning text, so use auto when you want it to explain or ask questions first.",
+    "aliases": ["tool_choice", "Function calling mode"],
+    "platforms": {
+      "anthropic": "tool_choice",
+      "openai": "tool_choice",
+      "google": "functionCallingConfig"
+    }
+  },
+  {
+    "id": "parallel-tool-calls",
+    "title": "Parallel Tool Calls",
+    "facets": {"area": "tools", "kind": "technique", "stage": "production"},
+    "summary": "The model requests several independent tool calls in one turn.",
+    "description": "Run them concurrently and return all results together: big latency wins for lookups. Disable it when calls depend on each other or must be ordered, like create then update.",
+    "aliases": ["Batched tool calls"],
+    "platforms": {
+      "anthropic": "Parallel tool use",
+      "openai": "parallel_tool_calls",
+      "google": "Parallel function calling"
+    }
+  },
+  {
+    "id": "mcp",
+    "title": "Model Context Protocol (MCP)",
+    "essential": true,
+    "facets": {"area": "tools", "kind": "concept", "stage": "production"},
+    "summary": "An open standard for exposing tools, data and prompts to any AI app through one server.",
+    "description": "Write an integration once as an MCP server and every MCP client (IDEs, chat apps, agents) can use it. It doesn't add security by itself: you still authenticate, scope permissions and vet third-party servers you connect.",
+    "aliases": ["MCP server", "MCP client"],
+    "platforms": {
+      "anthropic": "MCP connector",
+      "openai": "Remote MCP servers (Responses)",
+      "google": "MCP in Gemini SDK and CLI"
+    }
+  },
+  {
+    "id": "web-search-tool",
+    "title": "Web Search Tool",
+    "facets": {"area": "tools", "kind": "technique", "stage": "production"},
+    "summary": "A provider-hosted tool that searches the web and cites the pages it used.",
+    "description": "Fixes the knowledge cutoff without running your own search stack. Results can be wrong or hostile: show citations, restrict domains when you can, and treat fetched text as untrusted input that may carry injected instructions.",
+    "aliases": ["Grounding", "Browsing", "Server tools"],
+    "platforms": {
+      "anthropic": "Web search tool",
+      "openai": "Web search tool",
+      "google": "Grounding with Google Search"
+    }
+  },
+  {
+    "id": "code-execution-tool",
+    "title": "Code Execution Tool",
+    "facets": {"area": "tools", "kind": "technique", "stage": "production"},
+    "summary": "Let the model write and run code in a sandbox to calculate, analyse files or plot.",
+    "description": "Models are poor at exact arithmetic and data crunching but good at writing code that does it. The provider runs the sandbox; if you host your own, isolate it with no network and no secrets.",
+    "aliases": ["Code interpreter", "Sandbox"],
+    "platforms": {
+      "anthropic": "Code execution tool",
+      "openai": "Code Interpreter",
+      "google": "Code execution"
+    }
+  },
+  {
+    "id": "computer-use",
+    "title": "Computer Use",
+    "facets": {"area": "tools", "kind": "technique", "stage": "scale"},
+    "summary": "The model sees screenshots and drives a mouse and keyboard to operate any app.",
+    "description": "The last resort for software without an API: slower, costlier and less reliable than real tools. Run it in an isolated VM with no credentials it doesn't need, and require confirmation before anything irreversible.",
+    "aliases": ["GUI agent", "Browser agent", "CUA"],
+    "platforms": {
+      "anthropic": "Computer use tool",
+      "openai": "Computer use tool",
+      "google": "Gemini Computer Use"
+    }
+  },
+  {
+    "id": "too-many-tools",
+    "title": "Too Many Tools",
+    "facets": {"area": "tools", "kind": "pitfall", "stage": "scale"},
+    "summary": "Dozens of overlapping tools confuse the model and eat the context before work starts.",
+    "description": "Each definition costs tokens on every call, and similar tools get mixed up. Merge overlapping tools, namespace them, and load rarely-used ones on demand with tool search. If a human can't tell which tool to use, the model can't either.",
+    "aliases": ["Tool overload", "Tool search"],
+    "platforms": {
+      "anthropic": "Tool search tool"
+    }
+  },
+  {
+    "id": "rag",
+    "title": "Retrieval-Augmented Generation (RAG)",
+    "essential": true,
+    "facets": {"area": "retrieval", "kind": "pattern", "stage": "production"},
+    "summary": "Fetch the relevant documents for a question and put them in the prompt before answering.",
+    "description": "Gives the model private and fresh knowledge without retraining, and lets it cite sources. Quality is mostly retrieval quality: if the right chunk isn't fetched, no prompt can fix the answer. Evaluate retrieval and generation separately.",
+    "aliases": ["RAG", "Grounded generation"]
+  },
+  {
+    "id": "embeddings",
+    "title": "Embeddings",
+    "essential": true,
+    "facets": {"area": "retrieval", "kind": "concept", "stage": "production"},
+    "summary": "A vector of numbers that places text by meaning, so similar texts sit close together.",
+    "description": "The basis of semantic search, clustering and deduplication. Embed queries and documents with the same model, and re-embed everything when you change it: vectors from different models aren't comparable.",
+    "aliases": ["Vector embeddings", "Text embeddings"],
+    "platforms": {
+      "anthropic": "Voyage AI (recommended partner)",
+      "openai": "text-embedding-3",
+      "google": "gemini-embedding-001"
+    }
+  },
+  {
+    "id": "chunking",
+    "title": "Chunking",
+    "facets": {"area": "retrieval", "kind": "technique", "stage": "production"},
+    "summary": "Split documents into pieces small enough to be precise, big enough to make sense.",
+    "description": "Split on structure (headings, paragraphs, functions) rather than fixed character counts, with a little overlap. Too small and chunks lose context; too big and they dilute the match and waste tokens. Keep the source and section with each chunk.",
+    "aliases": ["Text splitting", "Document chunking"]
+  },
+  {
+    "id": "vector-database",
+    "title": "Vector Database",
+    "facets": {"area": "retrieval", "kind": "concept", "stage": "production"},
+    "summary": "A store that finds the nearest embeddings to a query fast, with metadata filters.",
+    "description": "Uses approximate nearest-neighbour indexes (HNSW, IVF) to search millions of vectors in milliseconds. Start with pgvector in the database you already run; reach for a dedicated store when scale or features demand it.",
+    "aliases": ["Vector store", "pgvector", "ANN index"],
+    "platforms": {
+      "openai": "Vector stores",
+      "google": "Vertex AI Vector Search"
+    }
+  },
+  {
+    "id": "cosine-similarity",
+    "title": "Cosine Similarity",
+    "facets": {"area": "retrieval", "kind": "concept", "stage": "production"},
+    "summary": "How close two embeddings point: 1 is the same direction, 0 unrelated.",
+    "description": "The usual score for semantic search. Similar is not the same as relevant: \"how to cancel\" and \"how not to cancel\" can sit close. Scores aren't comparable across models, so tune thresholds per model.",
+    "aliases": ["Dot product", "Vector similarity"]
+  },
+  {
+    "id": "hybrid-search",
+    "title": "Hybrid Search",
+    "facets": {"area": "retrieval", "kind": "technique", "stage": "production"},
+    "summary": "Combine keyword search (BM25) with vector search and merge the rankings.",
+    "description": "Embeddings miss exact terms like error codes, SKUs and names; keywords miss paraphrases. Running both and fusing the results (e.g. reciprocal rank fusion) beats either alone on most real corpora.",
+    "aliases": ["BM25 + vectors", "Reciprocal rank fusion"]
+  },
+  {
+    "id": "reranking",
+    "title": "Reranking",
+    "facets": {"area": "retrieval", "kind": "technique", "stage": "production"},
+    "summary": "Fetch many candidates cheaply, then reorder them with a slower, more accurate model.",
+    "description": "A cross-encoder reads the query and each chunk together, so it judges relevance far better than vector distance. Retrieve 50–100, rerank, keep the top 5–10: better answers with fewer tokens.",
+    "aliases": ["Cross-encoder", "Two-stage retrieval"],
+    "platforms": {
+      "anthropic": "Voyage rerank (partner)",
+      "google": "Vertex AI ranking API"
+    }
+  },
+  {
+    "id": "contextual-retrieval",
+    "title": "Contextual Retrieval",
+    "facets": {"area": "retrieval", "kind": "technique", "stage": "scale"},
+    "summary": "Prepend a short, model-written note about where each chunk sits before embedding it.",
+    "description": "\"Revenue grew 3%\" alone is unfindable; with \"From ACME's Q2 2024 report:\" it matches. Costs one cheap model call per chunk at index time, which prompt caching makes affordable.",
+    "aliases": ["Chunk context", "Contextual embeddings"]
+  },
+  {
+    "id": "query-rewriting",
+    "title": "Query Rewriting",
+    "facets": {"area": "retrieval", "kind": "technique", "stage": "production"},
+    "summary": "Turn the user's message into better search queries before retrieving.",
+    "description": "Follow-ups like \"what about the second one?\" need the conversation folded in. A model can expand acronyms, split multi-part questions, or write a hypothetical answer to embed (HyDE). Adds a call, so measure the gain.",
+    "aliases": ["HyDE", "Query expansion"]
+  },
+  {
+    "id": "agentic-search",
+    "title": "Agentic Search",
+    "facets": {"area": "retrieval", "kind": "pattern", "stage": "scale"},
+    "summary": "Give the model search tools and let it decide what to look up, read and look up again.",
+    "description": "Handles questions one retrieval round can't: comparisons, multi-hop facts, code navigation with grep. Slower and costlier than fixed RAG, so use it when questions are open-ended, and cap the number of steps.",
+    "aliases": ["Agentic RAG", "Iterative retrieval"]
+  },
+  {
+    "id": "managed-file-search",
+    "title": "Managed File Search",
+    "facets": {"area": "retrieval", "kind": "technique", "stage": "prototype"},
+    "summary": "Upload files and let the provider chunk, embed, index and retrieve them for you.",
+    "description": "The fastest path to a working RAG demo with no vector database to run. You give up control over chunking, ranking and where data lives; move to your own pipeline when evals show retrieval is the bottleneck.",
+    "aliases": ["Hosted RAG", "File search"],
+    "platforms": {
+      "openai": "File search tool",
+      "google": "File Search tool"
+    }
+  },
+  {
+    "id": "citations",
+    "title": "Citations",
+    "facets": {"area": "retrieval", "kind": "technique", "stage": "production"},
+    "summary": "Make the answer point at the exact source passages it relied on.",
+    "description": "Lets users verify claims and lets you catch answers that aren't supported. Native citation features return checked spans; asking the model to cite in text can still produce invented references.",
+    "aliases": ["Source attribution", "Grounding metadata"],
+    "platforms": {
+      "anthropic": "Citations",
+      "openai": "Annotations (url/file citations)",
+      "google": "Grounding metadata"
+    }
+  },
+  {
+    "id": "rag-vs-long-context",
+    "title": "RAG vs Long Context",
+    "facets": {"area": "retrieval", "kind": "concept", "stage": "production"},
+    "summary": "Small corpus? Put it all in the prompt. Large or changing corpus? Retrieve.",
+    "description": "If the documents fit comfortably and repeat across calls, sending them whole with prompt caching is simpler and often more accurate. RAG wins when the corpus is large, changes often, or needs per-user permissions.",
+    "aliases": ["Context stuffing"]
+  },
+  {
+    "id": "stale-index",
+    "title": "Stale Index",
+    "facets": {"area": "retrieval", "kind": "pitfall", "stage": "scale"},
+    "summary": "The vector index still holds deleted, outdated or permission-revoked documents.",
+    "description": "RAG then confidently answers from old policy or leaks a file a user lost access to. Re-index on change, delete vectors with their source, filter by permissions at query time, and show document dates in answers.",
+    "aliases": ["Index drift", "Embedding drift"]
+  },
+  {
+    "id": "agent-loop",
+    "title": "Agent Loop",
+    "essential": true,
+    "facets": {"area": "agents", "kind": "concept", "stage": "production"},
+    "summary": "Call the model, run the tools it asks for, feed back results, repeat until it's done.",
+    "description": "That loop is all an agent is: an LLM using tools based on what it observes. The model decides the next step, so it handles open-ended tasks, at the cost of predictability. Give it clear tools, a stop condition and a step limit.",
+    "aliases": ["Agent", "ReAct", "Tool loop"],
+    "platforms": {
+      "anthropic": "Claude Agent SDK",
+      "openai": "Agents SDK",
+      "google": "Agent Development Kit"
+    }
+  },
+  {
+    "id": "workflow-vs-agent",
+    "title": "Workflow vs Agent",
+    "essential": true,
+    "facets": {"area": "agents", "kind": "concept", "stage": "prototype"},
+    "summary": "Workflow: your code sets the steps. Agent: the model chooses them.",
+    "description": "Use a workflow when the steps are known: it's cheaper, faster and easier to test. Use an agent when the path depends on what it finds. Start with the simplest thing (one good prompt) and add autonomy only when evals show you need it.",
+    "aliases": ["Agentic workflow", "Autonomy"]
+  },
+  {
+    "id": "routing",
+    "title": "Routing",
+    "facets": {"area": "agents", "kind": "pattern", "stage": "production"},
+    "summary": "Classify the input first, then send it to the prompt, tool or model built for that case.",
+    "description": "Keeps each prompt focused instead of one prompt handling everything. Send easy questions to a small model and hard ones to a large one. The classifier needs its own eval: a wrong route fails silently.",
+    "aliases": ["Classifier", "Intent routing"]
+  },
+  {
+    "id": "parallelization",
+    "title": "Parallelization",
+    "facets": {"area": "agents", "kind": "pattern", "stage": "production"},
+    "summary": "Run independent LLM calls at once: split a task into parts, or ask several times and vote.",
+    "description": "Sectioning cuts latency on separable work, like checking a document for several policies. Voting raises confidence on judgements, like flagging unsafe content. Merge the results in code or in a final call.",
+    "aliases": ["Fan-out", "Voting", "Map-reduce"]
+  },
+  {
+    "id": "orchestrator-workers",
+    "title": "Orchestrator and Workers",
+    "facets": {"area": "agents", "kind": "pattern", "stage": "scale"},
+    "summary": "A lead model plans subtasks, hands them to workers, then combines their results.",
+    "description": "Fits tasks where the subtasks can't be known in advance, like a change touching an unknown set of files or a broad research question. Each worker gets a clean context. Costs many more tokens than one agent.",
+    "aliases": ["Supervisor", "Lead agent", "Subagents"]
+  },
+  {
+    "id": "evaluator-optimizer",
+    "title": "Evaluator–Optimizer",
+    "facets": {"area": "agents", "kind": "pattern", "stage": "production"},
+    "summary": "One call drafts, another critiques it, and the draft is revised until it passes.",
+    "description": "Works when you can state what \"good\" looks like and feedback measurably helps, as in translation or code that must pass tests. Cap the rounds: models can loop on taste forever.",
+    "aliases": ["Self-critique", "Reflection", "Generator–critic"]
+  },
+  {
+    "id": "subagents",
+    "title": "Subagents",
+    "facets": {"area": "agents", "kind": "pattern", "stage": "scale"},
+    "summary": "Delegate a side task to a fresh agent and get back only its summary.",
+    "description": "Keeps the main context clean: the subagent can read fifty files and return five lines. The handoff loses detail both ways, so brief it like a colleague and ask for exactly the output you need.",
+    "aliases": ["Context isolation", "Delegation"]
+  },
+  {
+    "id": "multi-agent",
+    "title": "Multi-Agent Systems",
+    "facets": {"area": "agents", "kind": "pattern", "stage": "scale"},
+    "summary": "Several agents with different roles or tools working on one goal.",
+    "description": "Pays off for wide, parallel work like research across many sources. For tightly coupled tasks like coding one feature, agents step on each other and lose shared context. Tokens multiply quickly, so prove one agent falls short first.",
+    "aliases": ["Agent swarm", "Crew"],
+    "platforms": {
+      "anthropic": "Claude Agent SDK subagents",
+      "openai": "Agents SDK handoffs",
+      "google": "ADK multi-agent"
+    }
+  },
+  {
+    "id": "human-in-the-loop",
+    "title": "Human in the Loop",
+    "facets": {"area": "agents", "kind": "pattern", "stage": "production"},
+    "summary": "Pause the agent for approval before risky, costly or irreversible actions.",
+    "description": "Sending email, paying, deleting or deploying should need a click. Show what will happen and why, make approval granular, and keep an audit log. Too many prompts and people approve blindly, so gate only what matters.",
+    "aliases": ["Approval step", "Confirmation"]
+  },
+  {
+    "id": "runaway-agent",
+    "title": "Runaway Agent",
+    "facets": {"area": "agents", "kind": "pitfall", "stage": "production"},
+    "summary": "An agent loops, retries or expands scope, burning tokens without finishing.",
+    "description": "Set a step limit, a token or cost budget, and timeouts on every tool. Detect repeated identical calls. Make tool errors tell it what to change, and give it a way to stop and report that it's stuck.",
+    "aliases": ["Infinite loop", "Budget limits"]
+  },
+  {
+    "id": "compounding-errors",
+    "title": "Compounding Errors",
+    "facets": {"area": "agents", "kind": "pitfall", "stage": "scale"},
+    "summary": "A small error early in a long task gets built on and grows with every step.",
+    "description": "At 95% per step, twenty steps succeed only a third of the time. Shorten chains, verify state with tools between steps (run the tests, re-read the file), checkpoint progress, and let the agent backtrack.",
+    "aliases": ["Error propagation", "Drift"]
+  },
+  {
+    "id": "agent-skills",
+    "title": "Agent Skills",
+    "facets": {"area": "agents", "kind": "technique", "stage": "production"},
+    "summary": "Folders of instructions and scripts an agent loads only when a task needs them.",
+    "description": "Only a short description sits in the context; the full instructions load on demand. Packages team know-how (how we release, how we write reports) without bloating every prompt.",
+    "aliases": ["Skills", "Procedural knowledge"],
+    "platforms": {
+      "anthropic": "Agent Skills",
+      "openai": "Skills (Codex)"
+    }
+  },
+  {
+    "id": "evals",
+    "title": "Evals",
+    "essential": true,
+    "facets": {"area": "evals", "kind": "concept", "stage": "prototype"},
+    "summary": "Automated tests that score model output on a fixed set of cases.",
+    "description": "The only way to know whether a prompt, model or retrieval change made things better or worse. Start with 20–50 real cases before writing much prompt; grow the set from production failures. Without evals every change is a guess.",
+    "aliases": ["Evaluation", "LLM testing"],
+    "platforms": {
+      "anthropic": "Console Evaluation tool",
+      "openai": "Evals API",
+      "google": "Vertex AI Gen AI evaluation"
+    }
+  },
+  {
+    "id": "golden-dataset",
+    "title": "Golden Dataset",
+    "facets": {"area": "evals", "kind": "technique", "stage": "production"},
+    "summary": "A curated set of inputs with known-good answers or grading notes.",
+    "description": "Draw cases from real traffic, including the hard and weird ones, not just the ones you thought of. Version it with the code, keep a held-out part you don't tune against, and add every bug you fix.",
+    "aliases": ["Test set", "Ground truth"]
+  },
+  {
+    "id": "code-graded-evals",
+    "title": "Code-Graded Evals",
+    "facets": {"area": "evals", "kind": "technique", "stage": "prototype"},
+    "summary": "Score output with plain code: exact match, regex, JSON validity, tests passing.",
+    "description": "Fast, cheap, deterministic: use it wherever the answer is checkable. Design outputs to be checkable (a label, a number, JSON) so more of your eval can be code. Keep model graders for what code can't judge.",
+    "aliases": ["Assertion-based evals", "Exact match"]
+  },
+  {
+    "id": "llm-as-judge",
+    "title": "LLM-as-Judge",
+    "essential": true,
+    "facets": {"area": "evals", "kind": "technique", "stage": "production"},
+    "summary": "Use a model with a rubric to grade outputs that code can't check.",
+    "description": "Scales human-like judgement for tone, faithfulness and helpfulness. Give a specific rubric, ask for reasoning before the score, prefer pass/fail over 1–10, and check the judge against human labels: judges favour long answers and their own style.",
+    "aliases": ["Model-graded eval", "Auto-grader"]
+  },
+  {
+    "id": "pairwise-comparison",
+    "title": "Pairwise Comparison",
+    "facets": {"area": "evals", "kind": "technique", "stage": "production"},
+    "summary": "Show a judge two outputs and ask which is better, instead of scoring each alone.",
+    "description": "Relative judgements are more consistent than absolute scores, for humans and models. Swap the order and ask twice to cancel position bias. Good for choosing between prompt or model versions.",
+    "aliases": ["A/B judging", "Preference eval"]
+  },
+  {
+    "id": "eval-in-ci",
+    "title": "Evals in CI",
+    "facets": {"area": "evals", "kind": "technique", "stage": "production"},
+    "summary": "Run the eval suite on every prompt, model or pipeline change and block regressions.",
+    "description": "Prompts are code: a one-word edit can break a use case nobody re-tested. Gate merges on the code-graded set; run slower judge-based evals nightly or before release. Track scores over time, not just pass/fail.",
+    "aliases": ["Regression evals", "Prompt CI"]
+  },
+  {
+    "id": "tracing",
+    "title": "Tracing",
+    "facets": {"area": "evals", "kind": "technique", "stage": "production"},
+    "summary": "Record every model call, tool call, input and output of a request as one trace.",
+    "description": "You can't debug an agent from its final answer. Traces show which step went wrong, what context it had and what it cost. Redact secrets and personal data before storing them.",
+    "aliases": ["LLM observability", "Spans"],
+    "platforms": {
+      "anthropic": "Console logs",
+      "openai": "Agents SDK tracing",
+      "google": "Vertex AI tracing"
+    }
+  },
+  {
+    "id": "benchmark-contamination",
+    "title": "Trusting Public Benchmarks",
+    "facets": {"area": "evals", "kind": "pitfall", "stage": "prototype"},
+    "summary": "Leaderboard scores don't tell you how a model does on your task.",
+    "description": "Benchmarks leak into training data and measure generic skills. A model ranked lower can win on your data. Pick models with your own eval set; use public benchmarks only to shortlist.",
+    "aliases": ["Leaderboards", "Benchmark contamination"]
+  },
+  {
+    "id": "vibe-checks",
+    "title": "Vibe Checks",
+    "facets": {"area": "evals", "kind": "pitfall", "stage": "prototype"},
+    "summary": "Trying a few prompts by hand and shipping because it \"looks good\".",
+    "description": "Fine for the first hour, harmful after. Hand-testing remembers wins and forgets failures, and never re-runs old cases. Turn every manual check into a saved case, and let the suite decide.",
+    "aliases": ["Eyeballing", "Manual testing"]
+  },
+  {
+    "id": "online-evals",
+    "title": "Online Evals",
+    "facets": {"area": "evals", "kind": "technique", "stage": "scale"},
+    "summary": "Score real production traffic: sampled judging, user feedback and A/B tests.",
+    "description": "Offline sets miss what users actually ask. Sample live traces for model-graded checks, collect thumbs and edits, and A/B big changes on a slice of traffic. Feed failures back into the golden dataset.",
+    "aliases": ["Production monitoring", "A/B testing"]
+  },
+  {
+    "id": "prompt-injection",
+    "title": "Prompt Injection",
+    "essential": true,
+    "facets": {"area": "safety", "kind": "concept", "stage": "production"},
+    "summary": "Text in the input that the model obeys as instructions, overriding yours.",
+    "description": "Models can't reliably tell your instructions from instructions inside data. There is no complete fix, so design for it: limit what tools can do, keep secrets out of reach, and require approval for actions with impact.",
+    "aliases": ["Injection attack", "Instruction hijacking"]
+  },
+  {
+    "id": "indirect-prompt-injection",
+    "title": "Indirect Prompt Injection",
+    "facets": {"area": "safety", "kind": "concept", "stage": "production"},
+    "summary": "Instructions hidden in a web page, email or file that an agent reads while working.",
+    "description": "The attacker never talks to your app: they plant text where the agent will look. Treat everything fetched as untrusted, mark it as data in the prompt, and never let content from one source trigger actions on another without checks.",
+    "aliases": ["Second-order injection", "Poisoned content"]
+  },
+  {
+    "id": "lethal-trifecta",
+    "title": "The Lethal Trifecta",
+    "facets": {"area": "safety", "kind": "concept", "stage": "production"},
+    "summary": "Private data + untrusted content + a way to send data out = a leak waiting to happen.",
+    "description": "An agent with all three can be told by a planted instruction to send your data to an attacker, via email, an HTTP call or even an image URL. Remove at least one leg for any agent that touches sensitive data.",
+    "aliases": ["Data exfiltration"]
+  },
+  {
+    "id": "jailbreak",
+    "title": "Jailbreak",
+    "facets": {"area": "safety", "kind": "concept", "stage": "production"},
+    "summary": "A prompt crafted to make the model ignore its safety training or your rules.",
+    "description": "Role-play, fake authority, encodings and many-shot tricks keep evolving. The model's refusal is one layer, not your only control: enforce limits in code, filter outputs, and monitor for abuse.",
+    "aliases": ["Guardrail bypass", "DAN"]
+  },
+  {
+    "id": "guardrails",
+    "title": "Guardrails",
+    "facets": {"area": "safety", "kind": "pattern", "stage": "production"},
+    "summary": "Checks around the model: classify inputs before and outputs after, block or rewrite.",
+    "description": "Catch off-topic requests, abuse, personal data and policy breaks with small fast classifiers or rules. They add latency and false positives, so run them in parallel where possible and tune on real traffic.",
+    "aliases": ["Moderation", "Content filters", "Input/output filters"],
+    "platforms": {
+      "openai": "Moderation API",
+      "google": "Safety settings"
+    }
+  },
+  {
+    "id": "least-privilege-tools",
+    "title": "Least-Privilege Tools",
+    "facets": {"area": "safety", "kind": "technique", "stage": "production"},
+    "summary": "Give the agent only the tools and permissions the task needs, scoped to the user.",
+    "description": "Assume the model will at some point call any tool it has with attacker-chosen arguments. Read-only by default, per-user credentials not admin keys, allowlists for domains and paths, and limits on amounts and counts.",
+    "aliases": ["Scoped permissions", "Capability limits"]
+  },
+  {
+    "id": "output-as-untrusted",
+    "title": "Treat Output as Untrusted",
+    "facets": {"area": "safety", "kind": "technique", "stage": "production"},
+    "summary": "Validate model output like user input before rendering, executing or storing it.",
+    "description": "Model text rendered as HTML can carry XSS; generated SQL or shell can be injected; links and images can leak data. Escape, parse against a schema, run code in a sandbox, and allowlist URLs.",
+    "aliases": ["Insecure output handling", "Output validation"]
+  },
+  {
+    "id": "pii-leakage",
+    "title": "Sensitive Data Leakage",
+    "facets": {"area": "safety", "kind": "pitfall", "stage": "production"},
+    "summary": "Personal or secret data sent to the model, logged in traces or repeated to other users.",
+    "description": "Strip what the task doesn't need before the call, redact logs, separate tenants in retrieval, and check the provider's retention terms. Anything in the context can come back out in a reply.",
+    "aliases": ["PII", "Data leakage"]
+  },
+  {
+    "id": "system-prompt-leak",
+    "title": "System Prompt Leaks",
+    "facets": {"area": "safety", "kind": "pitfall", "stage": "production"},
+    "summary": "Users can usually get the model to reveal its system prompt.",
+    "description": "Assume the system prompt is public. Never put API keys, internal URLs or secrets in it; enforce rules in code, not just in instructions. A leaked prompt should be embarrassing at worst, never a breach.",
+    "aliases": ["Prompt extraction"]
+  },
+  {
+    "id": "sycophancy",
+    "title": "Sycophancy",
+    "facets": {"area": "safety", "kind": "pitfall", "stage": "production"},
+    "summary": "The model agrees with the user, praises their idea or flips its answer under pushback.",
+    "description": "It was trained on human ratings, and people rate agreement highly. Ask for criticism explicitly, don't reveal your preferred answer, and be wary when it changes a correct answer after \"are you sure?\".",
+    "aliases": ["Agreeableness", "Flattery"]
+  },
+  {
+    "id": "token-pricing",
+    "title": "Token Pricing",
+    "essential": true,
+    "facets": {"area": "cost", "kind": "concept", "stage": "prototype"},
+    "summary": "You pay per million input and output tokens; output costs several times more.",
+    "description": "Long prompts with short answers are cheap; long answers and thinking tokens are not. Estimate cost per request and per user per month before launch, and log usage per feature so you know what to optimise.",
+    "aliases": ["Per-token pricing", "Usage"],
+    "platforms": {
+      "anthropic": "Per-model input/output pricing",
+      "openai": "Per-model input/output pricing",
+      "google": "Per-model input/output pricing"
+    }
+  },
+  {
+    "id": "batch-api",
+    "title": "Batch API",
+    "facets": {"area": "cost", "kind": "technique", "stage": "scale"},
+    "summary": "Submit many requests to run asynchronously within a day at about half price.",
+    "description": "For work nobody waits on: classifying a backlog, nightly summaries, running evals. Results come back in any order, so key each request with your own id. Combine with prompt caching for the biggest saving.",
+    "aliases": ["Async batch", "Offline inference"],
+    "platforms": {
+      "anthropic": "Message Batches API",
+      "openai": "Batch API",
+      "google": "Batch Mode"
+    }
+  },
+  {
+    "id": "streaming",
+    "title": "Streaming",
+    "essential": true,
+    "facets": {"area": "cost", "kind": "technique", "stage": "prototype"},
+    "summary": "Send tokens to the user as they're generated instead of waiting for the whole reply.",
+    "description": "Total time is the same but the app feels fast because text appears in a second or two. Handle partial output, cancellations and mid-stream errors. Structured output and tool calls stream too, as partial JSON.",
+    "aliases": ["Server-sent events", "SSE"],
+    "platforms": {
+      "anthropic": "stream: true (SSE)",
+      "openai": "stream: true (SSE)",
+      "google": "streamGenerateContent"
+    }
+  },
+  {
+    "id": "ttft",
+    "title": "Time to First Token",
+    "facets": {"area": "cost", "kind": "concept", "stage": "production"},
+    "summary": "The wait before the first token arrives: what users feel as latency.",
+    "description": "Grows with input length, model size and queueing, and with thinking before visible output. Cut it with prompt caching, smaller models, shorter prompts and streaming. Measure p95, not just the average.",
+    "aliases": ["TTFT", "Latency"]
+  },
+  {
+    "id": "model-cascade",
+    "title": "Model Cascade",
+    "facets": {"area": "cost", "kind": "pattern", "stage": "scale"},
+    "summary": "Try a small model first and escalate to a bigger one only when needed.",
+    "description": "Most traffic is easy. Escalate on low confidence, a failed check or a hard category. Can cut cost several-fold, but needs a reliable signal for when to escalate, or quality drops silently.",
+    "aliases": ["Model routing", "Fallback to larger model"]
+  },
+  {
+    "id": "rate-limits",
+    "title": "Rate Limits",
+    "facets": {"area": "cost", "kind": "concept", "stage": "production"},
+    "summary": "Caps on requests and tokens per minute; exceed them and you get 429 errors.",
+    "description": "Retry with exponential backoff and jitter, honour the retry-after header, and queue work instead of hammering. Limits rise with usage tier; ask early before a launch. Budget per-user limits too, so one user can't starve the rest.",
+    "aliases": ["429", "Throttling", "TPM/RPM"],
+    "platforms": {
+      "anthropic": "Usage tiers and rate limits",
+      "openai": "Usage tiers and rate limits",
+      "google": "Rate limits per tier"
+    }
+  },
+  {
+    "id": "effort-control",
+    "title": "Effort Control",
+    "facets": {"area": "cost", "kind": "technique", "stage": "production"},
+    "summary": "Tell a reasoning model how hard to think, trading quality against tokens and latency.",
+    "description": "Low effort for simple routing and chat, high for hard problems. Thinking tokens are billed, so the default isn't always right. Set it per request type and check the effect in your evals.",
+    "aliases": ["Thinking budget", "Reasoning effort"],
+    "platforms": {
+      "anthropic": "effort / thinking budget",
+      "openai": "reasoning.effort",
+      "google": "thinkingBudget / thinkingLevel"
+    }
+  },
+  {
+    "id": "semantic-cache",
+    "title": "Semantic Cache",
+    "facets": {"area": "cost", "kind": "technique", "stage": "scale"},
+    "summary": "Return a stored answer when a new question means the same as an earlier one.",
+    "description": "Cuts cost and latency for repetitive questions like FAQs. Risky: near-identical questions can need different answers, and per-user context makes cached answers wrong or leaky. Prefer exact-match caching unless evals show it's safe.",
+    "aliases": ["Response cache", "Embedding cache"]
+  },
+  {
+    "id": "output-length",
+    "title": "Controlling Output Length",
+    "facets": {"area": "cost", "kind": "technique", "stage": "production"},
+    "summary": "Ask for the length you need: output tokens are the slow, expensive part.",
+    "description": "Say \"in two sentences\" or give a word budget, ask for just the answer without preamble, and use structured fields instead of prose. Shorter output is faster, cheaper and often clearer.",
+    "aliases": ["Verbosity", "Concise answers"]
+  },
+  {
+    "id": "fine-tuning",
+    "title": "Fine-Tuning",
+    "facets": {"area": "deploy", "kind": "technique", "stage": "scale"},
+    "summary": "Further train a model on your examples to change its default behaviour.",
+    "description": "Reach for it after prompting, examples and retrieval are exhausted: to fix a format or style at scale, or to make a small model do one narrow task well. It teaches behaviour, not facts; use RAG for knowledge.",
+    "aliases": ["SFT", "Custom model", "Distillation"],
+    "platforms": {
+      "anthropic": "Fine-tuning via Amazon Bedrock",
+      "openai": "Fine-tuning API",
+      "google": "Vertex AI tuning"
+    }
+  },
+  {
+    "id": "model-pinning",
+    "title": "Pinning Model Versions",
+    "facets": {"area": "deploy", "kind": "technique", "stage": "production"},
+    "summary": "Call a dated model snapshot, not a moving alias, and upgrade on purpose.",
+    "description": "An alias can change under you and silently shift outputs. Pin the snapshot, run your evals against the new one, then switch, with a rollback ready. Note deprecation dates: old snapshots get retired.",
+    "aliases": ["Model snapshot", "Deprecation"],
+    "platforms": {
+      "anthropic": "Dated model ids",
+      "openai": "Dated snapshots",
+      "google": "Stable model versions"
+    }
+  },
+  {
+    "id": "cloud-platforms",
+    "title": "Models Through Your Cloud",
+    "facets": {"area": "deploy", "kind": "concept", "stage": "production"},
+    "summary": "Use the same models via your cloud provider for billing, regions and compliance.",
+    "description": "Fits companies already on one cloud: one bill, existing IAM, private networking and data residency. New features may arrive later than on the provider's own API, and model ids and quotas differ.",
+    "aliases": ["Bedrock", "Vertex AI", "Azure OpenAI"],
+    "platforms": {
+      "anthropic": "Amazon Bedrock, Google Vertex AI",
+      "openai": "Azure OpenAI in Foundry",
+      "google": "Vertex AI"
+    }
+  },
+  {
+    "id": "retries-fallbacks",
+    "title": "Retries and Fallbacks",
+    "facets": {"area": "deploy", "kind": "pattern", "stage": "production"},
+    "summary": "Handle overloads and outages by retrying, then falling back to another model or provider.",
+    "description": "Retry 429s and 5xx with backoff; on repeated failure switch to a backup model or a degraded mode. Fallback models need their own evals: a prompt tuned for one model can behave differently on another.",
+    "aliases": ["Failover", "Resilience"]
+  },
+  {
+    "id": "llm-gateway",
+    "title": "LLM Gateway",
+    "facets": {"area": "deploy", "kind": "pattern", "stage": "scale"},
+    "summary": "A proxy all model calls go through for keys, routing, limits, caching and logging.",
+    "description": "Centralises spend tracking, per-team limits, provider failover and redaction instead of reimplementing them in every service. It is also a single point of failure, so run it like critical infrastructure.",
+    "aliases": ["AI gateway", "Model proxy"]
+  },
+  {
+    "id": "self-hosting",
+    "title": "Self-Hosting Inference",
+    "facets": {"area": "deploy", "kind": "technique", "stage": "scale"},
+    "summary": "Serve open-weights models on your own GPUs with an engine like vLLM.",
+    "description": "Worth it for strict data control, very high steady volume or custom models. GPUs are expensive when idle; batching, quantization and autoscaling decide whether it beats an API on cost.",
+    "aliases": ["vLLM", "TGI", "Ollama"]
+  },
+  {
+    "id": "data-retention",
+    "title": "Data Retention and Training",
+    "facets": {"area": "deploy", "kind": "concept", "stage": "production"},
+    "summary": "Know what the provider stores, for how long, and whether it trains on your data.",
+    "description": "API data is generally not used for training by default, but logs are kept for a period for abuse monitoring. Zero-data-retention agreements, regions and BAAs exist for sensitive workloads; check them before sending health or legal data.",
+    "aliases": ["ZDR", "Data residency", "Privacy"],
+    "platforms": {
+      "anthropic": "Zero data retention (by agreement)",
+      "openai": "Zero data retention (by agreement)",
+      "google": "Vertex AI zero data retention"
+    }
+  },
+  {
+    "id": "api-key-exposure",
+    "title": "API Keys in the Client",
+    "facets": {"area": "deploy", "kind": "pitfall", "stage": "prototype"},
+    "summary": "Calling the model API straight from the browser or app exposes your key to everyone.",
+    "description": "Anyone can lift the key from the bundle or network tab and spend on your account. Call the model from your server, authenticate your users, and rate-limit per user. Rotate any key that has ever shipped.",
+    "aliases": ["Leaked key", "Client-side calls"]
+  },
+  {
+    "id": "cost-monitoring",
+    "title": "Cost Monitoring",
+    "facets": {"area": "deploy", "kind": "technique", "stage": "scale"},
+    "summary": "Track tokens and spend per feature, model and customer, with alerts.",
+    "description": "A prompt change or a looping agent can multiply the bill overnight. Log usage from every response, attribute it, set budget alerts and hard spend limits, and review the most expensive requests.",
+    "aliases": ["Spend tracking", "Usage dashboard"],
+    "platforms": {
+      "anthropic": "Console usage and cost",
+      "openai": "Usage dashboard and limits",
+      "google": "Cloud Billing budgets"
+    }
+  }
+]

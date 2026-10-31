@@ -6,7 +6,7 @@
 [![Release](https://img.shields.io/github/v/release/pearpages/flashcards)](https://github.com/pearpages/flashcards/releases)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-A mobile-first flashcard app with eight decks: design systems, CSS, accessibility, web performance, web security, system design, testing and Next.js. Every card has a wireframe drawing, and each deck brings its own filters and badges. About a fifth of every deck is starred ★ as the essentials you must know, and you can hide the cards you already know.
+A mobile-first flashcard app with ten decks: design systems, CSS, accessibility, web performance, web security, system design, testing, Next.js, LLM engineering and LLM internals. Every card has a wireframe drawing, and each deck brings its own filters and badges. About a fifth of every deck is starred ★ as the essentials you must know, and you can hide the cards you already know.
 
 The first deck, **Design System**, has 155 components, each tagged three ways: its purpose (forms, navigation, overlays…), its layer (primitive, component, pattern) and its atomic design level (atom, molecule, organism, template). Each card has wireframe drawings and, for most, the iOS and Android equivalents.
 
@@ -23,6 +23,10 @@ A sixth deck, **CSS**, has 100 cards from the cascade and selectors through flex
 A seventh deck, **Testing**, has 100 cards on strategy, test doubles, unit to end-to-end, APIs, non-functional checks, CI and suite maintenance, each with its test level and, where an API maps exactly, the JavaScript (Vitest, Testing Library, Playwright) and Python (pytest) way to do it.
 
 An eighth deck, **Next.js**, has 104 interview-style questions on the App Router: routing, Server and Client Components, data fetching, caching, Server Actions, proxy, images and fonts, metadata, config and deploys, each tagged with where its code runs (server, client, edge, build).
+
+A ninth deck, **LLM Engineering**, has 107 cards on building with LLMs: models, prompting, context, tools, retrieval, agents, evals, safety, cost and deploys, each tagged with the stage where it starts to matter (prototype, production, scale) and, where one exists, the Anthropic, OpenAI and Google feature for it.
+
+A tenth deck, **LLM Internals**, has 100 cards on how the models work inside: tokens, transformer architecture, attention, training, alignment, inference, efficiency, scaling and interpretability, each tagged with when it happens (pretraining, post-training, inference).
 
 **Try it: [flashcards.pearpages.com](https://flashcards.pearpages.com)** — works on phones and desktop, no sign-up.
 
@@ -53,7 +57,7 @@ An eighth deck, **Next.js**, has 104 interview-style questions on the App Router
 - **Hide what you know** — the "✓ Hide" button under the card (or `H`) takes it out of study, with Undo; hidden cards are remembered per deck in this browser only, stay in the list faded with an Unhide button, and the hidden counter in the header brings them back into study
 - **Filters** — narrow the deck by purpose and/or layer (each deck declares its own filters); the atomic design level is shown as a badge
 - **Desktop + mobile** — components that change shape on small screens show both versions side by side, or desktop · iOS · Android when the platforms differ
-- **Platform equivalents** — revealing a card shows its counterparts on the platforms its deck declares: iOS (SwiftUI/UIKit) and Android (Compose Material 3) for the UI decks, AWS, GCP and Azure for system design; search finds them too
+- **Platform equivalents** — revealing a card shows its counterparts on the platforms its deck declares: iOS (SwiftUI/UIKit) and Android (Compose Material 3) for the UI decks, AWS, GCP and Azure for system design, Anthropic, OpenAI and Google for LLM engineering; search finds them too
 - **Multiple decks** — add a folder under `src/decks/` and it shows up on the deck picker
 - **Swipe navigation** — swipe left/right to navigate between cards
 - **Keyboard navigation** — left/right arrow keys
@@ -76,6 +80,8 @@ src/decks/
   css/                 # same layout, with SwiftUI / Compose as its platforms
   testing/             # same layout, with JavaScript / Python as its platforms
   nextjs/              # same layout, no platform columns
+  llm-engineering/     # same layout, with Anthropic / OpenAI / Google as its platforms
+  llm-internals/       # same layout, no platform columns
     cards.json         # the cards
     images/<id>.svg    # one illustration per card (optional)
 ```
@@ -106,7 +112,7 @@ Add an entry to `src/decks/<deck>/cards.json`:
 | `description` | Yes      | Revealed on tap (≤ 280 chars to fit the card)                        |
 | `essential`   | No       | `true` for the deck's must-know cards (about a fifth of the deck): starred, kept by the ★ Essentials toggle |
 | `aliases`     | No       | Other names for the same thing                                       |
-| `platforms`   | No       | Equivalents keyed by the deck's declared platforms (e.g. `ios`, `android`; `aws`, `gcp`, `azure`; or `swiftui`, `compose`; `javascript`, `python`), ≤ 60 chars each |
+| `platforms`   | No       | Equivalents keyed by the deck's declared platforms (e.g. `ios`, `android`; `aws`, `gcp`, `azure`; or `swiftui`, `compose`; `javascript`, `python`; `anthropic`, `openai`, `google`), ≤ 60 chars each |
 
 Optionally add `images/<id>.svg` (160×120). Cards without one show a `?` placeholder.
 

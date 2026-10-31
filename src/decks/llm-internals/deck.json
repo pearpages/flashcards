@@ -1,0 +1,43 @@
+{
+  "id": "llm-internals",
+  "title": "LLM Internals",
+  "description": "How large language models work inside: tokens, transformer architecture, attention, training, alignment, inference, efficiency, scaling and interpretability. What each piece does and why it matters when you use a model.",
+  "facets": [
+    {
+      "key": "area",
+      "label": "Area",
+      "values": [
+        "tokens",
+        "architecture",
+        "attention",
+        "training",
+        "alignment",
+        "inference",
+        "efficiency",
+        "scaling",
+        "interpretability"
+      ]
+    },
+    {
+      "key": "kind",
+      "label": "Kind",
+      "values": [
+        "concept",
+        "component",
+        "technique",
+        "phenomenon"
+      ]
+    },
+    {
+      "key": "phase",
+      "label": "Happens in",
+      "filter": false,
+      "values": [
+        "pretraining",
+        "post-training",
+        "inference",
+        "any"
+      ]
+    }
+  ]
+}

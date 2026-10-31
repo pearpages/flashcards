@@ -146,3 +146,33 @@
   background: #f3e8fc;
   color: #7a3cc4;
 }
+
+.tag--prototype {
+  background: #e6f4ea;
+  color: #1e7a3c;
+}
+
+.tag--production {
+  background: #fdf0e1;
+  color: #a85d10;
+}
+
+.tag--scale {
+  background: #f3e8fc;
+  color: #7a3cc4;
+}
+
+.tag--pretraining {
+  background: #e8eefc;
+  color: #2f5bc4;
+}
+
+.tag--post-training {
+  background: #f3e8fc;
+  color: #7a3cc4;
+}
+
+.tag--inference {
+  background: #e6f4ea;
+  color: #1e7a3c;
+}

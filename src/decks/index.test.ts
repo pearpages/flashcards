@@ -87,6 +87,24 @@ describe("nextjs deck", () => {
   });
 });
 
+describe("llm decks", () => {
+  it("discovers the llm-engineering deck with its model providers", () => {
+    const deck = decks.find((d) => d.id === "llm-engineering");
+    expect(deck).toBeDefined();
+    expect(deck!.cards.length).toBeGreaterThanOrEqual(100);
+    expect(deck!.platforms?.map((p) => p.key)).toEqual(["anthropic", "openai", "google"]);
+    for (const card of deck!.cards) expect(getCardImages(deck!.id, card.id).desktop).toBeTruthy();
+  });
+
+  it("discovers the llm-internals deck with a drawing for every card", () => {
+    const deck = decks.find((d) => d.id === "llm-internals");
+    expect(deck).toBeDefined();
+    expect(deck!.cards.length).toBeGreaterThanOrEqual(100);
+    expect(deck!.platforms).toBeUndefined();
+    for (const card of deck!.cards) expect(getCardImages(deck!.id, card.id).desktop).toBeTruthy();
+  });
+});
+
 describe("getCardImages", () => {
   it("groups desktop and mobile drawings by card", () => {
     const images = getCardImages("design-system", "action-bar");
