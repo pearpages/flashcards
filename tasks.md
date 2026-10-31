@@ -83,6 +83,7 @@ item, and add a dated line at the top of **Done**.
 
 ## Done
 
+- [x] 2026-10-31: Released v0.6.1.
 - [x] 2026-10-31: Reviewed the LLM decks against current docs and papers: fixed 17 internals/engineering text errors (perplexity, KV cache, BPE, cosine 0…) and the provider cells (Claude sampling params and prefill now rejected, `output_config.format`, Workbench evals retired; OpenAI GPT-6 names, Evals and stored prompts shutting down, fine-tuning closed; Vertex AI renamed Agent Platform, `responseFormat`).
 - [x] 2026-10-31: Released v0.6.0.
 - [x] 2026-10-31: Two LLM decks: LLM Engineering (107 cards, Anthropic/OpenAI/Google equivalents, stage badge) and LLM Internals (100 cards, training-phase badge), a drawing per card; ADR-0017, ADR-0018.
