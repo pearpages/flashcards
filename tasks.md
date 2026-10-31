@@ -5,15 +5,19 @@ item, and add a dated line at the top of **Done**.
 
 ## Open
 
+- [ ] **Deck review follow-ups (2026-10-31).** All decks were checked against current
+      docs; couldn't confirm: Next.js `template.tsx` under Cache Components and Edge
+      `middleware.ts` status; Azure Monitor SLOs GA; Front Door edge actions; Safari passive
+      listeners and HTTP/2 push; `aria-busy`/`aria-controls` screen reader claims; Compose
+      Material 3 1.5.0 going stable (Expressive names). Re-check Baseline badges (css) and
+      provider names (system-design, llm-engineering) every few months. Facet ADRs
+      0008–0016 are still Proposed.
 - [ ] **LLM decks: open points from the 2026-10-31 review.** Couldn't confirm: Google's
       ranking API name after the Agent Search rename, OpenAI Evals' replacement (Datasets?),
       whether any Claude model is fine-tunable today. Provider features churn: re-check the
       llm-engineering platform cells every few months. ADR-0017 and ADR-0018 still Proposed.
 - [ ] **Verify motion in a real browser.** Card slide (~0.7s spring) and 3D flip timing,
       jump-bar smooth scroll and section highlight were only checked frozen or headless.
-- [ ] **Review native-platform names.** Newer Material 3 Expressive names (ButtonGroup,
-      SplitButtonLayout, FloatingToolbar) and some iOS approximations (TipKit for Tour) were
-      written from memory — check against current docs in `cards.json`.
 - [ ] **Split card text per deck** if the bundle grows again: the JS is ~970 kB (~305 kB
       gzipped) with ten decks, a growing share of it card text. Loading a
       deck's cards on entry needs async loading in `decks/index.ts`, `App` and `DeckView`.
@@ -21,54 +25,8 @@ item, and add a dated line at the top of **Done**.
 - [ ] **Review Proposed ADR-0015 and the essential picks** (about 20% of each deck, chosen by
       judgement). Open questions: css has no essential card in colour or architecture
       (candidates: `color-scheme`, `currentcolor`, `design-tokens`).
-- [ ] **Review the Next.js deck** (104 cards, ADR-0016 Proposed): check against current
-      nextjs.org docs; written from memory with spot checks. Least sure: Cache Components
-      replacing `dynamic`/`revalidate` segment config and failing the build on uncached reads
-      outside Suspense, `dynamicParams` under Cache Components, `staleTimes.dynamic` default,
-      prefetching only in production, `after()` in proxy, the CVE-2025-29927 mechanism,
-      `metadataBase` build error vs warning, ImageResponse 500 KB cap, env load order with
-      `NODE_ENV=test`, what `output: "export"` loses, `next/script` `worker`.
 - [ ] **Social card still says six decks.** `public/og.webp` predates the testing,
       Next.js and LLM decks; regenerate it with ten.
-- [ ] **Review the accessibility deck** (100 cards, ADR-0008 Proposed): check the content and
-      the SwiftUI/Compose names in `src/decks/accessibility/cards.json` against current
-      WAI-ARIA APG, WCAG 2.2 and platform docs; written from memory. Least sure:
-      `PlainTooltip`/`TooltipBox`, `.isToggle`, `CommandMenu`, `Table`, `OutlineGroup`,
-      `Gauge`, `HorizontalPager`, `stateDescription`, `android:autofillHints`; and the
-      support claims on `aria-controls`, `aria-busy` and `aria-errormessage`.
-- [ ] **Review the web-security deck** (100 cards, ADR-0010 Proposed): check content
-      against current OWASP cheat sheets and specs; written from memory. Least sure: the
-      OWASP 2025 category on judgement-call cards (xxe, redos, file-upload, reverse
-      tabnabbing, secrets-management, waf, ddos-protection, data-minimization), NIST SP
-      800-63B rev 4 password figures, OAuth 2.1 status, Trusted Types browser support,
-      CWE-1336 / CWE-915 / CWE-1392 / CWE-636 aliases.
-- [ ] **Review the web-performance deck** (100 cards, ADR-0011 Proposed): check content
-      against web.dev and MDN; written from memory. Least sure: TTFB ≤ 0.8 s and FCP
-      ≤ 1.8 s guides, INP's "one of the slowest" rule, CLS session windows and the 500 ms
-      input exclusion, TCP initial window (~14 kB), passive-by-default listeners in Safari,
-      Speculation Rules support, stale-while-revalidate in browsers, the `improves` badge
-      on judgement-call cards (core-web-vitals, p75, head-of-line-blocking, http3).
-- [ ] **Review the testing deck** (100 cards, ADR-0014 Proposed): check tool APIs against
-      current Vitest, Testing Library, Playwright and pytest docs; written from memory.
-      Least sure: `pytest-split` flags, `pytest-testmon`, `vitest --changed`, the
-      `environment`/`browser` config shape, Playwright Python `storage_state` and browser
-      flags, MSW v2 syntax, Atheris / Jazzer.js / fishery, the "about a third" figure
-      for automated accessibility checks.
-- [ ] **Review the css deck** (100 cards, ADR-0013 Proposed): check Baseline statuses
-      against web-features / MDN (they move every month) and the SwiftUI/Compose names.
-      Verified 2026-10-20: `@scope` and same-document view transitions newly available,
-      anchor positioning newly available (Firefox 147), scroll-driven animations limited.
-      Least sure: popover/top layer (newly → widely around now), `forced-colors` in Safari,
-      `hyphens` prefixes, unprefixed `line-clamp`; `.keyframeAnimator()`,
-      `SharedTransitionLayout`, `ViewThatFits` / `BoxWithConstraints` as container-query
-      equivalents, `Modifier.weight()` for `fr`.
-- [ ] **Review the system-design deck** (104 cards, ADR-0009 Proposed): check the
-      descriptions and the AWS/GCP/Azure service names in
-      `src/decks/system-design/cards.json` against current provider docs; written from memory.
-      Least sure: GCP Managed Service for Apache Kafka, Backup and DR Service, Service
-      Directory; CloudWatch Application Signals SLOs; Amazon Timestream (now Timestream for
-      InfluxDB?); Azure built-in PgBouncer, Synapse / Fabric, Istio add-on for AKS,
-      Functions Premium always-ready instances.
 
 ### Advertising readiness
 
@@ -83,6 +41,7 @@ item, and add a dated line at the top of **Done**.
 
 ## Done
 
+- [x] 2026-10-31: Reviewed the other eight decks against current docs: 86 fixes, e.g. Baseline badges (forced-colors widely; anchor positioning, line-clamp, display: contents limited), OWASP 2025 categories by CWE mapping, Next.js 16.4 (Edge runtime deprecated, prefetch defaults, slot `default.tsx`), renamed services (Timestream for InfluxDB, Azure Managed Redis), Material 3 Expressive names, WCAG/APG wording.
 - [x] 2026-10-31: Released v0.6.1.
 - [x] 2026-10-31: Reviewed the LLM decks against current docs and papers: fixed 17 internals/engineering text errors (perplexity, KV cache, BPE, cosine 0…) and the provider cells (Claude sampling params and prefill now rejected, `output_config.format`, Workbench evals retired; OpenAI GPT-6 names, Evals and stored prompts shutting down, fine-tuning closed; Vertex AI renamed Agent Platform, `responseFormat`).
 - [x] 2026-10-31: Released v0.6.0.

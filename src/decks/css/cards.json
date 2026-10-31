@@ -100,7 +100,7 @@
       "baseline": "baseline-newly"
     },
     "summary": "Limits styles to a subtree, with an optional lower bound where they stop.",
-    "description": "`@scope (.card) to (.card-content) { img { … } }` styles images in a card but not inside its content slot. When two scopes match, the closer root wins (scoping proximity). An alternative to BEM-style long class names.",
+    "description": "`@scope (.card) to (.card-content) { img { … } }` styles images in a card but not inside its content slot. When specificity ties, the closer scope root wins (scoping proximity). An alternative to BEM-style long class names.",
     "aliases": [
       "Scoped styles",
       "Donut scope"
@@ -191,7 +191,7 @@
       "baseline": "baseline-widely"
     },
     "summary": "Style a part of an element, or add a box: `::before`, `::after`, `::placeholder`.",
-    "description": "Double colon for pseudo-elements, single for pseudo-classes. `::before`/`::after` need `content` to render and are decorative: screen readers may read their text, so don't put meaning there. `::marker` and `::selection` style list bullets and highlights.",
+    "description": "Double colon for pseudo-elements, single for pseudo-classes. `::before`/`::after` need `content` to render and are decorative: screen readers may read their text, so don't put meaning there. `::marker` and `::selection` style bullets and highlights (Safari support partial).",
     "aliases": [
       "::before",
       "::after",
@@ -281,7 +281,7 @@
       "baseline": "baseline-widely"
     },
     "summary": "`:checked`, `:disabled`, `:required`, `:user-invalid` style form state without JavaScript.",
-    "description": "`:invalid` matches before the user has typed, so required fields look wrong on load. `:user-invalid` waits until they have interacted: use it for error styles. `:placeholder-shown` and `:autofill` cover other in-between states.",
+    "description": "`:invalid` matches before the user has typed, so required fields look wrong on load. `:user-invalid` waits until they have interacted: use it for error styles. `:placeholder-shown` and `:autofill` (not yet Baseline) cover other in-between states.",
     "aliases": [
       ":user-invalid",
       ":invalid",
@@ -365,7 +365,7 @@
     "facets": {
       "area": "box-model",
       "kind": "property",
-      "baseline": "baseline-widely"
+      "baseline": "limited"
     },
     "summary": "Removes an element's own box so its children act as children of its parent.",
     "description": "Useful to let a wrapper's children join a parent grid. Older browsers dropped the element's role from the accessibility tree (a `<ul>` stopped being a list, a `<button>` lost its role), so test with a screen reader and never use it on buttons. Subgrid is often the cleaner fix.",
@@ -916,10 +916,10 @@
     "facets": {
       "area": "positioning",
       "kind": "property",
-      "baseline": "baseline-newly"
+      "baseline": "limited"
     },
     "summary": "Tether a positioned box to another element, such as a tooltip to its button, in CSS.",
-    "description": "Name the anchor with `anchor-name: --btn`, then place the box with `position-anchor` and `position-area` or the `anchor()` function. `position-try` flips it when it would overflow. Baseline since Firefox 147 (2026); test newer parts like `anchor-size()` before relying on them.",
+    "description": "Name the anchor with `anchor-name: --btn`, then place the box with `position-anchor` and `position-area` or the `anchor()` function. `position-try` flips it when it would overflow. The core works in all engines since Firefox 147, but `position-visibility` is Safari-only.",
     "aliases": [
       "anchor-name",
       "position-area",
@@ -1104,7 +1104,7 @@
       "baseline": "baseline-widely"
     },
     "summary": "@media print and @page tidy a page for paper or PDF.",
-    "description": "Hide navigation and buttons, switch to dark text on white, show link URLs with `a::after { content: ' (' attr(href) ')' }`, and keep figures together with `break-inside: avoid`. `@page` sets margins and size. Receipts and articles get printed more than you think.",
+    "description": "Hide navigation and buttons, switch to dark text on white, show link URLs with `a::after { content: ' (' attr(href) ')' }`, and keep figures together with `break-inside: avoid`. `@page` (newly Baseline) sets margins and size. Receipts and articles get printed more than you think.",
     "aliases": [
       "@media print",
       "@page",
@@ -1127,7 +1127,7 @@
       "Line spacing"
     ],
     "platforms": {
-      "swiftui": ".lineSpacing()",
+      "swiftui": ".lineHeight(.multiple(factor: 1.5))",
       "compose": "TextStyle(lineHeight = …)"
     }
   },
@@ -1176,7 +1176,10 @@
       "balance",
       "pretty",
       "Orphans"
-    ]
+    ],
+    "platforms": {
+      "compose": "TextStyle(lineBreak = LineBreak.Paragraph)"
+    }
   },
   {
     "id": "text-overflow",
@@ -1203,7 +1206,7 @@
     "facets": {
       "area": "typography",
       "kind": "property",
-      "baseline": "baseline-widely"
+      "baseline": "limited"
     },
     "summary": "Cut text to a set number of lines and end it with an ellipsis.",
     "description": "The working form is still prefixed: `display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden`. All engines support it. The unprefixed `line-clamp` property is specified but not yet supported everywhere.",
@@ -1229,7 +1232,10 @@
     "aliases": [
       "hyphens: auto",
       "overflow-wrap"
-    ]
+    ],
+    "platforms": {
+      "compose": "TextStyle(hyphens = Hyphens.Auto)"
+    }
   },
   {
     "id": "font-variant-numeric",
@@ -1377,7 +1383,7 @@
       "baseline": "baseline-widely"
     },
     "summary": "linear-, radial- and conic-gradient() paint smooth colour transitions as images.",
-    "description": "Gradients are images, so they go in `background-image` and can stack with other layers. Interpolate in `oklch` (`linear-gradient(in oklch, …)`) to avoid muddy middles. Hard stops make stripes and pie charts; text over a gradient must keep its contrast.",
+    "description": "Gradients are images, so they go in `background-image` and can stack with other layers. Interpolate in `oklch` (`linear-gradient(in oklch, …)`, newly Baseline) to avoid muddy middles. Hard stops make stripes and pie charts; text over a gradient must keep its contrast.",
     "aliases": [
       "linear-gradient",
       "conic-gradient"
@@ -1393,7 +1399,7 @@
     "facets": {
       "area": "colour",
       "kind": "at-rule",
-      "baseline": "limited"
+      "baseline": "baseline-widely"
     },
     "summary": "High-contrast modes replace your colours with the user's palette; design for it.",
     "description": "Windows contrast themes override colours and drop `box-shadow` and background images. Use real borders or transparent outlines so edges still show, `currentColor` for icons, and `@media (forced-colors: active)` with system colours like `CanvasText` for fixes.",
@@ -1525,7 +1531,10 @@
       "animation-timeline",
       "scroll()",
       "view()"
-    ]
+    ],
+    "platforms": {
+      "swiftui": ".scrollTransition { }"
+    }
   },
   {
     "id": "starting-style",

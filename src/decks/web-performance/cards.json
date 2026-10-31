@@ -56,7 +56,7 @@
       "improves": "cls"
     },
     "summary": "How much visible content jumps around unexpectedly while the page is in use.",
-    "description": "Good ≤ 0.1, poor > 0.25. It scores the worst burst of shifts (a session window), and ignores shifts within 500 ms of user input. Images without dimensions, late ads and web fonts swapping in are the classic causes.",
+    "description": "Good ≤ 0.1, poor > 0.25. It scores the worst burst of shifts (a session window), and ignores shifts within 500 ms of a click, tap or key press. Images without dimensions, late ads and web fonts swapping in are the classic causes.",
     "aliases": [
       "CLS",
       "Layout shift"
@@ -251,7 +251,7 @@
       "improves": "inp"
     },
     "summary": "Google's small script that measures LCP, INP and CLS in the browser the way Chrome does.",
-    "description": "Call `onLCP`, `onINP` and `onCLS` with a function that sends each value to your analytics. The attribution build also reports which element or interaction caused the score, which turns a number into a fix.",
+    "description": "Call `onLCP`, `onINP` and `onCLS` with a function that sends each value to your analytics. LCP and INP now report in Firefox and Safari 26.2+ too; CLS is still Chromium-only. The attribution build names the element or interaction behind each score.",
     "aliases": [
       "web-vitals",
       "onINP"
@@ -339,7 +339,7 @@
       "improves": "fcp"
     },
     "summary": "Many requests share one connection, with compressed headers and request priorities.",
-    "description": "Ends the HTTP/1.1 limit of about six parallel requests per host, so spriting and domain sharding stop paying off. A lost TCP packet still stalls every stream on the connection. Server push is gone from browsers; use 103 Early Hints.",
+    "description": "Ends the HTTP/1.1 limit of about six parallel requests per host, so spriting and domain sharding stop paying off. A lost TCP packet still stalls every stream on the connection. Chrome and Firefox dropped server push; use 103 Early Hints.",
     "aliases": [
       "h2",
       "Multiplexing"
@@ -672,7 +672,7 @@
       "improves": "lcp"
     },
     "summary": "Browsers keep a paused copy of the page so Back and Forward are instant.",
-    "description": "Pages are excluded by `unload` handlers and some open connections, among other reasons. DevTools' Application panel tests eligibility and lists blockers. Use `pagehide`/`pageshow` instead of `unload`.",
+    "description": "Firefox skips pages with `unload` handlers; Chrome no longer fires `unload` and now caches some `no-store` pages. Open IndexedDB, WebSocket or WebRTC connections can also block it. DevTools' Application panel tests eligibility. Use `pagehide`/`pageshow`, not `unload`.",
     "aliases": [
       "bfcache",
       "pageshow"
@@ -1045,7 +1045,7 @@
       "improves": "fcp"
     },
     "summary": "Decides what text shows while a web font loads: fallback now, or invisible text.",
-    "description": "`swap` shows the fallback at once and swaps when the font arrives: text is readable but may shift. `optional` uses the font only if it's ready almost immediately, so no shift: good for body text. Avoid the default `block`, which can hide text.",
+    "description": "`swap` shows the fallback at once and swaps when the font arrives: text is readable but may shift. `optional` uses the font only if it's ready almost immediately, so no shift: good for body text. The default, `auto`, usually acts like `block`, which can hide text.",
     "aliases": [
       "FOIT",
       "FOUT",
@@ -1528,7 +1528,7 @@
       "improves": "inp"
     },
     "summary": "{ passive: true } promises a touch or wheel handler won't block scrolling.",
-    "description": "Without it, the browser may wait for your handler in case it calls `preventDefault()`, making scrolling stutter. Browsers already treat document-level `touchstart` and `wheel` listeners as passive. Prefer CSS `touch-action` over cancelling events.",
+    "description": "Without it, the browser may wait for your handler in case it calls `preventDefault()`, making scrolling stutter. `touchstart`, `touchmove` and `wheel` listeners on window, document and body are passive by default. Prefer CSS `touch-action` over cancelling events.",
     "aliases": [
       "passive: true",
       "touch-action"

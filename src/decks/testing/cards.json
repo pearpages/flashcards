@@ -920,7 +920,7 @@
       "level": "integration"
     },
     "summary": "Give a story a play function that clicks and types, and run it as a browser test.",
-    "description": "Every story becomes a test case: the `play` function interacts with the rendered component using Testing Library-style APIs, and Storybook's test runner or Vitest integration runs it in CI. Pick it when your components already live in Storybook.",
+    "description": "Every story becomes a test case: the `play` function interacts with the rendered component using Testing Library-style APIs, and Storybook's Vitest addon (or the older test-runner) runs it in CI. Pick it when your components already live in Storybook.",
     "aliases": [
       "play function",
       "Component stories as tests"
@@ -976,7 +976,7 @@
       "Vitest browser mode"
     ],
     "platforms": {
-      "javascript": "environment: 'jsdom' or browser: { enabled: true }"
+      "javascript": "environment: 'jsdom' or browser: { provider: playwright() }"
     }
   },
   {
@@ -1212,7 +1212,7 @@
       "level": "integration"
     },
     "summary": "Run axe on rendered pages to catch missing names, low contrast and broken ARIA.",
-    "description": "Cheap to add to component or e2e tests, and good at catching regressions. Automated rules find only part of the issues (often quoted as about a third): they can't judge whether alt text makes sense or focus order is logical. A pass is a floor.",
+    "description": "Cheap to add to component or e2e tests, and good at catching regressions. Automated rules find only part of the issues (Deque: about half by volume, far fewer WCAG criteria): they can't judge whether alt text makes sense or focus order is logical. A pass is a floor.",
     "aliases": [
       "axe-core",
       "jest-axe"
@@ -1316,12 +1316,12 @@
       "level": "static"
     },
     "summary": "Scan the source for risky patterns, or probe the running app from outside.",
-    "description": "SAST (CodeQL, Semgrep) runs on every pull request and points at the line, but reports false positives and misses runtime config. DAST (OWASP ZAP) attacks a deployed app and finds real, exploitable issues, but late and without a line number. Use both.",
+    "description": "SAST (CodeQL, Semgrep) runs on every pull request and points at the line, but reports false positives and misses runtime config. DAST (ZAP) attacks a deployed app and finds real, exploitable issues, but late and without a line number. Use both.",
     "aliases": [
       "Static analysis",
       "Dynamic analysis",
       "CodeQL",
-      "OWASP ZAP"
+      "ZAP"
     ],
     "platforms": {
       "javascript": "Semgrep / eslint-plugin-security",

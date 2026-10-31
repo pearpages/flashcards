@@ -42,7 +42,7 @@
     "essential": true,
     "facets": { "kind": "pattern", "helps": "keyboard", "level": "wcag-a" },
     "summary": "A tablist of tabs with one visible tabpanel; arrow keys move between tabs.",
-    "description": "Only the selected tab is in the Tab order (roving tabindex); ←/→ move and Home/End jump. `aria-selected` marks the active tab and `aria-controls` links its panel. Activate on Enter instead of on focus when panels are slow to load.",
+    "description": "Only the selected tab is in the Tab order (roving tabindex); ←/→ move and Home/End jump. `aria-selected` marks the active tab and `aria-controls` links its panel. Activate on Enter or Space instead of on focus when panels are slow to load.",
     "aliases": ["tablist", "tabpanel"],
     "platforms": {
       "ios": "Picker with .segmented style",
@@ -77,7 +77,7 @@
     "id": "listbox",
     "title": "Listbox",
     "facets": { "kind": "pattern", "helps": "keyboard", "level": "wcag-a" },
-    "summary": "A list of selectable options with one tab stop; arrow keys move, Space selects.",
+    "summary": "A list of selectable options with one tab stop; arrow keys move focus between options.",
     "description": "Use native `<select>` when you can: it works everywhere for free. A custom listbox needs `role=option` children, `aria-selected`, `aria-multiselectable` for multiple choice, typeahead, and a single tab stop.",
     "aliases": ["role=option"],
     "platforms": {
@@ -102,10 +102,10 @@
     "title": "Tooltip",
     "facets": { "kind": "pattern", "helps": "low-vision", "level": "wcag-aa" },
     "summary": "Short supplementary text on hover and focus, linked with aria-describedby.",
-    "description": "Never the only label and never interactive. WCAG 1.4.13: it appears on focus as well as hover, stays while the pointer moves onto it, and closes on Esc without moving focus. Icon buttons still need their own name.",
+    "description": "Never the only label and never interactive. Show it on focus as well as hover; WCAG 1.4.13 then asks that it stays while the pointer moves onto it and closes on Esc without moving focus. Icon buttons still need their own name.",
     "aliases": ["role=tooltip", "SC 1.4.13"],
     "platforms": {
-      "ios": ".help(\"…\")",
+      "ios": "No iOS tooltip; .help(\"…\") sets the accessibility hint",
       "android": "PlainTooltip in a TooltipBox"
     }
   },
@@ -264,7 +264,7 @@
     "essential": true,
     "facets": { "kind": "role", "helps": "screen-reader", "level": "wcag-a" },
     "summary": "header, nav, main, aside and footer: regions screen reader users jump between.",
-    "description": "They map to banner, navigation, main, complementary and contentinfo. Use one `<main>` per page and label repeated landmarks (two navs) with `aria-label`. A `<section>` only becomes a region landmark once it has an accessible name.",
+    "description": "They map to banner, navigation, main, complementary and contentinfo (header and footer only at page level). Use one `<main>` per page and label repeated landmarks with `aria-label`. A `<section>` is a region landmark only once it has a name.",
     "aliases": ["banner", "navigation", "main", "contentinfo", "region"]
   },
   {
@@ -459,7 +459,7 @@
     "title": "aria-errormessage",
     "facets": { "kind": "attribute", "helps": "screen-reader", "level": "wcag-a" },
     "summary": "Points a field at its error text; exposed only while aria-invalid is true.",
-    "description": "Meant for errors as `aria-describedby` is for hints. Screen reader support still lags behind `aria-describedby`, so many teams reference the error from `aria-describedby` too. Either way, the error must also be visible.",
+    "description": "Meant for errors as `aria-describedby` is for hints. Screen reader support still lags behind `aria-describedby`, so many teams reference the error from `aria-describedby` too. ARIA 1.3 lets it list several ids. The error must also be visible.",
     "aliases": ["SC 3.3.1"]
   },
   {
@@ -555,7 +555,7 @@
     "title": "Skip link",
     "facets": { "kind": "technique", "helps": "keyboard", "level": "wcag-a" },
     "summary": "The first link in the tab order, jumping past repeated navigation to the content.",
-    "description": "Visually hidden until focused, then shown at the top. Its target (`<main id=\"main\" tabindex=\"-1\">`) must take focus so the next Tab carries on from there. With landmarks and headings it meets 2.4.1 Bypass Blocks.",
+    "description": "Visually hidden until focused, then shown at the top. Its target (`<main id=\"main\">`, plus `tabindex=\"-1\"` for older browsers) receives focus so the next Tab carries on from there. With landmarks and headings it meets 2.4.1 Bypass Blocks.",
     "aliases": ["Skip to content", "SC 2.4.1"]
   },
   {
@@ -652,7 +652,7 @@
     "essential": true,
     "facets": { "kind": "criterion", "helps": "low-vision", "level": "wcag-a" },
     "summary": "Colour is never the only way information is shown.",
-    "description": "Error fields need an icon or text, not only red. Links in body text need an underline, or 3:1 against the text plus a hover cue. Chart series need patterns or direct labels. Check in greyscale: if the meaning disappears, add a second cue.",
+    "description": "Error fields need an icon or text, not only red. Links in body text need an underline, or 3:1 against the text plus a cue on hover and focus. Chart series need patterns or direct labels. Check in greyscale: if the meaning disappears, add a second cue.",
     "aliases": ["SC 1.4.1", "Colour blindness"]
   },
   {
@@ -792,7 +792,7 @@
     "aliases": ["SC 1.3.4"],
     "platforms": {
       "ios": "UISupportedInterfaceOrientations (Info.plist)",
-      "android": "android:screenOrientation"
+      "android": "android:screenOrientation (ignored ≥600dp from API 36)"
     }
   },
   {
@@ -804,7 +804,7 @@
     "aliases": ["SC 1.3.5", "autocomplete"],
     "platforms": {
       "ios": ".textContentType(.emailAddress)",
-      "android": "android:autofillHints"
+      "android": "semantics { contentType = ContentType.EmailAddress }"
     }
   },
   {
@@ -871,7 +871,7 @@
     "id": "three-flashes",
     "title": "Three Flashes",
     "facets": { "kind": "criterion", "helps": "photosensitive", "level": "wcag-a" },
-    "summary": "Nothing flashes more than three times in any one second.",
+    "summary": "Nothing flashes more than three times a second, unless it's below the flash thresholds.",
     "description": "Flashing, especially saturated red, can trigger seizures in people with photosensitive epilepsy, and it's the one failure that harms people directly. Check videos and animations with a tool like PEAT, and avoid strobing effects.",
     "aliases": ["SC 2.3.1", "Photosensitive epilepsy"]
   },
@@ -923,7 +923,7 @@
     "title": "Pointer Cancellation",
     "facets": { "kind": "criterion", "helps": "motor", "level": "wcag-a" },
     "summary": "Actions fire when the pointer is released, so a slip can be cancelled by moving away.",
-    "description": "Trigger on `click` (pointer up), not `mousedown` or `touchstart`. People with tremors often press the wrong thing; releasing outside the target should do nothing. Drag and drop and piano keys are exempt when down-events are essential.",
+    "description": "Trigger on `click` (pointer up), not `mousedown` or `touchstart`. People with tremors often press the wrong thing; releasing outside the target should do nothing. Down-events are fine only when essential, like piano keys; a drag must be abortable.",
     "aliases": ["SC 2.5.2", "Up-event"]
   },
   {

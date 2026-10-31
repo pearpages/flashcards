@@ -100,7 +100,7 @@
       "runs": "server"
     },
     "summary": "`@slot` folders render several pages in one layout, each navigating on its own.",
-    "description": "Slots arrive as layout props (`{ children, team, analytics }`), each with its own loading and error states. Slots aren't URL segments. Add a `default.tsx` per slot: on a hard reload an unmatched slot renders it, or a 404 without one. Pairs with intercepting routes for modals.",
+    "description": "Slots arrive as layout props (`{ children, team, analytics }`), each with its own loading and error states. Slots aren't URL segments. Since v16 every slot needs a `default.tsx` or the build fails; a hard reload renders it for unmatched slots. Pairs with intercepting routes.",
     "aliases": [
       "Named slots",
       "default.js"
@@ -130,7 +130,7 @@
       "runs": "client"
     },
     "summary": "`<Link>` navigates on the client and prefetches routes as they scroll into view.",
-    "description": "Shared layouts stay mounted and only changed segments load. By default it prefetches the static shell, down to the nearest Suspense fallback; `prefetch={true}` fetches more, `prefetch={false}` nothing. Prefetching only runs in production builds. Use `<a>` for external links.",
+    "description": "Shared layouts stay mounted and only changed segments load. By default static routes prefetch fully and dynamic ones down to the nearest `loading.tsx`; with Partial Prefetching, the App Shell. `prefetch={true}` fetches more, `false` nothing. Only in production builds.",
     "aliases": [
       "next/link",
       "Soft navigation"
@@ -350,7 +350,7 @@
       "runs": "build"
     },
     "summary": "Return the dynamic segment values to prerender at build time.",
-    "description": "`generateStaticParams()` returns e.g. `[{ slug: 'hello' }]` for `[slug]`. Unlisted values render on first visit and are cached for the next one; `dynamicParams = false` makes them 404. Return the popular few, not 100,000 products, to keep builds fast.",
+    "description": "`generateStaticParams()` returns e.g. `[{ slug: 'hello' }]` for `[slug]`. Unlisted values render on first visit and are cached; without Cache Components, `dynamicParams = false` makes them 404. With Cache Components, return at least one param. Prerender the popular few.",
     "aliases": [
       "getStaticPaths",
       "dynamicParams"
@@ -534,7 +534,7 @@
       "runs": "build"
     },
     "summary": "`cacheComponents: true` leaves data uncached by default; you opt in with `'use cache'`.",
-    "description": "The v16 model. It replaces implicit `fetch` caching and segment configs like `revalidate` and `dynamic`. Every async read must be cached or inside `<Suspense>`, or Next.js errors and names the route, so nothing goes static or dynamic by accident. It enables Partial Prerendering.",
+    "description": "On in new create-next-app apps since 16.4, default for all in v17; pair it with `partialPrefetching: true`. Replaces implicit `fetch` caching and `revalidate`/`dynamic` configs. Uncached reads must be cached or in `<Suspense>`, or Next.js errors; `instant = false` opts out.",
     "aliases": [
       "dynamicIO",
       "experimental.useCache"
@@ -629,7 +629,7 @@
       "runs": "any"
     },
     "summary": "Request memoization, the Data Cache, the Full Route Cache and the client Router Cache.",
-    "description": "Memoization dedups calls within one render; the Data Cache keeps fetch results across requests; the Full Route Cache stores prerendered HTML and RSC payloads; the Router Cache keeps visited segments in the browser. Debug stale data by asking which layer held it.",
+    "description": "The pre-Cache Components model: memoization dedups calls in one render; the Data Cache keeps fetch results; the Full Route Cache stores prerendered HTML and RSC; the Router Cache keeps segments in the browser. Cache Components reframes this as `use cache` plus the static shell.",
     "aliases": [
       "Data Cache",
       "Full Route Cache",
@@ -645,7 +645,7 @@
       "runs": "client"
     },
     "summary": "The browser keeps RSC payloads of visited and prefetched routes for instant navigation.",
-    "description": "Layouts and loading states are reused across navigations. Since v15 pages aren't reused by default (`staleTimes.dynamic` is 0); with Cache Components, `cacheLife`'s `stale` decides. Actions calling `updateTag`, `revalidatePath` or `refresh()` clear it, as does `router.refresh()`.",
+    "description": "Layouts and loading states are reused across navigations. Since v15 dynamic pages aren't reused (`staleTimes.dynamic` is 0; static ones keep 5 min); with Cache Components, `cacheLife`'s `stale` decides. `updateTag`, `revalidatePath`, `refresh()` and `router.refresh()` clear it.",
     "aliases": [
       "staleTimes",
       "router.refresh",
@@ -1132,7 +1132,7 @@
       "kind": "api",
       "runs": "client"
     },
-    "summary": "`beforeInteractive`, `afterInteractive` (default), `lazyOnload`, or experimental `worker`.",
+    "summary": "`beforeInteractive`, `afterInteractive` (default), `lazyOnload`; `worker` is Pages-only.",
     "description": "Use `lazyOnload` for chat widgets and other non-urgent third parties, `afterInteractive` for analytics, `beforeInteractive` only for must-run-first code in the root layout. The script loads once across navigations; `onLoad` needs a Client Component.",
     "aliases": [
       "<Script>",
@@ -1430,7 +1430,7 @@
       "runs": "build"
     },
     "summary": "`reactCompiler: true` auto-memoises components, so most manual useMemo is unnecessary.",
-    "description": "Stable since Next.js 16 but off by default; install `babel-plugin-react-compiler`. It runs through Babel, so builds get slower. It only helps code that follows the Rules of React; use `'use no memo'` to opt a component out while you fix it.",
+    "description": "Stable since Next.js 16 but off by default; install `babel-plugin-react-compiler`. Via Babel builds get slower; 16.3+ adds an experimental Rust version (`turbopackRustReactCompiler`). It only helps code that follows the Rules of React; opt out with `'use no memo'`.",
     "aliases": [
       "babel-plugin-react-compiler",
       "Auto memoization"
@@ -1491,7 +1491,7 @@
       "runs": "build"
     },
     "summary": "`output: \"export\"` writes plain HTML, CSS and JS to `out/`, hostable on any static server.",
-    "description": "With no server you lose proxy, ISR, Server Actions, cookies and headers, config redirects and rewrites, draft mode and default image optimisation (use a custom loader). Dynamic routes need `generateStaticParams`. Server Components still run, at build.",
+    "description": "With no server you lose proxy, ISR, Server Actions, cookies, config headers, redirects and rewrites, draft mode, intercepting routes and default image optimisation (use a custom loader). Dynamic routes need `generateStaticParams`. Server Components still run, at build.",
     "aliases": [
       "output: export",
       "SPA",
@@ -1554,8 +1554,8 @@
       "kind": "concept",
       "runs": "edge"
     },
-    "summary": "Node.js is the default; `runtime = 'edge'` trades Node APIs for fast, nearby cold starts.",
-    "description": "Edge has only Web APIs: no `fs`, no native modules, many npm packages break, and code size is capped. Running near the user doesn't help if every request goes back to one database. Stay on Node unless a route is light and latency-critical.",
+    "summary": "Node.js is the default; `runtime = 'edge'` is deprecated, so drop the export.",
+    "description": "Edge has only Web APIs: no `fs`, no native modules, no ISR, and many npm packages break. The `runtime = 'edge'` segment export is deprecated, and Cache Components rejects any `runtime` export. Running near users rarely helps if every request hits one database.",
     "aliases": [
       "export const runtime",
       "Edge functions"

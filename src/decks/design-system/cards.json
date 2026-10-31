@@ -291,7 +291,7 @@
       "atomic": "atom"
     },
     "summary": "Packs items of different heights into columns without gaps.",
-    "description": "The Pinterest layout. Visual order differs from DOM order, which can confuse keyboard users, so keep reading order sensible. CSS grid-lanes is coming; today it's JS or columns.",
+    "description": "The Pinterest layout. Visual order differs from DOM order, which can confuse keyboard users, so keep reading order sensible. CSS grid-lanes shipped in Safari 26.4; elsewhere it's JS or columns.",
     "aliases": [
       "Waterfall",
       "Staggered grid"
@@ -562,7 +562,7 @@
       "Dismiss button"
     ],
     "platforms": {
-      "ios": "Toolbar xmark button",
+      "ios": "Button(role: .close) (iOS 26)",
       "android": "IconButton with Close icon"
     }
   },
@@ -615,7 +615,7 @@
     ],
     "platforms": {
       "ios": "ControlGroup of Toggles",
-      "android": "MultiChoiceSegmentedButtonRow"
+      "android": "MultiChoiceSegmentedButtonRow / connected ButtonGroup"
     }
   },
   {
@@ -648,7 +648,7 @@
     ],
     "platforms": {
       "ios": "Menu with primaryAction",
-      "android": "SplitButtonLayout (M3 Expressive)"
+      "android": "SplitButton (M3 Expressive)"
     }
   },
   {
@@ -684,7 +684,7 @@
     ],
     "platforms": {
       "ios": "UIPasteboard + confirmation",
-      "android": "ClipboardManager + Snackbar"
+      "android": "Clipboard (LocalClipboard); system confirms on API 33+"
     }
   },
   {
@@ -702,7 +702,7 @@
     ],
     "platforms": {
       "ios": ".toolbar (bottom bar)",
-      "android": "BottomAppBar / FloatingToolbar"
+      "android": "FlexibleBottomAppBar / HorizontalFloatingToolbar"
     }
   },
   {
@@ -982,7 +982,7 @@
     ],
     "platforms": {
       "ios": "Picker (.segmented)",
-      "android": "SingleChoiceSegmentedButtonRow"
+      "android": "SingleChoiceSegmentedButtonRow / connected ButtonGroup"
     }
   },
   {
@@ -1065,7 +1065,7 @@
     ],
     "platforms": {
       "ios": ".searchable / UISearchBar",
-      "android": "SearchBar / DockedSearchBar"
+      "android": "SearchBar + ExpandedFullScreenSearchBar"
     }
   },
   {
@@ -1351,7 +1351,7 @@
       "Text editor"
     ],
     "platforms": {
-      "ios": "UITextView (allowsEditingTextAttributes)",
+      "ios": "TextEditor with AttributedString (iOS 26)",
       "android": "BasicTextField + spans (no built-in)"
     }
   },
@@ -1507,7 +1507,7 @@
       "atomic": "molecule"
     },
     "summary": "Shows where the current page sits in the site hierarchy.",
-    "description": "A trail of links like Home › Products › Shoes, in a nav labelled 'Breadcrumb'. The last item is the current page (aria-current=page) and isn't a link.",
+    "description": "A trail of links like Home › Products › Shoes, in a nav labelled 'Breadcrumb'. The last item is the current page: a link with aria-current=page (or plain text).",
     "aliases": [
       "Breadcrumb"
     ],
@@ -1586,7 +1586,7 @@
     ],
     "platforms": {
       "ios": "NavigationSplitView sidebar",
-      "android": "ModalNavigationDrawer"
+      "android": "ModalNavigationDrawer / ModalWideNavigationRail"
     }
   },
   {
@@ -1604,7 +1604,7 @@
     ],
     "platforms": {
       "ios": "Sidebar-adaptable TabView (iPad)",
-      "android": "NavigationRail"
+      "android": "WideNavigationRail / NavigationRail"
     }
   },
   {
@@ -1624,7 +1624,7 @@
     ],
     "platforms": {
       "ios": "TabView (tab bar)",
-      "android": "NavigationBar"
+      "android": "ShortNavigationBar / NavigationBar"
     }
   },
   {
@@ -1907,7 +1907,7 @@
     "summary": "A short text label that appears on hover or focus.",
     "description": "Plain text only, never interactive or essential. Shows on keyboard focus too, dismisses with Escape. Doesn't work on touch, so don't hide key info in it.",
     "platforms": {
-      "ios": ".help (pointer on iPad/Mac)",
+      "ios": ".help (tooltip on macOS/visionOS only; hint on iOS)",
       "android": "TooltipBox + PlainTooltip"
     }
   },
@@ -1965,7 +1965,7 @@
       "Product tour"
     ],
     "platforms": {
-      "ios": "TipKit",
+      "ios": "TipKit (TipGroup for ordered tips)",
       "android": "TooltipBox + RichTooltip"
     }
   },
@@ -2563,7 +2563,7 @@
     ],
     "platforms": {
       "ios": "VideoPlayer (AVKit)",
-      "android": "PlayerView (Media3)"
+      "android": "PlayerView / Compose Player (Media3)"
     }
   },
   {

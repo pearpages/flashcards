@@ -156,7 +156,7 @@
     "facets": {
       "area": "injection",
       "kind": "attack",
-      "owasp": "a01-access-control"
+      "owasp": "a08-integrity-failures"
     },
     "summary": "Binding a request body straight onto a model lets clients set fields like `role`.",
     "description": "`user.update(req.body)` happily saves `{\"role\": \"admin\"}`. Bind an explicit allowlist of fields per endpoint (a DTO or schema), never the whole body. Blocklists fail the day someone adds a column.",
@@ -236,7 +236,7 @@
       "owasp": "a02-misconfiguration"
     },
     "summary": "Response headers that let named origins read your API from their pages.",
-    "description": "`Access-Control-Allow-Origin` names who may read. Never reflect any `Origin` back together with `Access-Control-Allow-Credentials: true`: any site could read logged-in data. CORS loosens the same-origin policy; it never blocks a request reaching you.",
+    "description": "`Access-Control-Allow-Origin` names who may read. Never reflect any `Origin` back together with `Access-Control-Allow-Credentials: true`: any site could read logged-in data. It loosens the same-origin policy; simple requests still reach your server.",
     "aliases": [
       "Cross-Origin Resource Sharing",
       "Preflight"
@@ -345,7 +345,7 @@
       "owasp": "a05-injection"
     },
     "summary": "The browser rejects plain strings in DOM XSS sinks unless a policy created them.",
-    "description": "With `require-trusted-types-for 'script'` in the CSP, `el.innerHTML = string` throws; only values made by a named policy, which sanitises, get through. Reviewing DOM XSS becomes reviewing a few policies. Browsers without support ignore it.",
+    "description": "With `require-trusted-types-for 'script'` in the CSP, `el.innerHTML = string` throws; only values made by a named policy, which sanitises, get through. Reviewing DOM XSS becomes reviewing a few policies. Baseline since 2026; older browsers ignore it.",
     "aliases": [
       "require-trusted-types-for"
     ]
@@ -356,7 +356,7 @@
     "facets": {
       "area": "browser",
       "kind": "attack",
-      "owasp": "a02-misconfiguration"
+      "owasp": "a06-insecure-design"
     },
     "summary": "Your page is framed invisibly over a decoy, so users click your buttons unknowingly.",
     "description": "The attacker loads your 'Delete account' page in a transparent iframe aligned over their 'Claim prize' button. Stop it by forbidding framing with CSP `frame-ancestors`, plus `X-Frame-Options` for very old browsers.",
@@ -371,7 +371,7 @@
     "facets": {
       "area": "browser",
       "kind": "defence",
-      "owasp": "a02-misconfiguration"
+      "owasp": "a06-insecure-design"
     },
     "summary": "A CSP directive listing which sites may embed your page in a frame.",
     "description": "`frame-ancestors 'none'` forbids all framing; `'self'` allows only your own pages. It replaces `X-Frame-Options`, which can't list several origins. Send it on every HTML response, not just the login page.",
@@ -621,7 +621,7 @@
       "owasp": "a07-auth-failures"
     },
     "summary": "Public-key login (WebAuthn) bound to the site, so there's no password to steal or phish.",
-    "description": "The device keeps a private key per site and signs the server's challenge after a fingerprint, face or PIN. The browser uses it only on the matching origin, so phishing pages get nothing, and the server stores only a public key. Keep a recovery path.",
+    "description": "The device keeps a private key per site and signs the server's challenge after a fingerprint, face or PIN. The browser uses it only for the matching domain (RP ID), so phishing pages get nothing, and the server stores only a public key. Keep a recovery path.",
     "aliases": [
       "WebAuthn",
       "FIDO2",
@@ -637,7 +637,7 @@
       "owasp": "a07-auth-failures"
     },
     "summary": "Lets an app act for a user with a scoped access token instead of their password.",
-    "description": "Use the authorization code flow with PKCE for every client; the implicit and password grants are dropped in OAuth 2.1. Register exact redirect URIs, use `state` against CSRF and ask for the narrowest scopes. OAuth grants access; OIDC says who the user is.",
+    "description": "Use the authorization code flow with PKCE for all clients; the implicit and password grants are deprecated (RFC 9700) and dropped in the OAuth 2.1 draft. Register exact redirect URIs, use `state` against CSRF, ask for narrow scopes. OAuth grants access; OIDC says who the user is.",
     "aliases": [
       "Authorization code flow",
       "OAuth 2.1",
@@ -795,7 +795,7 @@
     "facets": {
       "area": "sessions",
       "kind": "defence",
-      "owasp": "a07-auth-failures"
+      "owasp": "a02-misconfiguration"
     },
     "summary": "HttpOnly, Secure and SameSite keep a session cookie from scripts, HTTP and other sites.",
     "description": "`HttpOnly` hides it from JavaScript, so XSS can't read it (it can still act as the user). `Secure` sends it only over HTTPS. `SameSite=Lax` stops most cross-site sends and `Strict` stops all. Omit `Domain` so subdomains don't receive it.",
@@ -997,7 +997,7 @@
     "facets": {
       "area": "transport",
       "kind": "defence",
-      "owasp": "a04-crypto-failures"
+      "owasp": "a07-auth-failures"
     },
     "summary": "Check the certificate's chain, hostname and dates before trusting a TLS connection.",
     "description": "Browsers do it for you; your own HTTP clients may be configured not to. Never ship `rejectUnauthorized: false`, `verify=False` or a trust-all `TrustManager` 'just for testing'. For an internal CA, add it to the trust store instead.",
@@ -1135,7 +1135,7 @@
     "facets": {
       "area": "data",
       "kind": "defence",
-      "owasp": "a02-misconfiguration"
+      "owasp": "a07-auth-failures"
     },
     "summary": "API keys and passwords live in a secrets manager, injected at runtime, never in git.",
     "description": "A secret in code lands in every clone, fork and CI log. Load secrets from a vault or the platform's secret store, give each service its own with least privilege, rotate them, and scan commits. A leaked key must be revoked, not just removed from history.",
@@ -1307,7 +1307,7 @@
       "owasp": "a03-supply-chain"
     },
     "summary": "Packages can run code at install time (postinstall), before you ever import them.",
-    "description": "A malicious or hijacked package runs with your rights on every laptop and CI runner that installs it. Turn lifecycle scripts off by default (`ignore-scripts`, or pnpm's allowlist of packages that may build) and allow them one by one.",
+    "description": "A malicious or hijacked package runs with your rights on every laptop and CI runner that installs it. Turn lifecycle scripts off (`ignore-scripts`; pnpm 10+ already blocks them unless allowlisted) and allow them one by one.",
     "aliases": [
       "postinstall",
       "Lifecycle scripts"
@@ -1460,7 +1460,7 @@
     "facets": {
       "area": "infrastructure",
       "kind": "attack",
-      "owasp": "a02-misconfiguration"
+      "owasp": "a07-auth-failures"
     },
     "summary": "Admin panels, databases and devices left with their factory username and password.",
     "description": "Scanners try well-known default logins on new services within minutes of them going online. Generate a unique password at install or force a change, disable unused default accounts, and keep admin interfaces off the public internet.",
@@ -1475,7 +1475,7 @@
     "facets": {
       "area": "infrastructure",
       "kind": "attack",
-      "owasp": "a02-misconfiguration"
+      "owasp": "a01-access-control"
     },
     "summary": "A public .git folder, .env file or backup on the web server hands over source and secrets.",
     "description": "Deploying the whole project folder publishes `.git/`, `.env`, `*.bak` files and database dumps. Serve only a build output folder, deny dotfiles in the web server, turn off directory listing, and scan your own site for these paths.",

@@ -74,6 +74,7 @@
     "aliases": ["PgBouncer"],
     "platforms": {
       "aws": "RDS Proxy",
+      "gcp": "Cloud SQL Managed Connection Pooling",
       "azure": "Built-in PgBouncer (PostgreSQL flexible server)"
     }
   },
@@ -132,7 +133,7 @@
     "platforms": {
       "aws": "Redshift",
       "gcp": "BigQuery",
-      "azure": "Synapse Analytics / Microsoft Fabric"
+      "azure": "Microsoft Fabric / Synapse Analytics"
     }
   },
   {
@@ -155,7 +156,8 @@
     "description": "Metrics, sensor readings and prices arrive in time order and are read by range. A TSDB compresses them hard, rolls old data up (per minute → per hour) and expires it by retention policy. Beware high-cardinality labels: each one makes a new series.",
     "aliases": ["TSDB", "Prometheus", "Retention", "Cardinality"],
     "platforms": {
-      "aws": "Amazon Timestream",
+      "aws": "Timestream for InfluxDB",
+      "gcp": "Managed Service for Prometheus",
       "azure": "Azure Data Explorer"
     }
   },
@@ -215,7 +217,7 @@
     "platforms": {
       "aws": "ElastiCache",
       "gcp": "Memorystore",
-      "azure": "Azure Cache for Redis"
+      "azure": "Azure Managed Redis"
     }
   },
   {
@@ -294,7 +296,7 @@
     "title": "Cache Eviction",
     "facets": { "concern": "caching", "kind": "principle", "scale": "growing" },
     "summary": "What to drop when the cache is full: least recently used, least frequently used, oldest.",
-    "description": "LRU suits most workloads; LFU keeps steady favourites but is slow to forget; FIFO is simplest. Watch the hit ratio: a cache that's too small evicts constantly. Redis needs a `maxmemory-policy`, or by default writes fail once memory is full.",
+    "description": "LRU suits most workloads; LFU keeps steady favourites but is slow to forget; FIFO is simplest. Watch the hit ratio: a cache that's too small evicts constantly. Redis defaults to `noeviction`: once `maxmemory` is reached, writes fail, so pick a policy.",
     "aliases": ["LRU", "LFU", "Hit ratio", "maxmemory-policy"]
   },
   {
@@ -586,7 +588,7 @@
     "essential": true,
     "facets": { "concern": "reliability", "kind": "pattern", "scale": "day-one" },
     "summary": "Retry transient failures after growing, randomised delays: 100ms, 200ms, 400ms…",
-    "description": "Jitter stops clients retrying in lockstep. Retry only idempotent requests and transient errors (timeouts, 503), never 4xx. Cap attempts, and retry at one layer only: three layers of three retries is 27 calls.",
+    "description": "Jitter stops clients retrying in lockstep. Retry only idempotent requests and transient errors (timeouts, 503, 429 after `Retry-After`), not other 4xx. Cap attempts, and retry at one layer only: three layers of three retries is 27 calls.",
     "aliases": ["Exponential backoff", "Jitter", "Retry storm"]
   },
   {
@@ -640,7 +642,7 @@
     "aliases": ["Red-black deployment"],
     "platforms": {
       "aws": "CodeDeploy blue/green",
-      "gcp": "Cloud Deploy",
+      "gcp": "Cloud Run revision traffic migration",
       "azure": "App Service deployment slots"
     }
   },
@@ -783,7 +785,7 @@
     "aliases": ["Version column", "Compare-and-set", "Lost update"],
     "platforms": {
       "aws": "DynamoDB conditional writes",
-      "gcp": "Firestore transactions",
+      "gcp": "Firestore transactions (optimistic concurrency)",
       "azure": "Cosmos DB ETag with If-Match"
     }
   },
@@ -963,7 +965,8 @@
     "description": "Good for redirects, auth checks, A/B assignment, headers and personalising cached pages. Runtimes are restricted (limited APIs, short CPU time) and far from your database, so keep data access out or use an edge store.",
     "aliases": ["Edge computing", "Cloudflare Workers"],
     "platforms": {
-      "aws": "CloudFront Functions / Lambda@Edge"
+      "aws": "CloudFront Functions / Lambda@Edge",
+      "gcp": "Service Extensions plugins on Cloud CDN"
     }
   },
   {
