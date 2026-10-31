@@ -49,6 +49,7 @@ item, and add a dated line at the top of **Done**.
 
 ## Done
 
+- [x] 2026-10-31: Released v1.0.0.
 - [x] 2026-10-31: Redesigned the app on the pulp design system, following the "Flashcards: mobile redesign on pulp" canvas: deck list, study screen with progress and Show answer / I know this / Next card, filters in a sheet with counts and switches, browse sections as surfaces, toasts with Undo; ADR-0019.
 - [x] 2026-10-31: Released v0.6.2.
 - [x] 2026-10-31: Reviewed the other eight decks against current docs: 86 fixes, e.g. Baseline badges (forced-colors widely; anchor positioning, line-clamp, display: contents limited), OWASP 2025 categories by CWE mapping, Next.js 16.4 (Edge runtime deprecated, prefetch defaults, slot `default.tsx`), renamed services (Timestream for InfluxDB, Azure Managed Redis), Material 3 Expressive names, WCAG/APG wording.
