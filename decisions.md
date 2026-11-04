@@ -30,6 +30,7 @@ accepted.
 | [0017](docs/adr/0017-llm-engineering-deck-facets.md) | LLM Engineering deck: area and kind filters, stage as a badge, model providers as platforms | Proposed | 2026-10-31 |
 | [0018](docs/adr/0018-llm-internals-deck-facets.md) | LLM Internals deck: area and kind filters, training phase as a badge | Proposed | 2026-10-31 |
 | [0019](docs/adr/0019-pulp-design-system.md) | Build the UI on the pulp design system | Accepted | 2026-10-31 |
+| [0020](docs/adr/0020-work-in-github-issues.md) | Work is tracked in GitHub Issues, not `tasks.md` | Accepted | 2026-11-04 |
 
 ## Format
 

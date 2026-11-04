@@ -40,8 +40,8 @@ Check UI changes at 375px wide and on desktop.
 ## Pull requests
 
 - One topic per pull request, with a short description of what and why.
-- Update [tasks.md](tasks.md), and [architecture.md](architecture.md) or the README when
-  behaviour changes.
+- Close the issue it finishes (`Fixes #N`), and update [architecture.md](architecture.md) or the
+  README when behaviour changes.
 - Commit messages are short, lowercase and say what changed (`add tooltip card`).
 
 ## Conduct and security

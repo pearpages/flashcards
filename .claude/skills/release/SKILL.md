@@ -55,13 +55,12 @@ create the GitHub release.
 
 ## Step 4 — Bump, commit and tag
 
-Add a dated line at the top of **Done** in `tasks.md`
-(`- [x] YYYY-MM-DD: Released v<next>.`). `npm version` refuses to run with that edit in the
-tree, so bump without git and commit and tag by hand:
+Bump without git, then commit and tag by hand. The GitHub release (step 6) is the record of the
+release:
 
 ```bash
 npm version <bump> --no-git-tag-version
-git add package.json tasks.md
+git add package.json
 git commit -m "release <next>"
 git tag -a v<next> -m "release <next>"
 ```

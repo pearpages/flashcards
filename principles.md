@@ -69,6 +69,6 @@ card face is exposed to screen readers (`aria-hidden` on the other).
 ## Process
 
 **P10. Knowledge lives in its file.** How to work → `AGENTS.md`; rules → here; how it is
-built → `architecture.md`; why → an ADR; work → `tasks.md`; risk → `security.md`.
+built → `architecture.md`; why → an ADR; work → GitHub Issues; risk → `security.md`.
 *Why:* a session log in the agent file hides decisions from the next person.
 [ADR-0001](docs/adr/0001-project-knowledge-files.md)
